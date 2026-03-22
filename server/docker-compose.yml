@@ -1,15 +1,23 @@
 version: "3.9"
 
 services:
-  # ── MongoDB ──────────────────────────────────────────────────────────────────
-  mongo:
-    image: mongo:7
-    container_name: mongo
+  # ── PostgreSQL ───────────────────────────────────────────────────────────────
+  postgres:
+    image: postgres:16
+    container_name: postgres
     restart: unless-stopped
-    ports:
-      - "27017:27017"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
     volumes:
-      - mongo_data:/data/db
+      - postgres_data:/var/lib/postgresql/data
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
     networks:
       - app-network
 
@@ -44,11 +52,14 @@ services:
       - "3001:3001"
     environment:
       PORT: 3001
-      MONGO_URI: mongodb://mongo:27017/patient-service
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/patientdb
       JWT_SECRET: ${JWT_SECRET}
       JWT_EXPIRES: 7d
+      DOCTOR_SERVICE_URL: http://doctor-service:3003
+      INTERNAL_SYNC_SECRET: ${INTERNAL_SYNC_SECRET:-sync-secret}
     depends_on:
-      - mongo
+      postgres:
+        condition: service_healthy
     networks:
       - app-network
 
@@ -61,11 +72,12 @@ services:
       - "3002:3002"
     environment:
       PORT: 3002
-      MONGO_URI: mongodb://mongo:27017/admin-service
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/admindb
       JWT_SECRET: ${JWT_SECRET}
       JWT_EXPIRES: 7d
     depends_on:
-      - mongo
+      postgres:
+        condition: service_healthy
     networks:
       - app-network
 
@@ -78,11 +90,14 @@ services:
       - "3003:3003"
     environment:
       PORT: 3003
-      MONGO_URI: mongodb://mongo:27017/doctor-service
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/doctordb
       JWT_SECRET: ${JWT_SECRET}
       JWT_EXPIRES: 7d
+      PATIENT_SERVICE_URL: http://patient-service:3001
+      INTERNAL_SYNC_SECRET: ${INTERNAL_SYNC_SECRET:-sync-secret}
     depends_on:
-      - mongo
+      postgres:
+        condition: service_healthy
     networks:
       - app-network
 
@@ -101,7 +116,7 @@ services:
       - app-network
 
 volumes:
-  mongo_data:
+  postgres_data:
 
 networks:
   app-network:

@@ -8,7 +8,15 @@ import {
   getAllDoctors,
   getDoctorById,
   getDoctorsBySpecialization,
+  updateDoctorById,
+  deleteDoctorById,
 } from '../controllers/doctorController';
+import {
+  getDoctorAppointments,
+  addDoctorNotes,
+  syncMirroredAppointment,
+} from '../controllers/appointmentController';
+import { requireRole } from '../middleware/requireRole';
 import { validateRequest } from '../middleware/validateRequest';
 
 const router = Router();
@@ -16,6 +24,7 @@ const router = Router();
 // ── Public ────────────────────────────────────────────────────────────────────
 router.post(
   '/auth/register',
+  requireRole('admin', 'superadmin'),
   [
     body('name').notEmpty().withMessage('Name is required'),
     body('email').isEmail().withMessage('Valid email is required'),
@@ -39,10 +48,31 @@ router.post(
 
 router.get('/', getAllDoctors);
 router.get('/specialization/:specialization', getDoctorsBySpecialization);
-router.get('/:id', getDoctorById);
 
 // ── Protected ─────────────────────────────────────────────────────────────────
 router.get('/profile/me', getProfile);
 router.put('/profile/me', updateProfile);
+
+// ── Appointments (Protected) ───────────────────────────────────────────────────
+router.get('/me/appointments', getDoctorAppointments);
+
+router.get('/me/appointments/upcoming', (req, res) => {
+  (req.query as Record<string, unknown>).upcomingOnly = 'true';
+  getDoctorAppointments(req, res);
+});
+
+router.put('/appointments/:appointmentId/notes', [
+  body('doctorNotes').notEmpty().withMessage('Doctor notes are required'),
+  body('prescriptions').optional().isArray(),
+], validateRequest, addDoctorNotes);
+
+// ── Internal sync (service-to-service) ──────────────────────────────────────
+router.post('/internal/appointments/sync', syncMirroredAppointment);
+
+router.get('/:id', getDoctorById);
+
+// ── Admin CRUD ───────────────────────────────────────────────────────────────
+router.put('/:id', requireRole('admin', 'superadmin'), updateDoctorById);
+router.delete('/:id', requireRole('admin', 'superadmin'), deleteDoctorById);
 
 export default router;

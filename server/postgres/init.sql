@@ -1,0 +1,3 @@
+CREATE DATABASE admindb;
+CREATE DATABASE doctordb;
+CREATE DATABASE patientdb;

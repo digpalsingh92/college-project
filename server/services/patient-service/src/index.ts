@@ -2,9 +2,9 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
-import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import patientRoutes from './routes/patientRoutes';
+import prisma from './lib/prisma';
 
 dotenv.config();
 
@@ -18,11 +18,10 @@ app.use(morgan('dev'));
 app.use(express.json());
 
 // ── Database ──────────────────────────────────────────────────────────────────
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/patient-service';
-mongoose
-  .connect(MONGO_URI)
-  .then(() => console.log('Patient Service: MongoDB connected'))
-  .catch((err) => console.error('MongoDB connection error:', err));
+prisma
+  .$connect()
+  .then(() => console.log('Patient Service: PostgreSQL connected'))
+  .catch((err) => console.error('PostgreSQL connection error:', err));
 
 // ── Routes ────────────────────────────────────────────────────────────────────
 app.get('/health', (_req, res) => {
@@ -39,6 +38,16 @@ app.use((err: Error, _req: express.Request, res: express.Response, _next: expres
 
 app.listen(PORT, () => {
   console.log(`Patient Service running on port ${PORT}`);
+});
+
+process.on('SIGINT', async () => {
+  await prisma.$disconnect();
+  process.exit(0);
+});
+
+process.on('SIGTERM', async () => {
+  await prisma.$disconnect();
+  process.exit(0);
 });
 
 export default app;
