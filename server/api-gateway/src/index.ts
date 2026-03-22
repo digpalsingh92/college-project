@@ -12,7 +12,7 @@ import { swaggerSpec } from './swagger';
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 
 // ── Core middleware ──────────────────────────────────────────────────────────
 app.use(helmet());
@@ -32,10 +32,10 @@ app.get('/api-docs.json', (_req, res) => {
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // ── Service URLs ──────────────────────────────────────────────────────────────
-const PATIENT_SERVICE_URL = process.env.PATIENT_SERVICE_URL || 'http://localhost:3001';
-const ADMIN_SERVICE_URL   = process.env.ADMIN_SERVICE_URL   || 'http://localhost:3002';
-const DOCTOR_SERVICE_URL  = process.env.DOCTOR_SERVICE_URL  || 'http://localhost:3003';
-const AI_SERVICE_URL      = process.env.AI_SERVICE_URL      || 'http://localhost:5000';
+const PATIENT_SERVICE_URL = process.env.PATIENT_SERVICE_URL || 'http://localhost:4001';
+const ADMIN_SERVICE_URL   = process.env.ADMIN_SERVICE_URL   || 'http://localhost:4002';
+const DOCTOR_SERVICE_URL  = process.env.DOCTOR_SERVICE_URL  || 'http://localhost:4003';
+const AI_SERVICE_URL      = process.env.AI_SERVICE_URL      || 'http://localhost:4004';
 
 const proxyOptions = (target: string) => ({
   target,

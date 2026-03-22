@@ -22,6 +22,7 @@ const schema = z.object({
   duration: z.coerce.number().optional(),
 });
 type FormData = z.infer<typeof schema>;
+type RawFormData = z.input<typeof schema>;
 
 export default function PatientAppointmentsPage() {
   const { appointments, loading, fetchPatientAppointments, createAppointment, cancelAppointment } = useAppointments();
@@ -31,7 +32,7 @@ export default function PatientAppointmentsPage() {
   const [search, setSearch]       = useState('');
   const [filterStatus, setFilter] = useState('all');
 
-  const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<FormData>({
+  const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<RawFormData, unknown, FormData>({
     resolver: zodResolver(schema),
   });
 
