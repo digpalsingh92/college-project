@@ -1,0 +1,108 @@
+version: "3.9"
+
+services:
+  # ── MongoDB ──────────────────────────────────────────────────────────────────
+  mongo:
+    image: mongo:7
+    container_name: mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - app-network
+
+  # ── API Gateway ───────────────────────────────────────────────────────────────
+  api-gateway:
+    build: ./api-gateway
+    container_name: api-gateway
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      PORT: 3000
+      JWT_SECRET: ${JWT_SECRET}
+      PATIENT_SERVICE_URL: http://patient-service:3001
+      ADMIN_SERVICE_URL: http://admin-service:3002
+      DOCTOR_SERVICE_URL: http://doctor-service:3003
+      AI_SERVICE_URL: http://ai-service:5000
+    depends_on:
+      - patient-service
+      - admin-service
+      - doctor-service
+      - ai-service
+    networks:
+      - app-network
+
+  # ── Patient Service ───────────────────────────────────────────────────────────
+  patient-service:
+    build: ./services/patient-service
+    container_name: patient-service
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    environment:
+      PORT: 3001
+      MONGO_URI: mongodb://mongo:27017/patient-service
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRES: 7d
+    depends_on:
+      - mongo
+    networks:
+      - app-network
+
+  # ── Admin Service ─────────────────────────────────────────────────────────────
+  admin-service:
+    build: ./services/admin-service
+    container_name: admin-service
+    restart: unless-stopped
+    ports:
+      - "3002:3002"
+    environment:
+      PORT: 3002
+      MONGO_URI: mongodb://mongo:27017/admin-service
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRES: 7d
+    depends_on:
+      - mongo
+    networks:
+      - app-network
+
+  # ── Doctor Service ────────────────────────────────────────────────────────────
+  doctor-service:
+    build: ./services/doctor-service
+    container_name: doctor-service
+    restart: unless-stopped
+    ports:
+      - "3003:3003"
+    environment:
+      PORT: 3003
+      MONGO_URI: mongodb://mongo:27017/doctor-service
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRES: 7d
+    depends_on:
+      - mongo
+    networks:
+      - app-network
+
+  # ── AI Service ────────────────────────────────────────────────────────────────
+  ai-service:
+    build: ./services/ai-service
+    container_name: ai-service
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      PORT: 5000
+      FLASK_ENV: production
+      MODEL_PATH: app/models/saved
+    networks:
+      - app-network
+
+volumes:
+  mongo_data:
+
+networks:
+  app-network:
+    driver: bridge
