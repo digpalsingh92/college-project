@@ -4,18 +4,19 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 enum Role {
   doctor
+
+  @@map("DoctorRole")
 }
 
 model Doctor {
   id            String   @id @default(uuid())
   name          String
   email         String   @unique
-  passwordHash  String
+  passwordHash  String   @map("password")
   specialization String
   licenseNumber String   @unique
   phone         String?
