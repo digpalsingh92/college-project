@@ -13,6 +13,6 @@ def create_app() -> Flask:
     from .routes.health import health_bp
 
     app.register_blueprint(health_bp)
-    app.register_blueprint(predict_bp, url_prefix="/api/ai")
+    app.register_blueprint(predict_bp, url_prefix="/api/ai/v1")
 
     return app

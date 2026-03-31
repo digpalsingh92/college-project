@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -33,14 +33,14 @@ export default function PatientLoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0e1a] flex items-center justify-center p-4">
+    <div className="min-h-screen bg-[#f0f4f8] flex items-center justify-center p-4">
       <div className="w-full max-w-md animate-fadein">
         <div className="text-center mb-8">
           <div className="inline-flex w-14 h-14 rounded-2xl bg-blue-600 items-center justify-center mb-4 shadow-lg shadow-blue-600/30">
             <Heart className="w-7 h-7 text-white" />
           </div>
-          <h1 className="text-2xl font-bold text-[#e8eaf0]">Patient Sign In</h1>
-          <p className="text-[#8892a4] text-sm mt-1">Access your health dashboard</p>
+          <h1 className="text-2xl font-bold text-[#0f172a]">Patient Sign In</h1>
+          <p className="text-[#475569] text-sm mt-1">Access your health dashboard</p>
         </div>
 
         <div className="glass-card p-8">
@@ -53,12 +53,12 @@ export default function PatientLoginPage() {
             <Button type="submit" className="w-full" size="lg" loading={isSubmitting}>Sign In</Button>
           </form>
 
-          <p className="text-center text-sm text-[#8892a4] mt-6">
+          <p className="text-center text-sm text-[#475569] mt-6">
             Don&apos;t have an account?{' '}
             <Link href="/auth/patient/register" className="text-blue-400 hover:text-blue-300 font-medium">Register</Link>
           </p>
-          <p className="text-center text-sm text-[#8892a4] mt-2">
-            <Link href="/" className="text-[#8892a4] hover:text-[#e8eaf0]">← Back to home</Link>
+          <p className="text-center text-sm text-[#475569] mt-2">
+            <Link href="/" className="text-[#475569] hover:text-[#0f172a]">← Back to home</Link>
           </p>
         </div>
       </div>

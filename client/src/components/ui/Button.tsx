@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import { cn } from '@/utils';
 import { Loader2 } from 'lucide-react';
 import { ButtonHTMLAttributes } from 'react';
@@ -10,24 +10,24 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const variants: Record<string, string> = {
-  primary: 'bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-600/20',
-  secondary: 'bg-purple-600 hover:bg-purple-500 text-white shadow-lg shadow-purple-600/20',
-  danger: 'bg-red-600/20 hover:bg-red-600/40 text-red-400 border border-red-600/30',
-  ghost: 'hover:bg-white/5 text-[#8892a4] hover:text-white',
-  outline: 'border border-[#1e2d4a] hover:border-blue-500/50 text-[#e8eaf0] hover:bg-blue-500/10',
+  primary: 'bg-gradient-to-r from-[#1f9d8f] to-[#1f83c2] hover:brightness-110 text-white shadow-lg shadow-[#1f83c2]/20 border border-transparent',
+  secondary: 'bg-gradient-to-r from-[#1479b0] to-[#225ea5] hover:brightness-110 text-white shadow-lg shadow-[#225ea5]/20 border border-transparent',
+  danger: 'bg-[#f56565]/15 hover:bg-[#f56565]/25 text-[#ffb3b3] border border-[#f56565]/40',
+  ghost: 'hover:bg-white/5 text-[#94a7c8] hover:text-[#eaf1ff] border border-transparent',
+  outline: 'border border-[#25395f] hover:border-[#26c5b4]/50 text-[#eaf1ff] hover:bg-[#1f9d8f]/10',
 };
 
 const sizes: Record<string, string> = {
-  sm: 'h-8 px-3 text-sm rounded-lg',
-  md: 'h-10 px-4 text-sm rounded-xl',
-  lg: 'h-12 px-6 text-base rounded-xl',
+  sm: 'h-9 px-3.5 text-sm rounded-xl',
+  md: 'h-11 px-4.5 text-sm rounded-xl',
+  lg: 'h-12 px-6 text-base rounded-2xl',
 };
 
 export function Button({ variant = 'primary', size = 'md', loading, disabled, children, className, ...props }: ButtonProps) {
   return (
     <button
       className={cn(
-        'inline-flex items-center justify-center gap-2 font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed glow-btn',
+        'inline-flex items-center justify-center gap-2 font-semibold tracking-[0.01em] transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-50 glow-btn',
         variants[variant],
         sizes[size],
         className

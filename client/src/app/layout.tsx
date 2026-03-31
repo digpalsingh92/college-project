@@ -1,5 +1,19 @@
+// Force reload
 import type { Metadata } from 'next';
+import { Manrope, Space_Grotesk } from 'next/font/google';
 import './globals.css';
+
+const manrope = Manrope({
+  variable: '--font-body',
+  subsets: ['latin'],
+  display: 'swap',
+});
+
+const spaceGrotesk = Space_Grotesk({
+  variable: '--font-heading',
+  subsets: ['latin'],
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   title: 'MedCare – Healthcare Platform',
@@ -9,11 +23,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-      </head>
-      <body className="antialiased">{children}</body>
+      <body className={`${manrope.variable} ${spaceGrotesk.variable} antialiased`}>{children}</body>
     </html>
   );
 }

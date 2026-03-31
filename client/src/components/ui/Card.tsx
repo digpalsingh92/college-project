@@ -1,4 +1,4 @@
-import { cn } from '@/utils';
+﻿import { cn } from '@/utils';
 
 interface CardProps {
   children: React.ReactNode;
@@ -11,7 +11,7 @@ export function Card({ children, className, hover }: CardProps) {
     <div
       className={cn(
         'glass-card p-6',
-        hover && 'transition-all duration-200 hover:border-blue-500/30 hover:bg-[#141d35]',
+        hover && 'transition-all duration-200 hover:border-blue-500/30 hover:bg-[#f1f5f9]',
         className
       )}
     >
@@ -25,5 +25,5 @@ export function CardHeader({ children, className }: { children: React.ReactNode;
 }
 
 export function CardTitle({ children, className }: { children: React.ReactNode; className?: string }) {
-  return <h3 className={cn('text-base font-semibold text-[#e8eaf0]', className)}>{children}</h3>;
+  return <h3 className={cn('text-base font-semibold text-[#0f172a]', className)}>{children}</h3>;
 }

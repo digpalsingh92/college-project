@@ -34,46 +34,49 @@ export default api;
 
 // ── Patient endpoints ─────────────────────────────────────────────────────────
 export const patientApi = {
-  register:  (data: object) => api.post('/api/patients/auth/register', data),
-  login:     (data: object) => api.post('/api/patients/auth/login', data),
-  getProfile: ()            => api.get('/api/patients/profile'),
-  updateProfile: (data: object) => api.put('/api/patients/profile', data),
+  register:  (data: object) => api.post('/patients/register', data),
+  login:     (data: object) => api.post('/patients/login', data),
+  getProfile: ()            => api.get('/patients/profile'),
+  updateProfile: (data: object) => api.put('/patients/profile', data),
 
   // Appointments
-  createAppointment:  (data: object) => api.post('/api/patients/appointments', data),
-  getAppointments:    (params?: object) => api.get('/api/patients/appointments', { params }),
-  getAppointmentById: (id: string) => api.get(`/api/patients/appointments/${id}`),
-  updateAppointment:  (id: string, data: object) => api.put(`/api/patients/appointments/${id}`, data),
-  cancelAppointment:  (id: string) => api.delete(`/api/patients/appointments/${id}`),
+  createAppointment:  (data: object) => api.post('/patients/appointments', data),
+  getAppointments:    (params?: object) => api.get('/patients/appointments', { params }),
+  getAppointmentById: (id: string) => api.get(`/patients/appointments/${id}`),
+  updateAppointment:  (id: string, data: object) => api.put(`/patients/appointments/${id}`, data),
+  cancelAppointment:  (id: string) => api.delete(`/patients/appointments/${id}`),
 };
 
 // ── Doctor endpoints ──────────────────────────────────────────────────────────
 export const doctorApi = {
-  register:  (data: object) => api.post('/api/doctors/auth/register', data),
-  login:     (data: object) => api.post('/api/doctors/auth/login', data),
-  getProfile: ()            => api.get('/api/doctors/profile/me'),
-  updateProfile: (data: object) => api.put('/api/doctors/profile/me', data),
-  getAll:     ()            => api.get('/api/doctors'),
-  getById:    (id: string)  => api.get(`/api/doctors/${id}`),
-  getBySpecialization: (spec: string) => api.get(`/api/doctors/specialization/${spec}`),
+  register:  (data: object) => api.post('/doctor/register', data),
+  login:     (data: object) => api.post('/doctor/login', data),
+  getProfile: ()            => api.get('/doctor/profile/me'),
+  updateProfile: (data: object) => api.put('/doctor/profile/me', data),
+  getAll:     ()            => api.get('/doctor'),
+  getById:    (id: string)  => api.get(`/doctor/${id}`),
+  getBySpecialization: (spec: string) => api.get(`/doctor/specialization/${spec}`),
 
   // Appointments
-  getAppointments:  (params?: object) => api.get('/api/doctors/me/appointments', { params }),
-  getUpcoming:      ()                => api.get('/api/doctors/me/appointments/upcoming'),
-  addNotes:         (id: string, data: object) => api.put(`/api/doctors/appointments/${id}/notes`, data),
+  getAppointments:  (params?: object) => api.get('/doctor/me/appointments', { params }),
+  getUpcoming:      ()                => api.get('/doctor/me/appointments/upcoming'),
+  addNotes:         (id: string, data: object) => api.put(`/doctor/appointments/${id}/notes`, data),
 };
 
 // ── Admin endpoints ───────────────────────────────────────────────────────────
 export const adminApi = {
-  login:           (data: object) => api.post('/api/admin/auth/login', data),
-  register:        (data: object) => api.post('/api/admin/auth/register', data),
-  getDashboard:    ()             => api.get('/api/admin/dashboard'),
-  getUsers:        ()             => api.get('/api/admin/users'),
-  updateUserStatus: (id: string, data: object) => api.patch(`/api/admin/users/${id}/status`, data),
+  login:           (data: object) => api.post('/admin/login', data),
+  register:        (data: object) => api.post('/admin/register', data),
+  getDashboard:    ()             => api.get('/admin/dashboard'),
+  getUsers:        ()             => api.get('/admin/users'),
+  getDoctors:      ()             => api.get('/admin/doctors'),
+  getPatients:     ()             => api.get('/admin/patients'),
+  getAppointments: ()             => api.get('/admin/appointments'),
+  updateUserStatus: (id: string, data: object) => api.patch(`/admin/users/${id}/status`, data),
 };
 
 // ── AI endpoints ──────────────────────────────────────────────────────────────
 export const aiApi = {
-  predict:      (data: object) => api.post('/api/ai/predict', data),
-  symptomCheck: (data: object) => api.post('/api/ai/symptom-check', data),
+  predict:      (data: object) => api.post('/ai/predict', data),
+  symptomCheck: (data: object) => api.post('/ai/symptom-check', data),
 };

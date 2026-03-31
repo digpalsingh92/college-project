@@ -1,4 +1,26 @@
-export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+const rawApiBaseUrl = (process.env.NEXT_PUBLIC_API_URL ?? '/api/v1').trim();
+
+function normalizeApiBaseUrl(value: string): string {
+  if (!value) return '/api/v1';
+
+  const withoutTrailingSlash = value.replace(/\/+$/, '');
+
+  if (withoutTrailingSlash.startsWith('/')) {
+    return withoutTrailingSlash;
+  }
+
+  if (/^https?:\/\//i.test(withoutTrailingSlash)) {
+    return withoutTrailingSlash;
+  }
+
+  if (/^(localhost|127\.0\.0\.1)(:\d+)?(\/.*)?$/i.test(withoutTrailingSlash)) {
+    return `http://${withoutTrailingSlash}`;
+  }
+
+  return '/api/v1';
+}
+
+export const API_BASE_URL = normalizeApiBaseUrl(rawApiBaseUrl);
 
 export const ROUTES = {
   home: '/',

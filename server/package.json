@@ -1,0 +1,24 @@
+{
+  "name": "hospital-microservices",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Node microservice workspace for admin, patient, and doctor services.",
+  "workspaces": [
+    "services/*"
+  ],
+  "scripts": {
+    "dev:gateway": "npm run dev -w @hospital/api-gateway",
+    "dev:admin": "npm run dev -w @hospital/admin-service",
+    "dev:patient": "npm run dev -w @hospital/patient-service",
+    "dev:doctor": "npm run dev -w @hospital/doctor-service",
+    "dev:all": "concurrently -k -n gateway,admin,patient,doctor \"npm run dev:gateway\" \"npm run dev:admin\" \"npm run dev:patient\" \"npm run dev:doctor\"",
+    "start:gateway": "npm run start -w @hospital/api-gateway",
+    "start:admin": "npm run start -w @hospital/admin-service",
+    "start:patient": "npm run start -w @hospital/patient-service",
+    "start:doctor": "npm run start -w @hospital/doctor-service",
+    "start:all": "concurrently -k -n gateway,admin,patient,doctor \"npm run start:gateway\" \"npm run start:admin\" \"npm run start:patient\" \"npm run start:doctor\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.1"
+  }
+}
