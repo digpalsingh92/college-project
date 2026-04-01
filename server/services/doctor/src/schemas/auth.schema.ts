@@ -21,6 +21,7 @@ export const loginDoctorSchema = z.object({
   password: z.string().min(1, 'Password is required'),
 });
 
+
 export type CreateDoctorInput = z.infer<typeof createDoctorSchema>;
 export type RegisterDoctorInput = z.infer<typeof registerDoctorSchema>;
 export type LoginDoctorInput = z.infer<typeof loginDoctorSchema>;

@@ -5,7 +5,7 @@ import path from 'path';
 import fs from 'fs';
 import swaggerUi from 'swagger-ui-express';
 import YAML from 'yaml';
-import doctorRoutes from './routes/doctor.routes';
+import doctorRoutes from './routes/auth.route';
 import { errorHandler, notFoundHandler } from './middlewares/error.middleware';
 
 const app = express();

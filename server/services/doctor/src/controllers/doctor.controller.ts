@@ -1,37 +1,40 @@
 import { Request, Response } from 'express';
-import { createDoctor, listDoctors, loginDoctor, registerDoctor } from '../services/doctor.service';
+import { getDoctorProfile, updateDoctorProfile } from '../services/doctor.service';
+import { AppError } from '../utils/app-error';
 
-export const createDoctorController = async (req: Request, res: Response): Promise<void> => {
-  const doctor = await createDoctor(req.body);
-  res.status(201).json({
+export const getDoctorProfileController = async (req: Request, res: Response): Promise<void> => {
+  const doctorId = req.user?.id;
+  if (!doctorId) {
+    throw new AppError('Unauthorized', 401);
+  }
+
+  const doctor = await getDoctorProfile(doctorId);
+  if (!doctor) {
+    throw new AppError('Doctor not found', 404);
+  }
+
+  res.status(200).json({
     success: true,
-    message: 'Doctor created successfully',
     data: doctor,
   });
 };
 
-export const registerDoctorController = async (req: Request, res: Response): Promise<void> => {
-  const result = await registerDoctor(req.body);
-  res.status(201).json({
-    success: true,
-    message: 'Doctor registered successfully',
-    data: result,
-  });
-};
+export const updateDoctorProfileController = async (req: Request, res: Response): Promise<void> => {
+  const doctorId = req.user?.id; 
+    const updateData = req.body;
 
-export const loginDoctorController = async (req: Request, res: Response): Promise<void> => {
-  const result = await loginDoctor(req.body);
+  if (!doctorId) {
+    throw new AppError('Unauthorized', 401);
+  }
+
+  const updatedDoctor = await updateDoctorProfile(doctorId, updateData);
+  if (!updatedDoctor) {
+    throw new AppError('Doctor not found', 404);
+  }
+
   res.status(200).json({
     success: true,
-    message: 'Doctor login successfull',
-    data: result,
-  });
-};
-
-export const listDoctorsController = async (_req: Request, res: Response): Promise<void> => {
-  const doctors = await listDoctors();
-  res.status(200).json({
-    success: true,
-    data: doctors,
+    message: 'Profile updated successfully',
+    data: updatedDoctor,
   });
 };
