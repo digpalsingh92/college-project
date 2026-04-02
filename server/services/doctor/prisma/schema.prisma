@@ -4,6 +4,8 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+
+  url      = env("DATABASE_URL")
 }
 
 enum Role {
@@ -25,4 +27,17 @@ model Doctor {
   updatedAt     DateTime @updatedAt
 
   @@index([specialization])
+  schedules Schedule[]
+}
+
+model Schedule {
+  id        String   @id @default(uuid())
+  doctorId  String
+  dayOfWeek String
+  startTime DateTime
+  endTime   DateTime
+
+  doctor Doctor @relation(fields: [doctorId], references: [id])
+
+  @@index([doctorId, dayOfWeek])
 }
