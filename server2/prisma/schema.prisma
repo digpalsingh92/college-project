@@ -1,0 +1,78 @@
+enum Role {
+  patient
+  doctor
+  admin
+}
+
+enum DayOfWeek {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+  SUNDAY
+}
+
+enum AppointmentStatus {
+  booked
+  cancelled
+  completed
+  no_show
+}
+
+model User {
+  id            String   @id @default(uuid())
+  name          String
+  email         String   @unique
+  passwordHash  String   @map("password")
+  role          Role     @default(patient)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  doctorProfile DoctorProfile?
+
+  schedules Schedule[]
+  appointmentsAsPatient Appointment[] @relation("PatientAppointments")
+  appointmentsAsDoctor Appointment[] @relation("DoctorAppointments")
+}
+
+model DoctorProfile {
+  id              String @id @default(uuid())
+  userId          String @unique
+  specialization  String
+  experience      Int
+  consultationFee Float
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model Schedule {
+  id        String   @id @default(uuid())
+  doctorId  String
+  dayOfWeek DayOfWeek
+  startTime Int   // minutes
+  endTime   Int
+
+  doctor User @relation(fields: [doctorId], references: [id])
+
+  @@index([doctorId, dayOfWeek])
+  appointments Appointment[]
+}
+
+model Appointment {
+  id         String   @id @default(uuid())
+  patientId  String
+  doctorId   String
+  scheduleId String
+  date       DateTime
+  status     AppointmentStatus @default(booked)
+
+  createdAt DateTime @default(now())
+
+  patient User @relation("PatientAppointments", fields: [patientId], references: [id])
+  doctor  User @relation("DoctorAppointments", fields: [doctorId], references: [id])
+  schedule Schedule @relation(fields: [scheduleId], references: [id])
+
+  @@index([patientId, doctorId, date])
+}
