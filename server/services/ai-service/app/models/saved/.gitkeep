@@ -1,3 +1,0 @@
-# This directory holds serialised model files (*.joblib).
-# Files here are auto-loaded by app/models/ai_model.py at startup.
-# Add this file to version control so the directory is preserved.
