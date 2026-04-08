@@ -12,6 +12,7 @@ export interface AuthResponse {
     id: string;
     name: string;
     email: string;
+    specialization: string;
     role: Role;
     createdAt: Date;
     specialization?: string;
