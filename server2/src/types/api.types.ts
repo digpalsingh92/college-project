@@ -1,4 +1,4 @@
-export type Role = 'doctor';
+export type Role = 'patient' | 'doctor' | 'admin';
 
 export interface JwtPayload {
   id: string;
@@ -6,15 +6,17 @@ export interface JwtPayload {
   role: Role;
 }
 
-export interface Response {
+export interface AuthResponse {
   token: string;
   data: {
     id: string;
     name: string;
     email: string;
-    specialization: string;
     role: Role;
     createdAt: Date;
+    specialization?: string;
+    experience?: number;
+    consultationFee?: number;
   };
 }
 
