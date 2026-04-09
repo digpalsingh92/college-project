@@ -1,13 +1,13 @@
 import type { NextConfig } from "next";
 
-const API_GATEWAY_URL = (process.env.API_GATEWAY_URL || 'http://localhost:5000').replace(/\/+$/, '');
+  const backendUrl = process.env.BACKEND_URL ?? "http://localhost:5000";
 
 const nextConfig: NextConfig = {
   async rewrites() {
     return [
       {
-        source: '/api/v1/:path*',
-        destination: `${API_GATEWAY_URL}/api/v1/:path*`,
+        source: "/api/:path*",
+        destination: `${backendUrl}/api/:path*`,
       },
     ];
   },

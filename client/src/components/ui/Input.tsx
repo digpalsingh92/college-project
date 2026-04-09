@@ -1,39 +1,56 @@
-﻿'use client';
-import { cn } from '@/utils';
-import { InputHTMLAttributes, forwardRef } from 'react';
+"use client";
+
+import { forwardRef, InputHTMLAttributes, useId } from "react";
+import { cn } from "@/helpers/cn";
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   error?: string;
-  leftIcon?: React.ReactNode;
+  helperText?: string;
 }
 
-export const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ label, error, leftIcon, className, ...props }, ref) => {
-    return (
-      <div className="flex flex-col gap-1.5">
-        {label && <label className="text-sm font-medium text-[#9db0cf]">{label}</label>}
-        <div className="relative">
-          {leftIcon && (
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#94a7c8]">
-              {leftIcon}
-            </span>
-          )}
-          <input
-            ref={ref}
-            className={cn(
-              'h-11 w-full rounded-xl border border-[#2a3d62] bg-[#e8f0fe] text-sm text-[#9db0cf] placeholder:text-[#9db0cf] transition-all duration-200',
-              'focus:border-[#26c5b4]/70 focus:outline-none focus:ring-2 focus:ring-[#26c5b4]/25',
-              leftIcon ? 'pl-10 pr-4' : 'px-4',
-              error && 'border-[#f56565]/70 focus:border-[#f56565]/70 focus:ring-[#f56565]/30',
-              className
-            )}
-            {...props}
-          />
-        </div>
-        {error && <p className="text-xs text-[#ffadad]">{error}</p>}
-      </div>
-    );
-  }
-);
-Input.displayName = 'Input';
+export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
+  { id, label, error, helperText, className, ...props },
+  ref
+) {
+  const generatedId = useId();
+  const inputId = id ?? generatedId;
+  const describedBy = error
+    ? `${inputId}-error`
+    : helperText
+      ? `${inputId}-helper`
+      : undefined;
+
+  return (
+    <div className="flex w-full flex-col gap-1.5">
+      {label ? (
+        <label htmlFor={inputId} className="text-sm font-medium text-foreground">
+          {label}
+        </label>
+      ) : null}
+      <input
+        ref={ref}
+        id={inputId}
+        aria-invalid={Boolean(error)}
+        aria-describedby={describedBy}
+        className={cn(
+          "h-10 rounded-md border px-3 text-sm outline-none transition-colors",
+          error
+            ? "border-red-500 focus:border-red-600"
+            : "border-slate-200 bg-white focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500",
+          className
+        )}
+        {...props}
+      />
+      {error ? (
+        <p id={`${inputId}-error`} className="text-xs text-red-600">
+          {error}
+        </p>
+      ) : helperText ? (
+        <p id={`${inputId}-helper`} className="text-xs text-muted">
+          {helperText}
+        </p>
+      ) : null}
+    </div>
+  );
+});

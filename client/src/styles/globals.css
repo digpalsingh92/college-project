@@ -1,0 +1,39 @@
+@import "tailwindcss";
+
+/* Light theme only — no OS dark-mode override */
+:root {
+  color-scheme: light;
+  --background: #f3f4f6;
+  --foreground: #111827;
+  --muted: #6b7280;
+  --surface: #ffffff;
+  --border: #e5e7eb;
+  --primary: #059669;
+  --primary-foreground: #ffffff;
+  --primary-soft: #d1fae5;
+  --admin-accent: #2563eb;
+  --admin-soft: #eff6ff;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-surface: var(--surface);
+  --color-border: var(--border);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+}
