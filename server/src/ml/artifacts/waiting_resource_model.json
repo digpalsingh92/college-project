@@ -1,0 +1,2418 @@
+{
+  "version": "1.0.0",
+  "trainedAt": "2026-04-08T20:41:39.697Z",
+  "datasetPath": "C:\\Users\\diggy\\Desktop\\college-project\\server\\src\\Datasets\\healthcare_appointment_no_show_wait_time.csv",
+  "datasetRecords": 2800,
+  "waitingTimeModel": {
+    "global": {
+      "count": 2800,
+      "avgWaitingMinutes": 90.19,
+      "p90WaitingMinutes": 162,
+      "noShowRate": 0.2307,
+      "cancelRate": 0.0986
+    },
+    "byDepartment": {
+      "Orthopedics": {
+        "count": 538,
+        "avgWaitingMinutes": 90.32,
+        "p90WaitingMinutes": 163,
+        "noShowRate": 0.2435,
+        "cancelRate": 0.1004
+      },
+      "Cardiology": {
+        "count": 594,
+        "avgWaitingMinutes": 91.76,
+        "p90WaitingMinutes": 159,
+        "noShowRate": 0.2273,
+        "cancelRate": 0.0943
+      },
+      "Pediatrics": {
+        "count": 573,
+        "avgWaitingMinutes": 88.5,
+        "p90WaitingMinutes": 158,
+        "noShowRate": 0.2199,
+        "cancelRate": 0.1152
+      },
+      "General Medicine": {
+        "count": 532,
+        "avgWaitingMinutes": 91.28,
+        "p90WaitingMinutes": 162,
+        "noShowRate": 0.218,
+        "cancelRate": 0.0846
+      },
+      "Dermatology": {
+        "count": 563,
+        "avgWaitingMinutes": 89.1,
+        "p90WaitingMinutes": 164,
+        "noShowRate": 0.2451,
+        "cancelRate": 0.0977
+      }
+    },
+    "byDepartmentAppointmentType": {
+      "Orthopedics|New": {
+        "count": 263,
+        "avgWaitingMinutes": 88.97,
+        "p90WaitingMinutes": 161,
+        "noShowRate": 0.2395,
+        "cancelRate": 0.076
+      },
+      "Cardiology|Follow-up": {
+        "count": 283,
+        "avgWaitingMinutes": 88.7,
+        "p90WaitingMinutes": 156,
+        "noShowRate": 0.2473,
+        "cancelRate": 0.0848
+      },
+      "Pediatrics|New": {
+        "count": 276,
+        "avgWaitingMinutes": 87.93,
+        "p90WaitingMinutes": 158,
+        "noShowRate": 0.2283,
+        "cancelRate": 0.1051
+      },
+      "Pediatrics|Follow-up": {
+        "count": 297,
+        "avgWaitingMinutes": 89.02,
+        "p90WaitingMinutes": 162,
+        "noShowRate": 0.2121,
+        "cancelRate": 0.1246
+      },
+      "Cardiology|New": {
+        "count": 311,
+        "avgWaitingMinutes": 94.53,
+        "p90WaitingMinutes": 161,
+        "noShowRate": 0.209,
+        "cancelRate": 0.1029
+      },
+      "Orthopedics|Follow-up": {
+        "count": 275,
+        "avgWaitingMinutes": 91.6,
+        "p90WaitingMinutes": 163,
+        "noShowRate": 0.2473,
+        "cancelRate": 0.1236
+      },
+      "General Medicine|Follow-up": {
+        "count": 252,
+        "avgWaitingMinutes": 92.42,
+        "p90WaitingMinutes": 164,
+        "noShowRate": 0.2183,
+        "cancelRate": 0.0833
+      },
+      "Dermatology|New": {
+        "count": 260,
+        "avgWaitingMinutes": 92.83,
+        "p90WaitingMinutes": 165,
+        "noShowRate": 0.2462,
+        "cancelRate": 0.0808
+      },
+      "Dermatology|Follow-up": {
+        "count": 303,
+        "avgWaitingMinutes": 85.91,
+        "p90WaitingMinutes": 162,
+        "noShowRate": 0.2442,
+        "cancelRate": 0.1122
+      },
+      "General Medicine|New": {
+        "count": 280,
+        "avgWaitingMinutes": 90.25,
+        "p90WaitingMinutes": 161,
+        "noShowRate": 0.2179,
+        "cancelRate": 0.0857
+      }
+    },
+    "byDepartmentAppointmentTypeHourReminder": {
+      "Orthopedics|New|12|Yes": {
+        "count": 9,
+        "avgWaitingMinutes": 71.78,
+        "p90WaitingMinutes": 136,
+        "noShowRate": 0.1111,
+        "cancelRate": 0.3333
+      },
+      "Cardiology|Follow-up|9|No": {
+        "count": 14,
+        "avgWaitingMinutes": 84.36,
+        "p90WaitingMinutes": 169,
+        "noShowRate": 0.3571,
+        "cancelRate": 0
+      },
+      "Orthopedics|New|13|Yes": {
+        "count": 13,
+        "avgWaitingMinutes": 78.38,
+        "p90WaitingMinutes": 127,
+        "noShowRate": 0.1538,
+        "cancelRate": 0.2308
+      },
+      "Orthopedics|New|14|No": {
+        "count": 9,
+        "avgWaitingMinutes": 72.11,
+        "p90WaitingMinutes": 168,
+        "noShowRate": 0.2222,
+        "cancelRate": 0
+      },
+      "Pediatrics|New|8|Yes": {
+        "count": 14,
+        "avgWaitingMinutes": 69.43,
+        "p90WaitingMinutes": 134,
+        "noShowRate": 0.2143,
+        "cancelRate": 0
+      },
+      "Pediatrics|New|13|Yes": {
+        "count": 13,
+        "avgWaitingMinutes": 104.08,
+        "p90WaitingMinutes": 166,
+        "noShowRate": 0.3077,
+        "cancelRate": 0.2308
+      },
+      "Pediatrics|Follow-up|15|No": {
+        "count": 6,
+        "avgWaitingMinutes": 100.83,
+        "p90WaitingMinutes": 167,
+        "noShowRate": 0.1667,
+        "cancelRate": 0
+      },
+      "Cardiology|New|19|No": {
+        "count": 13,
+        "avgWaitingMinutes": 104.62,
+        "p90WaitingMinutes": 159,
+        "noShowRate": 0.1538,
+        "cancelRate": 0.0769
+      },
+      "Orthopedics|Follow-up|12|Yes": {
+        "count": 12,
+        "avgWaitingMinutes": 83.58,
+        "p90WaitingMinutes": 150,
+        "noShowRate": 0.0833,
+        "cancelRate": 0.1667
+      },
+      "General Medicine|Follow-up|19|No": {
+        "count": 11,
+        "avgWaitingMinutes": 78,
+        "p90WaitingMinutes": 155,
+        "noShowRate": 0,
+        "cancelRate": 0.1818
+      },
+      "Dermatology|New|14|No": {
+        "count": 11,
+        "avgWaitingMinutes": 89,
+        "p90WaitingMinutes": 137,
+        "noShowRate": 0,
+        "cancelRate": 0.0909
+      },
+      "Pediatrics|New|17|Yes": {
+        "count": 14,
+        "avgWaitingMinutes": 67.71,
+        "p90WaitingMinutes": 112,
+        "noShowRate": 0.2857,
+        "cancelRate": 0.0714
+      },
+      "Pediatrics|Follow-up|13|Yes": {
+        "count": 22,
+        "avgWaitingMinutes": 104.82,
+        "p90WaitingMinutes": 173,
+        "noShowRate": 0.2273,
+        "cancelRate": 0.0909
+      },
+      "Orthopedics|Follow-up|11|Yes": {
+        "count": 15,
+        "avgWaitingMinutes": 92.6,
+        "p90WaitingMinutes": 159,
+        "noShowRate": 0.4,
+        "cancelRate": 0.0667
+      },
+      "Cardiology|New|17|Yes": {
+        "count": 12,
+        "avgWaitingMinutes": 99.42,
+        "p90WaitingMinutes": 165,
+        "noShowRate": 0,
+        "cancelRate": 0.0833
+      },
+      "Cardiology|New|16|Yes": {
+        "count": 13,
+        "avgWaitingMinutes": 79.77,
+        "p90WaitingMinutes": 152,
+        "noShowRate": 0.3846,
+        "cancelRate": 0.0769
+      },
+      "Pediatrics|New|17|No": {
+        "count": 14,
+        "avgWaitingMinutes": 90.36,
+        "p90WaitingMinutes": 151,
+        "noShowRate": 0.3571,
+        "cancelRate": 0
+      },
+      "Orthopedics|New|17|No": {
+        "count": 16,
+        "avgWaitingMinutes": 77,
+        "p90WaitingMinutes": 161,
+        "noShowRate": 0.125,
+        "cancelRate": 0
+      },
+      "General Medicine|Follow-up|14|Yes": {
+        "count": 12,
+        "avgWaitingMinutes": 104.25,
+        "p90WaitingMinutes": 165,
+        "noShowRate": 0.3333,
+        "cancelRate": 0.1667
+      },
+      "Dermatology|New|19|No": {
+        "count": 13,
+        "avgWaitingMinutes": 90.54,
+        "p90WaitingMinutes": 145,
+        "noShowRate": 0.1538,
+        "cancelRate": 0.0769
+      },
+      "Orthopedics|New|12|No": {
+        "count": 13,
+        "avgWaitingMinutes": 70.23,
+        "p90WaitingMinutes": 125,
+        "noShowRate": 0.3077,
+        "cancelRate": 0
+      },
+      "Orthopedics|Follow-up|14|No": {
+        "count": 12,
+        "avgWaitingMinutes": 107.42,
+        "p90WaitingMinutes": 168,
+        "noShowRate": 0.0833,
+        "cancelRate": 0.3333
+      },
+      "Cardiology|New|10|Yes": {
+        "count": 14,
+        "avgWaitingMinutes": 103.79,
+        "p90WaitingMinutes": 172,
+        "noShowRate": 0.3571,
+        "cancelRate": 0
+      },
+      "Dermatology|New|9|Yes": {
+        "count": 10,
+        "avgWaitingMinutes": 87.4,
+        "p90WaitingMinutes": 157,
+        "noShowRate": 0.2,
+        "cancelRate": 0.1
+      },
+      "Pediatrics|Follow-up|18|Yes": {
+        "count": 16,
+        "avgWaitingMinutes": 80.94,
+        "p90WaitingMinutes": 137,
+        "noShowRate": 0.125,
+        "cancelRate": 0.3125
+      },
+      "Pediatrics|Follow-up|11|Yes": {
+        "count": 15,
+        "avgWaitingMinutes": 83.27,
+        "p90WaitingMinutes": 155,
+        "noShowRate": 0.2,
+        "cancelRate": 0.2
+      },
+      "Pediatrics|New|15|No": {
+        "count": 18,
+        "avgWaitingMinutes": 90.94,
+        "p90WaitingMinutes": 150,
+        "noShowRate": 0.2778,
+        "cancelRate": 0.1111
+      },
+      "Cardiology|Follow-up|11|Yes": {
+        "count": 10,
+        "avgWaitingMinutes": 99.9,
+        "p90WaitingMinutes": 156,
+        "noShowRate": 0.3,
+        "cancelRate": 0.1
+      },
+      "Dermatology|Follow-up|16|No": {
+        "count": 15,
+        "avgWaitingMinutes": 95.07,
+        "p90WaitingMinutes": 161,
+        "noShowRate": 0.2,
+        "cancelRate": 0.0667
+      },
+      "Cardiology|Follow-up|17|Yes": {
+        "count": 11,
+        "avgWaitingMinutes": 90.36,
+        "p90WaitingMinutes": 153,
+        "noShowRate": 0.3636,
+        "cancelRate": 0
+      },
+      "Dermatology|New|19|Yes": {
+        "count": 16,
+        "avgWaitingMinutes": 114.94,
+        "p90WaitingMinutes": 178,
+        "noShowRate": 0.125,
+        "cancelRate": 0.0625
+      },
+      "General Medicine|Follow-up|14|No": {
+        "count": 11,
+        "avgWaitingMinutes": 87.45,
+        "p90WaitingMinutes": 166,
+        "noShowRate": 0.1818,
+        "cancelRate": 0.0909
+      },
+      "Orthopedics|Follow-up|15|No": {
+        "count": 11,
+        "avgWaitingMinutes": 126.73,
+        "p90WaitingMinutes": 170,
+        "noShowRate": 0.1818,
+        "cancelRate": 0.0909
+      },
+      "Orthopedics|Follow-up|19|Yes": {
+        "count": 10,
+        "avgWaitingMinutes": 73,
+        "p90WaitingMinutes": 124,
+        "noShowRate": 0.3,
+        "cancelRate": 0.3
+      },
+      "Cardiology|New|15|Yes": {
+        "count": 16,
+        "avgWaitingMinutes": 87.56,
+        "p90WaitingMinutes": 171,
+        "noShowRate": 0.1875,
+        "cancelRate": 0.0625
+      },
+      "Orthopedics|Follow-up|10|Yes": {
+        "count": 14,
+        "avgWaitingMinutes": 114.86,
+        "p90WaitingMinutes": 177,
+        "noShowRate": 0,
+        "cancelRate": 0.2143
+      },
+      "Cardiology|Follow-up|17|No": {
+        "count": 13,
+        "avgWaitingMinutes": 88.23,
+        "p90WaitingMinutes": 167,
+        "noShowRate": 0.2308,
+        "cancelRate": 0.2308
+      },
+      "Orthopedics|New|17|Yes": {
+        "count": 11,
+        "avgWaitingMinutes": 96.91,
+        "p90WaitingMinutes": 147,
+        "noShowRate": 0.3636,
+        "cancelRate": 0.1818
+      },
+      "Pediatrics|Follow-up|8|Yes": {
+        "count": 13,
+        "avgWaitingMinutes": 104.62,
+        "p90WaitingMinutes": 170,
+        "noShowRate": 0.2308,
+        "cancelRate": 0.1538
+      },
+      "Dermatology|Follow-up|13|No": {
+        "count": 9,
+        "avgWaitingMinutes": 116.33,
+        "p90WaitingMinutes": 166,
+        "noShowRate": 0.4444,
+        "cancelRate": 0
+      },
+      "General Medicine|Follow-up|16|Yes": {
+        "count": 12,
+        "avgWaitingMinutes": 94.5,
+        "p90WaitingMinutes": 163,
+        "noShowRate": 0.3333,
+        "cancelRate": 0
+      },
+      "Orthopedics|New|9|Yes": {
+        "count": 10,
+        "avgWaitingMinutes": 98,
+        "p90WaitingMinutes": 169,
+        "noShowRate": 0.3,
+        "cancelRate": 0.1
+      },
+      "General Medicine|New|18|Yes": {
+        "count": 8,
+        "avgWaitingMinutes": 63.88,
+        "p90WaitingMinutes": 151,
+        "noShowRate": 0.25,
+        "cancelRate": 0.125
+      },
+      "General Medicine|New|9|Yes": {
+        "count": 7,
+        "avgWaitingMinutes": 90.71,
+        "p90WaitingMinutes": 175,
+        "noShowRate": 0.1429,
+        "cancelRate": 0.1429
+      },
+      "Cardiology|Follow-up|14|No": {
+        "count": 10,
+        "avgWaitingMinutes": 92.7,
+        "p90WaitingMinutes": 104,
+        "noShowRate": 0.1,
+        "cancelRate": 0.1
+      },
+      "Orthopedics|Follow-up|9|No": {
+        "count": 10,
+        "avgWaitingMinutes": 78.9,
+        "p90WaitingMinutes": 141,
+        "noShowRate": 0.1,
+        "cancelRate": 0.1
+      },
+      "General Medicine|New|17|No": {
+        "count": 14,
+        "avgWaitingMinutes": 89.71,
+        "p90WaitingMinutes": 159,
+        "noShowRate": 0.1429,
+        "cancelRate": 0.0714
+      },
+      "Dermatology|New|15|No": {
+        "count": 9,
+        "avgWaitingMinutes": 92.11,
+        "p90WaitingMinutes": 155,
+        "noShowRate": 0.3333,
+        "cancelRate": 0.1111
+      },
+      "General Medicine|New|13|Yes": {
+        "count": 17,
+        "avgWaitingMinutes": 75.12,
+        "p90WaitingMinutes": 166,
+        "noShowRate": 0.1176,
+        "cancelRate": 0.2353
+      },
+      "Dermatology|Follow-up|14|No": {
+        "count": 23,
+        "avgWaitingMinutes": 84.09,
+        "p90WaitingMinutes": 169,
+        "noShowRate": 0.1739,
+        "cancelRate": 0.087
+      },
+      "Cardiology|New|14|No": {
+        "count": 11,
+        "avgWaitingMinutes": 71.82,
+        "p90WaitingMinutes": 126,
+        "noShowRate": 0.2727,
+        "cancelRate": 0
+      },
+      "General Medicine|Follow-up|13|No": {
+        "count": 8,
+        "avgWaitingMinutes": 69.75,
+        "p90WaitingMinutes": 153,
+        "noShowRate": 0.25,
+        "cancelRate": 0.125
+      },
+      "Pediatrics|Follow-up|17|No": {
+        "count": 14,
+        "avgWaitingMinutes": 88.71,
+        "p90WaitingMinutes": 148,
+        "noShowRate": 0.1429,
+        "cancelRate": 0.0714
+      },
+      "Cardiology|New|18|No": {
+        "count": 13,
+        "avgWaitingMinutes": 113.54,
+        "p90WaitingMinutes": 172,
+        "noShowRate": 0.2308,
+        "cancelRate": 0
+      },
+      "Dermatology|New|16|No": {
+        "count": 14,
+        "avgWaitingMinutes": 93.21,
+        "p90WaitingMinutes": 168,
+        "noShowRate": 0.2857,
+        "cancelRate": 0.2857
+      },
+      "Cardiology|Follow-up|16|No": {
+        "count": 16,
+        "avgWaitingMinutes": 76.19,
+        "p90WaitingMinutes": 152,
+        "noShowRate": 0.4375,
+        "cancelRate": 0
+      },
+      "General Medicine|New|14|No": {
+        "count": 15,
+        "avgWaitingMinutes": 90.47,
+        "p90WaitingMinutes": 170,
+        "noShowRate": 0.2667,
+        "cancelRate": 0.0667
+      },
+      "Orthopedics|New|16|Yes": {
+        "count": 13,
+        "avgWaitingMinutes": 71.92,
+        "p90WaitingMinutes": 112,
+        "noShowRate": 0.1538,
+        "cancelRate": 0.1538
+      },
+      "Orthopedics|Follow-up|17|No": {
+        "count": 15,
+        "avgWaitingMinutes": 85.27,
+        "p90WaitingMinutes": 172,
+        "noShowRate": 0.1333,
+        "cancelRate": 0.2667
+      },
+      "Dermatology|Follow-up|10|Yes": {
+        "count": 14,
+        "avgWaitingMinutes": 70.71,
+        "p90WaitingMinutes": 141,
+        "noShowRate": 0.1429,
+        "cancelRate": 0.1429
+      },
+      "Dermatology|Follow-up|10|No": {
+        "count": 9,
+        "avgWaitingMinutes": 72.56,
+        "p90WaitingMinutes": 171,
+        "noShowRate": 0,
+        "cancelRate": 0
+      },
+      "Orthopedics|Follow-up|8|No": {
+        "count": 12,
+        "avgWaitingMinutes": 88,
+        "p90WaitingMinutes": 136,
+        "noShowRate": 0.4167,
+        "cancelRate": 0
+      },
+      "Dermatology|Follow-up|12|No": {
+        "count": 12,
+        "avgWaitingMinutes": 80.33,
+        "p90WaitingMinutes": 156,
+        "noShowRate": 0.3333,
+        "cancelRate": 0.0833
+      },
+      "Cardiology|New|11|Yes": {
+        "count": 12,
+        "avgWaitingMinutes": 84.58,
+        "p90WaitingMinutes": 135,
+        "noShowRate": 0.25,
+        "cancelRate": 0.0833
+      },
+      "Pediatrics|Follow-up|9|Yes": {
+        "count": 13,
+        "avgWaitingMinutes": 97.23,
+        "p90WaitingMinutes": 169,
+        "noShowRate": 0.3846,
+        "cancelRate": 0.0769
+      },
+      "Pediatrics|Follow-up|16|No": {
+        "count": 10,
+        "avgWaitingMinutes": 63.8,
+        "p90WaitingMinutes": 117,
+        "noShowRate": 0.3,
+        "cancelRate": 0.1
+      },
+      "Cardiology|Follow-up|10|Yes": {
+        "count": 15,
+        "avgWaitingMinutes": 74.13,
+        "p90WaitingMinutes": 151,
+        "noShowRate": 0.3333,
+        "cancelRate": 0.2
+      },
+      "General Medicine|Follow-up|13|Yes": {
+        "count": 11,
+        "avgWaitingMinutes": 85.18,
+        "p90WaitingMinutes": 145,
+        "noShowRate": 0.2727,
+        "cancelRate": 0
+      },
+      "Cardiology|Follow-up|12|Yes": {
+        "count": 15,
+        "avgWaitingMinutes": 90.53,
+        "p90WaitingMinutes": 165,
+        "noShowRate": 0.2667,
+        "cancelRate": 0
+      },
+      "Dermatology|Follow-up|8|Yes": {
+        "count": 23,
+        "avgWaitingMinutes": 84.57,
+        "p90WaitingMinutes": 146,
+        "noShowRate": 0.2609,
+        "cancelRate": 0.2174
+      },
+      "Cardiology|New|11|No": {
+        "count": 17,
+        "avgWaitingMinutes": 92.18,
+        "p90WaitingMinutes": 153,
+        "noShowRate": 0.1176,
+        "cancelRate": 0.1765
+      },
+      "Orthopedics|Follow-up|19|No": {
+        "count": 14,
+        "avgWaitingMinutes": 96.21,
+        "p90WaitingMinutes": 163,
+        "noShowRate": 0.2857,
+        "cancelRate": 0.2143
+      },
+      "Dermatology|New|12|Yes": {
+        "count": 12,
+        "avgWaitingMinutes": 96.33,
+        "p90WaitingMinutes": 166,
+        "noShowRate": 0.5,
+        "cancelRate": 0
+      },
+      "Pediatrics|New|13|No": {
+        "count": 10,
+        "avgWaitingMinutes": 109,
+        "p90WaitingMinutes": 166,
+        "noShowRate": 0.2,
+        "cancelRate": 0.3
+      },
+      "Cardiology|New|9|No": {
+        "count": 14,
+        "avgWaitingMinutes": 105.07,
+        "p90WaitingMinutes": 155,
+        "noShowRate": 0.2143,
+        "cancelRate": 0
+      },
+      "General Medicine|New|10|Yes": {
+        "count": 12,
+        "avgWaitingMinutes": 72.67,
+        "p90WaitingMinutes": 137,
+        "noShowRate": 0.1667,
+        "cancelRate": 0.0833
+      },
+      "Dermatology|Follow-up|18|No": {
+        "count": 11,
+        "avgWaitingMinutes": 62.73,
+        "p90WaitingMinutes": 94,
+        "noShowRate": 0,
+        "cancelRate": 0.3636
+      },
+      "Dermatology|Follow-up|13|Yes": {
+        "count": 9,
+        "avgWaitingMinutes": 75.78,
+        "p90WaitingMinutes": 162,
+        "noShowRate": 0.2222,
+        "cancelRate": 0.1111
+      },
+      "Orthopedics|New|11|Yes": {
+        "count": 10,
+        "avgWaitingMinutes": 117,
+        "p90WaitingMinutes": 170,
+        "noShowRate": 0.3,
+        "cancelRate": 0.1
+      },
+      "Pediatrics|New|16|No": {
+        "count": 12,
+        "avgWaitingMinutes": 57.25,
+        "p90WaitingMinutes": 138,
+        "noShowRate": 0.0833,
+        "cancelRate": 0.0833
+      },
+      "Pediatrics|New|9|No": {
+        "count": 8,
+        "avgWaitingMinutes": 90.75,
+        "p90WaitingMinutes": 172,
+        "noShowRate": 0.25,
+        "cancelRate": 0
+      },
+      "General Medicine|New|13|No": {
+        "count": 15,
+        "avgWaitingMinutes": 112.6,
+        "p90WaitingMinutes": 169,
+        "noShowRate": 0.3333,
+        "cancelRate": 0
+      },
+      "Orthopedics|New|9|No": {
+        "count": 4,
+        "avgWaitingMinutes": 87.75,
+        "p90WaitingMinutes": 115,
+        "noShowRate": 0,
+        "cancelRate": 0.25
+      },
+      "Dermatology|Follow-up|19|No": {
+        "count": 10,
+        "avgWaitingMinutes": 88.1,
+        "p90WaitingMinutes": 150,
+        "noShowRate": 0.2,
+        "cancelRate": 0.1
+      },
+      "Pediatrics|New|14|No": {
+        "count": 13,
+        "avgWaitingMinutes": 91,
+        "p90WaitingMinutes": 157,
+        "noShowRate": 0.4615,
+        "cancelRate": 0.0769
+      },
+      "Cardiology|New|10|No": {
+        "count": 13,
+        "avgWaitingMinutes": 113.08,
+        "p90WaitingMinutes": 166,
+        "noShowRate": 0.3077,
+        "cancelRate": 0.1538
+      },
+      "General Medicine|Follow-up|18|Yes": {
+        "count": 9,
+        "avgWaitingMinutes": 84.33,
+        "p90WaitingMinutes": 167,
+        "noShowRate": 0.3333,
+        "cancelRate": 0
+      },
+      "Pediatrics|Follow-up|12|No": {
+        "count": 12,
+        "avgWaitingMinutes": 98.75,
+        "p90WaitingMinutes": 158,
+        "noShowRate": 0.25,
+        "cancelRate": 0.25
+      },
+      "Dermatology|Follow-up|15|Yes": {
+        "count": 17,
+        "avgWaitingMinutes": 99.24,
+        "p90WaitingMinutes": 156,
+        "noShowRate": 0.1765,
+        "cancelRate": 0.2353
+      },
+      "General Medicine|New|17|Yes": {
+        "count": 8,
+        "avgWaitingMinutes": 105.38,
+        "p90WaitingMinutes": 162,
+        "noShowRate": 0.375,
+        "cancelRate": 0.125
+      },
+      "General Medicine|Follow-up|15|Yes": {
+        "count": 14,
+        "avgWaitingMinutes": 118.36,
+        "p90WaitingMinutes": 160,
+        "noShowRate": 0.1429,
+        "cancelRate": 0
+      },
+      "Cardiology|New|18|Yes": {
+        "count": 14,
+        "avgWaitingMinutes": 108.71,
+        "p90WaitingMinutes": 171,
+        "noShowRate": 0.2143,
+        "cancelRate": 0
+      },
+      "Pediatrics|Follow-up|19|No": {
+        "count": 19,
+        "avgWaitingMinutes": 96.05,
+        "p90WaitingMinutes": 176,
+        "noShowRate": 0.2632,
+        "cancelRate": 0.1579
+      },
+      "Orthopedics|New|10|No": {
+        "count": 14,
+        "avgWaitingMinutes": 95.29,
+        "p90WaitingMinutes": 165,
+        "noShowRate": 0.2143,
+        "cancelRate": 0
+      },
+      "Orthopedics|New|10|Yes": {
+        "count": 13,
+        "avgWaitingMinutes": 80.77,
+        "p90WaitingMinutes": 142,
+        "noShowRate": 0.0769,
+        "cancelRate": 0
+      },
+      "Cardiology|Follow-up|12|No": {
+        "count": 10,
+        "avgWaitingMinutes": 78.4,
+        "p90WaitingMinutes": 125,
+        "noShowRate": 0,
+        "cancelRate": 0.1
+      },
+      "Cardiology|Follow-up|18|Yes": {
+        "count": 9,
+        "avgWaitingMinutes": 75.78,
+        "p90WaitingMinutes": 158,
+        "noShowRate": 0.5556,
+        "cancelRate": 0
+      },
+      "Dermatology|New|17|Yes": {
+        "count": 16,
+        "avgWaitingMinutes": 83.94,
+        "p90WaitingMinutes": 170,
+        "noShowRate": 0.1875,
+        "cancelRate": 0.125
+      },
+      "Cardiology|New|15|No": {
+        "count": 9,
+        "avgWaitingMinutes": 122,
+        "p90WaitingMinutes": 174,
+        "noShowRate": 0.1111,
+        "cancelRate": 0.1111
+      },
+      "Cardiology|Follow-up|15|Yes": {
+        "count": 9,
+        "avgWaitingMinutes": 80.67,
+        "p90WaitingMinutes": 120,
+        "noShowRate": 0.2222,
+        "cancelRate": 0
+      },
+      "Cardiology|Follow-up|9|Yes": {
+        "count": 13,
+        "avgWaitingMinutes": 110.08,
+        "p90WaitingMinutes": 170,
+        "noShowRate": 0.2308,
+        "cancelRate": 0.2308
+      },
+      "Dermatology|Follow-up|19|Yes": {
+        "count": 16,
+        "avgWaitingMinutes": 114.5,
+        "p90WaitingMinutes": 176,
+        "noShowRate": 0.1875,
+        "cancelRate": 0.0625
+      },
+      "Pediatrics|Follow-up|11|No": {
+        "count": 13,
+        "avgWaitingMinutes": 80.23,
+        "p90WaitingMinutes": 156,
+        "noShowRate": 0.2308,
+        "cancelRate": 0.2308
+      },
+      "Dermatology|New|17|No": {
+        "count": 10,
+        "avgWaitingMinutes": 83.9,
+        "p90WaitingMinutes": 159,
+        "noShowRate": 0,
+        "cancelRate": 0.1
+      },
+      "Orthopedics|New|8|Yes": {
+        "count": 11,
+        "avgWaitingMinutes": 89.82,
+        "p90WaitingMinutes": 131,
+        "noShowRate": 0.1818,
+        "cancelRate": 0
+      },
+      "General Medicine|New|19|No": {
+        "count": 11,
+        "avgWaitingMinutes": 91.36,
+        "p90WaitingMinutes": 162,
+        "noShowRate": 0.3636,
+        "cancelRate": 0
+      },
+      "Dermatology|Follow-up|18|Yes": {
+        "count": 11,
+        "avgWaitingMinutes": 92.91,
+        "p90WaitingMinutes": 171,
+        "noShowRate": 0.2727,
+        "cancelRate": 0.2727
+      },
+      "Orthopedics|New|11|No": {
+        "count": 9,
+        "avgWaitingMinutes": 93,
+        "p90WaitingMinutes": 156,
+        "noShowRate": 0.3333,
+        "cancelRate": 0.1111
+      },
+      "Dermatology|New|16|Yes": {
+        "count": 13,
+        "avgWaitingMinutes": 102.31,
+        "p90WaitingMinutes": 158,
+        "noShowRate": 0.3077,
+        "cancelRate": 0.0769
+      },
+      "Cardiology|Follow-up|10|No": {
+        "count": 14,
+        "avgWaitingMinutes": 96.64,
+        "p90WaitingMinutes": 146,
+        "noShowRate": 0.2857,
+        "cancelRate": 0.0714
+      },
+      "Dermatology|Follow-up|9|No": {
+        "count": 14,
+        "avgWaitingMinutes": 83.93,
+        "p90WaitingMinutes": 166,
+        "noShowRate": 0.2857,
+        "cancelRate": 0.0714
+      },
+      "General Medicine|Follow-up|16|No": {
+        "count": 19,
+        "avgWaitingMinutes": 96.84,
+        "p90WaitingMinutes": 164,
+        "noShowRate": 0.2632,
+        "cancelRate": 0.0526
+      },
+      "Dermatology|New|18|Yes": {
+        "count": 7,
+        "avgWaitingMinutes": 72.43,
+        "p90WaitingMinutes": 115,
+        "noShowRate": 0.1429,
+        "cancelRate": 0.2857
+      },
+      "Orthopedics|Follow-up|13|Yes": {
+        "count": 10,
+        "avgWaitingMinutes": 70.4,
+        "p90WaitingMinutes": 132,
+        "noShowRate": 0.1,
+        "cancelRate": 0.3
+      },
+      "Pediatrics|Follow-up|14|Yes": {
+        "count": 7,
+        "avgWaitingMinutes": 122.57,
+        "p90WaitingMinutes": 167,
+        "noShowRate": 0.2857,
+        "cancelRate": 0.1429
+      },
+      "Orthopedics|Follow-up|14|Yes": {
+        "count": 11,
+        "avgWaitingMinutes": 82,
+        "p90WaitingMinutes": 149,
+        "noShowRate": 0.3636,
+        "cancelRate": 0.0909
+      },
+      "Dermatology|New|11|Yes": {
+        "count": 7,
+        "avgWaitingMinutes": 87.71,
+        "p90WaitingMinutes": 142,
+        "noShowRate": 0,
+        "cancelRate": 0
+      },
+      "General Medicine|New|12|No": {
+        "count": 16,
+        "avgWaitingMinutes": 112.38,
+        "p90WaitingMinutes": 160,
+        "noShowRate": 0.1875,
+        "cancelRate": 0.0625
+      },
+      "General Medicine|Follow-up|10|No": {
+        "count": 11,
+        "avgWaitingMinutes": 83.64,
+        "p90WaitingMinutes": 154,
+        "noShowRate": 0.3636,
+        "cancelRate": 0.0909
+      },
+      "Cardiology|New|9|Yes": {
+        "count": 15,
+        "avgWaitingMinutes": 98.4,
+        "p90WaitingMinutes": 149,
+        "noShowRate": 0.0667,
+        "cancelRate": 0.1333
+      },
+      "Pediatrics|Follow-up|10|No": {
+        "count": 7,
+        "avgWaitingMinutes": 76.29,
+        "p90WaitingMinutes": 155,
+        "noShowRate": 0.2857,
+        "cancelRate": 0.1429
+      },
+      "Cardiology|Follow-up|15|No": {
+        "count": 10,
+        "avgWaitingMinutes": 83.7,
+        "p90WaitingMinutes": 150,
+        "noShowRate": 0.1,
+        "cancelRate": 0.2
+      },
+      "General Medicine|Follow-up|17|Yes": {
+        "count": 11,
+        "avgWaitingMinutes": 96.45,
+        "p90WaitingMinutes": 166,
+        "noShowRate": 0.0909,
+        "cancelRate": 0.1818
+      },
+      "Cardiology|New|13|No": {
+        "count": 10,
+        "avgWaitingMinutes": 79.1,
+        "p90WaitingMinutes": 160,
+        "noShowRate": 0,
+        "cancelRate": 0.3
+      },
+      "Orthopedics|Follow-up|8|Yes": {
+        "count": 10,
+        "avgWaitingMinutes": 69.2,
+        "p90WaitingMinutes": 99,
+        "noShowRate": 0.3,
+        "cancelRate": 0.1
+      },
+      "General Medicine|Follow-up|10|Yes": {
+        "count": 8,
+        "avgWaitingMinutes": 115.38,
+        "p90WaitingMinutes": 171,
+        "noShowRate": 0.375,
+        "cancelRate": 0.25
+      },
+      "Cardiology|New|12|No": {
+        "count": 16,
+        "avgWaitingMinutes": 91.44,
+        "p90WaitingMinutes": 164,
+        "noShowRate": 0.1875,
+        "cancelRate": 0.125
+      },
+      "Pediatrics|New|14|Yes": {
+        "count": 8,
+        "avgWaitingMinutes": 88.38,
+        "p90WaitingMinutes": 155,
+        "noShowRate": 0.125,
+        "cancelRate": 0
+      },
+      "Dermatology|Follow-up|11|Yes": {
+        "count": 20,
+        "avgWaitingMinutes": 75.15,
+        "p90WaitingMinutes": 134,
+        "noShowRate": 0.25,
+        "cancelRate": 0.05
+      },
+      "Cardiology|New|17|No": {
+        "count": 11,
+        "avgWaitingMinutes": 105,
+        "p90WaitingMinutes": 153,
+        "noShowRate": 0.4545,
+        "cancelRate": 0.0909
+      },
+      "Pediatrics|Follow-up|16|Yes": {
+        "count": 16,
+        "avgWaitingMinutes": 99.31,
+        "p90WaitingMinutes": 154,
+        "noShowRate": 0.125,
+        "cancelRate": 0
+      },
+      "Orthopedics|Follow-up|13|No": {
+        "count": 8,
+        "avgWaitingMinutes": 77.75,
+        "p90WaitingMinutes": 153,
+        "noShowRate": 0.375,
+        "cancelRate": 0.125
+      },
+      "General Medicine|Follow-up|11|No": {
+        "count": 8,
+        "avgWaitingMinutes": 122.88,
+        "p90WaitingMinutes": 176,
+        "noShowRate": 0.125,
+        "cancelRate": 0
+      },
+      "Orthopedics|Follow-up|18|No": {
+        "count": 12,
+        "avgWaitingMinutes": 90,
+        "p90WaitingMinutes": 153,
+        "noShowRate": 0.3333,
+        "cancelRate": 0.0833
+      },
+      "Dermatology|New|12|No": {
+        "count": 14,
+        "avgWaitingMinutes": 83.36,
+        "p90WaitingMinutes": 134,
+        "noShowRate": 0.2143,
+        "cancelRate": 0.0714
+      },
+      "Orthopedics|Follow-up|16|Yes": {
+        "count": 14,
+        "avgWaitingMinutes": 86.21,
+        "p90WaitingMinutes": 160,
+        "noShowRate": 0.3571,
+        "cancelRate": 0
+      },
+      "General Medicine|Follow-up|8|Yes": {
+        "count": 10,
+        "avgWaitingMinutes": 94.4,
+        "p90WaitingMinutes": 157,
+        "noShowRate": 0.1,
+        "cancelRate": 0.2
+      },
+      "General Medicine|New|18|No": {
+        "count": 15,
+        "avgWaitingMinutes": 82.87,
+        "p90WaitingMinutes": 172,
+        "noShowRate": 0.3333,
+        "cancelRate": 0.1333
+      },
+      "Pediatrics|New|18|No": {
+        "count": 16,
+        "avgWaitingMinutes": 90.25,
+        "p90WaitingMinutes": 156,
+        "noShowRate": 0.125,
+        "cancelRate": 0.125
+      },
+      "Dermatology|Follow-up|16|Yes": {
+        "count": 7,
+        "avgWaitingMinutes": 117.71,
+        "p90WaitingMinutes": 171,
+        "noShowRate": 0.1429,
+        "cancelRate": 0.1429
+      },
+      "General Medicine|Follow-up|11|Yes": {
+        "count": 8,
+        "avgWaitingMinutes": 111.75,
+        "p90WaitingMinutes": 170,
+        "noShowRate": 0.25,
+        "cancelRate": 0
+      },
+      "Orthopedics|Follow-up|15|Yes": {
+        "count": 13,
+        "avgWaitingMinutes": 84.62,
+        "p90WaitingMinutes": 166,
+        "noShowRate": 0.1538,
+        "cancelRate": 0
+      },
+      "Dermatology|Follow-up|9|Yes": {
+        "count": 9,
+        "avgWaitingMinutes": 69,
+        "p90WaitingMinutes": 142,
+        "noShowRate": 0.3333,
+        "cancelRate": 0.1111
+      },
+      "Orthopedics|New|19|Yes": {
+        "count": 11,
+        "avgWaitingMinutes": 101.36,
+        "p90WaitingMinutes": 178,
+        "noShowRate": 0.1818,
+        "cancelRate": 0.1818
+      },
+      "Cardiology|New|16|No": {
+        "count": 12,
+        "avgWaitingMinutes": 81.58,
+        "p90WaitingMinutes": 143,
+        "noShowRate": 0.25,
+        "cancelRate": 0.1667
+      },
+      "Orthopedics|New|16|No": {
+        "count": 9,
+        "avgWaitingMinutes": 84.22,
+        "p90WaitingMinutes": 175,
+        "noShowRate": 0.3333,
+        "cancelRate": 0
+      },
+      "Pediatrics|New|9|Yes": {
+        "count": 14,
+        "avgWaitingMinutes": 101,
+        "p90WaitingMinutes": 153,
+        "noShowRate": 0.2143,
+        "cancelRate": 0.2143
+      },
+      "General Medicine|New|11|Yes": {
+        "count": 13,
+        "avgWaitingMinutes": 76.69,
+        "p90WaitingMinutes": 139,
+        "noShowRate": 0.0769,
+        "cancelRate": 0
+      },
+      "General Medicine|Follow-up|9|No": {
+        "count": 9,
+        "avgWaitingMinutes": 96.56,
+        "p90WaitingMinutes": 162,
+        "noShowRate": 0.2222,
+        "cancelRate": 0.1111
+      },
+      "Cardiology|Follow-up|18|No": {
+        "count": 11,
+        "avgWaitingMinutes": 79.27,
+        "p90WaitingMinutes": 138,
+        "noShowRate": 0.1818,
+        "cancelRate": 0.1818
+      },
+      "Dermatology|Follow-up|12|Yes": {
+        "count": 8,
+        "avgWaitingMinutes": 126.88,
+        "p90WaitingMinutes": 177,
+        "noShowRate": 0.5,
+        "cancelRate": 0.125
+      },
+      "Pediatrics|Follow-up|14|No": {
+        "count": 13,
+        "avgWaitingMinutes": 86.62,
+        "p90WaitingMinutes": 171,
+        "noShowRate": 0.3846,
+        "cancelRate": 0.1538
+      },
+      "Cardiology|New|8|Yes": {
+        "count": 12,
+        "avgWaitingMinutes": 90.08,
+        "p90WaitingMinutes": 159,
+        "noShowRate": 0.25,
+        "cancelRate": 0.0833
+      },
+      "General Medicine|New|15|No": {
+        "count": 10,
+        "avgWaitingMinutes": 81.1,
+        "p90WaitingMinutes": 135,
+        "noShowRate": 0.3,
+        "cancelRate": 0
+      },
+      "Pediatrics|Follow-up|8|No": {
+        "count": 14,
+        "avgWaitingMinutes": 92.29,
+        "p90WaitingMinutes": 146,
+        "noShowRate": 0.2143,
+        "cancelRate": 0.0714
+      },
+      "Pediatrics|Follow-up|17|Yes": {
+        "count": 12,
+        "avgWaitingMinutes": 88.17,
+        "p90WaitingMinutes": 157,
+        "noShowRate": 0.25,
+        "cancelRate": 0.0833
+      },
+      "Cardiology|Follow-up|8|Yes": {
+        "count": 9,
+        "avgWaitingMinutes": 95,
+        "p90WaitingMinutes": 167,
+        "noShowRate": 0.3333,
+        "cancelRate": 0
+      },
+      "Orthopedics|New|18|Yes": {
+        "count": 10,
+        "avgWaitingMinutes": 65.6,
+        "p90WaitingMinutes": 131,
+        "noShowRate": 0.2,
+        "cancelRate": 0.1
+      },
+      "Pediatrics|Follow-up|18|No": {
+        "count": 10,
+        "avgWaitingMinutes": 82,
+        "p90WaitingMinutes": 131,
+        "noShowRate": 0.2,
+        "cancelRate": 0.1
+      },
+      "Pediatrics|Follow-up|13|No": {
+        "count": 13,
+        "avgWaitingMinutes": 78.08,
+        "p90WaitingMinutes": 138,
+        "noShowRate": 0.1538,
+        "cancelRate": 0.0769
+      },
+      "General Medicine|Follow-up|8|No": {
+        "count": 10,
+        "avgWaitingMinutes": 80.1,
+        "p90WaitingMinutes": 177,
+        "noShowRate": 0.2,
+        "cancelRate": 0
+      },
+      "Dermatology|New|13|Yes": {
+        "count": 10,
+        "avgWaitingMinutes": 109.9,
+        "p90WaitingMinutes": 168,
+        "noShowRate": 0.2,
+        "cancelRate": 0.1
+      },
+      "Cardiology|Follow-up|13|No": {
+        "count": 13,
+        "avgWaitingMinutes": 110.85,
+        "p90WaitingMinutes": 159,
+        "noShowRate": 0.3077,
+        "cancelRate": 0
+      },
+      "General Medicine|Follow-up|12|No": {
+        "count": 4,
+        "avgWaitingMinutes": 78.25,
+        "p90WaitingMinutes": 168,
+        "noShowRate": 0,
+        "cancelRate": 0.25
+      },
+      "Pediatrics|New|12|No": {
+        "count": 9,
+        "avgWaitingMinutes": 117.11,
+        "p90WaitingMinutes": 178,
+        "noShowRate": 0.1111,
+        "cancelRate": 0.1111
+      },
+      "Dermatology|Follow-up|8|No": {
+        "count": 11,
+        "avgWaitingMinutes": 91.64,
+        "p90WaitingMinutes": 161,
+        "noShowRate": 0.6364,
+        "cancelRate": 0
+      },
+      "Cardiology|New|12|Yes": {
+        "count": 17,
+        "avgWaitingMinutes": 73.24,
+        "p90WaitingMinutes": 143,
+        "noShowRate": 0.2941,
+        "cancelRate": 0.2353
+      },
+      "Dermatology|New|8|No": {
+        "count": 10,
+        "avgWaitingMinutes": 115.2,
+        "p90WaitingMinutes": 165,
+        "noShowRate": 0.2,
+        "cancelRate": 0
+      },
+      "Orthopedics|New|8|No": {
+        "count": 16,
+        "avgWaitingMinutes": 80.25,
+        "p90WaitingMinutes": 173,
+        "noShowRate": 0.4375,
+        "cancelRate": 0.0625
+      },
+      "General Medicine|New|16|Yes": {
+        "count": 11,
+        "avgWaitingMinutes": 99.45,
+        "p90WaitingMinutes": 172,
+        "noShowRate": 0.3636,
+        "cancelRate": 0
+      },
+      "Orthopedics|New|19|No": {
+        "count": 10,
+        "avgWaitingMinutes": 114.7,
+        "p90WaitingMinutes": 171,
+        "noShowRate": 0.2,
+        "cancelRate": 0
+      },
+      "Cardiology|Follow-up|16|Yes": {
+        "count": 14,
+        "avgWaitingMinutes": 87.71,
+        "p90WaitingMinutes": 145,
+        "noShowRate": 0.1429,
+        "cancelRate": 0
+      },
+      "General Medicine|Follow-up|17|No": {
+        "count": 15,
+        "avgWaitingMinutes": 87.13,
+        "p90WaitingMinutes": 146,
+        "noShowRate": 0.3333,
+        "cancelRate": 0
+      },
+      "Pediatrics|New|10|Yes": {
+        "count": 15,
+        "avgWaitingMinutes": 78.6,
+        "p90WaitingMinutes": 152,
+        "noShowRate": 0.2,
+        "cancelRate": 0
+      },
+      "Pediatrics|New|19|Yes": {
+        "count": 9,
+        "avgWaitingMinutes": 123.67,
+        "p90WaitingMinutes": 177,
+        "noShowRate": 0.2222,
+        "cancelRate": 0
+      },
+      "General Medicine|New|8|No": {
+        "count": 7,
+        "avgWaitingMinutes": 97.14,
+        "p90WaitingMinutes": 161,
+        "noShowRate": 0.1429,
+        "cancelRate": 0.1429
+      },
+      "Orthopedics|New|18|No": {
+        "count": 11,
+        "avgWaitingMinutes": 99.36,
+        "p90WaitingMinutes": 145,
+        "noShowRate": 0.1818,
+        "cancelRate": 0
+      },
+      "General Medicine|New|16|No": {
+        "count": 5,
+        "avgWaitingMinutes": 115.8,
+        "p90WaitingMinutes": 167,
+        "noShowRate": 0,
+        "cancelRate": 0.2
+      },
+      "Orthopedics|Follow-up|12|No": {
+        "count": 14,
+        "avgWaitingMinutes": 96.5,
+        "p90WaitingMinutes": 165,
+        "noShowRate": 0.0714,
+        "cancelRate": 0
+      },
+      "Dermatology|New|9|No": {
+        "count": 8,
+        "avgWaitingMinutes": 104.25,
+        "p90WaitingMinutes": 160,
+        "noShowRate": 0.25,
+        "cancelRate": 0.125
+      },
+      "Cardiology|Follow-up|8|No": {
+        "count": 12,
+        "avgWaitingMinutes": 84.25,
+        "p90WaitingMinutes": 135,
+        "noShowRate": 0.1667,
+        "cancelRate": 0.1667
+      },
+      "General Medicine|Follow-up|15|No": {
+        "count": 9,
+        "avgWaitingMinutes": 65.56,
+        "p90WaitingMinutes": 172,
+        "noShowRate": 0.2222,
+        "cancelRate": 0.2222
+      },
+      "Dermatology|New|13|No": {
+        "count": 11,
+        "avgWaitingMinutes": 77.55,
+        "p90WaitingMinutes": 116,
+        "noShowRate": 0.1818,
+        "cancelRate": 0
+      },
+      "Dermatology|Follow-up|17|No": {
+        "count": 12,
+        "avgWaitingMinutes": 87.5,
+        "p90WaitingMinutes": 171,
+        "noShowRate": 0.1667,
+        "cancelRate": 0.1667
+      },
+      "General Medicine|New|11|No": {
+        "count": 12,
+        "avgWaitingMinutes": 104.33,
+        "p90WaitingMinutes": 146,
+        "noShowRate": 0.3333,
+        "cancelRate": 0
+      },
+      "Cardiology|Follow-up|14|Yes": {
+        "count": 11,
+        "avgWaitingMinutes": 83.82,
+        "p90WaitingMinutes": 142,
+        "noShowRate": 0.3636,
+        "cancelRate": 0.1818
+      },
+      "General Medicine|Follow-up|18|No": {
+        "count": 11,
+        "avgWaitingMinutes": 115.36,
+        "p90WaitingMinutes": 173,
+        "noShowRate": 0.1818,
+        "cancelRate": 0.0909
+      },
+      "Dermatology|New|11|No": {
+        "count": 8,
+        "avgWaitingMinutes": 101.38,
+        "p90WaitingMinutes": 159,
+        "noShowRate": 0.25,
+        "cancelRate": 0.125
+      },
+      "Cardiology|Follow-up|13|Yes": {
+        "count": 11,
+        "avgWaitingMinutes": 108.09,
+        "p90WaitingMinutes": 170,
+        "noShowRate": 0.2727,
+        "cancelRate": 0.0909
+      },
+      "Pediatrics|New|8|No": {
+        "count": 15,
+        "avgWaitingMinutes": 110.87,
+        "p90WaitingMinutes": 167,
+        "noShowRate": 0.2667,
+        "cancelRate": 0.2
+      },
+      "Orthopedics|New|13|No": {
+        "count": 7,
+        "avgWaitingMinutes": 89.29,
+        "p90WaitingMinutes": 150,
+        "noShowRate": 0.2857,
+        "cancelRate": 0
+      },
+      "Pediatrics|Follow-up|10|Yes": {
+        "count": 17,
+        "avgWaitingMinutes": 79.71,
+        "p90WaitingMinutes": 135,
+        "noShowRate": 0.1176,
+        "cancelRate": 0.1765
+      },
+      "Dermatology|New|18|No": {
+        "count": 11,
+        "avgWaitingMinutes": 99.82,
+        "p90WaitingMinutes": 165,
+        "noShowRate": 0.2727,
+        "cancelRate": 0
+      },
+      "Dermatology|Follow-up|14|Yes": {
+        "count": 10,
+        "avgWaitingMinutes": 43.9,
+        "p90WaitingMinutes": 59,
+        "noShowRate": 0.3,
+        "cancelRate": 0
+      },
+      "Pediatrics|New|19|No": {
+        "count": 5,
+        "avgWaitingMinutes": 114.6,
+        "p90WaitingMinutes": 169,
+        "noShowRate": 0,
+        "cancelRate": 0
+      },
+      "General Medicine|New|15|Yes": {
+        "count": 20,
+        "avgWaitingMinutes": 82,
+        "p90WaitingMinutes": 138,
+        "noShowRate": 0.15,
+        "cancelRate": 0
+      },
+      "General Medicine|Follow-up|12|Yes": {
+        "count": 8,
+        "avgWaitingMinutes": 76.25,
+        "p90WaitingMinutes": 179,
+        "noShowRate": 0.125,
+        "cancelRate": 0
+      },
+      "Orthopedics|Follow-up|9|Yes": {
+        "count": 11,
+        "avgWaitingMinutes": 104.27,
+        "p90WaitingMinutes": 159,
+        "noShowRate": 0.1818,
+        "cancelRate": 0.0909
+      },
+      "Orthopedics|New|14|Yes": {
+        "count": 14,
+        "avgWaitingMinutes": 103.14,
+        "p90WaitingMinutes": 168,
+        "noShowRate": 0.4286,
+        "cancelRate": 0.0714
+      },
+      "Pediatrics|New|10|No": {
+        "count": 10,
+        "avgWaitingMinutes": 68.1,
+        "p90WaitingMinutes": 136,
+        "noShowRate": 0.2,
+        "cancelRate": 0
+      },
+      "Pediatrics|Follow-up|9|No": {
+        "count": 6,
+        "avgWaitingMinutes": 74.33,
+        "p90WaitingMinutes": 164,
+        "noShowRate": 0.1667,
+        "cancelRate": 0.1667
+      },
+      "General Medicine|New|8|Yes": {
+        "count": 9,
+        "avgWaitingMinutes": 113.22,
+        "p90WaitingMinutes": 177,
+        "noShowRate": 0,
+        "cancelRate": 0.1111
+      },
+      "General Medicine|New|19|Yes": {
+        "count": 11,
+        "avgWaitingMinutes": 99.27,
+        "p90WaitingMinutes": 165,
+        "noShowRate": 0.0909,
+        "cancelRate": 0.0909
+      },
+      "Cardiology|New|14|Yes": {
+        "count": 11,
+        "avgWaitingMinutes": 110.64,
+        "p90WaitingMinutes": 163,
+        "noShowRate": 0,
+        "cancelRate": 0.1818
+      },
+      "Pediatrics|New|11|Yes": {
+        "count": 15,
+        "avgWaitingMinutes": 89,
+        "p90WaitingMinutes": 146,
+        "noShowRate": 0.2667,
+        "cancelRate": 0.2
+      },
+      "General Medicine|New|14|Yes": {
+        "count": 16,
+        "avgWaitingMinutes": 77.38,
+        "p90WaitingMinutes": 159,
+        "noShowRate": 0.25,
+        "cancelRate": 0.1875
+      },
+      "Pediatrics|Follow-up|12|Yes": {
+        "count": 12,
+        "avgWaitingMinutes": 66.17,
+        "p90WaitingMinutes": 131,
+        "noShowRate": 0.0833,
+        "cancelRate": 0
+      },
+      "General Medicine|New|10|No": {
+        "count": 13,
+        "avgWaitingMinutes": 72.08,
+        "p90WaitingMinutes": 157,
+        "noShowRate": 0.3077,
+        "cancelRate": 0.2308
+      },
+      "Pediatrics|New|18|Yes": {
+        "count": 11,
+        "avgWaitingMinutes": 110.91,
+        "p90WaitingMinutes": 158,
+        "noShowRate": 0.1818,
+        "cancelRate": 0.1818
+      },
+      "Pediatrics|New|11|No": {
+        "count": 10,
+        "avgWaitingMinutes": 48.3,
+        "p90WaitingMinutes": 153,
+        "noShowRate": 0.1,
+        "cancelRate": 0.3
+      },
+      "Orthopedics|Follow-up|18|Yes": {
+        "count": 10,
+        "avgWaitingMinutes": 98.3,
+        "p90WaitingMinutes": 128,
+        "noShowRate": 0.5,
+        "cancelRate": 0
+      },
+      "Orthopedics|Follow-up|10|No": {
+        "count": 7,
+        "avgWaitingMinutes": 107.29,
+        "p90WaitingMinutes": 178,
+        "noShowRate": 0.2857,
+        "cancelRate": 0.1429
+      },
+      "Dermatology|New|8|Yes": {
+        "count": 10,
+        "avgWaitingMinutes": 104.3,
+        "p90WaitingMinutes": 153,
+        "noShowRate": 0.4,
+        "cancelRate": 0
+      },
+      "Orthopedics|Follow-up|16|No": {
+        "count": 13,
+        "avgWaitingMinutes": 89.77,
+        "p90WaitingMinutes": 151,
+        "noShowRate": 0.3846,
+        "cancelRate": 0.1538
+      },
+      "Pediatrics|New|12|Yes": {
+        "count": 9,
+        "avgWaitingMinutes": 72.78,
+        "p90WaitingMinutes": 177,
+        "noShowRate": 0,
+        "cancelRate": 0
+      },
+      "Pediatrics|Follow-up|19|Yes": {
+        "count": 12,
+        "avgWaitingMinutes": 71.25,
+        "p90WaitingMinutes": 91,
+        "noShowRate": 0.25,
+        "cancelRate": 0.0833
+      },
+      "Cardiology|New|13|Yes": {
+        "count": 13,
+        "avgWaitingMinutes": 89.54,
+        "p90WaitingMinutes": 149,
+        "noShowRate": 0.3846,
+        "cancelRate": 0
+      },
+      "Cardiology|New|8|No": {
+        "count": 11,
+        "avgWaitingMinutes": 82.09,
+        "p90WaitingMinutes": 136,
+        "noShowRate": 0.0909,
+        "cancelRate": 0.2727
+      },
+      "General Medicine|Follow-up|9|Yes": {
+        "count": 8,
+        "avgWaitingMinutes": 95.75,
+        "p90WaitingMinutes": 157,
+        "noShowRate": 0.125,
+        "cancelRate": 0.125
+      },
+      "Orthopedics|New|15|Yes": {
+        "count": 8,
+        "avgWaitingMinutes": 105.75,
+        "p90WaitingMinutes": 173,
+        "noShowRate": 0,
+        "cancelRate": 0.125
+      },
+      "General Medicine|New|9|No": {
+        "count": 6,
+        "avgWaitingMinutes": 92,
+        "p90WaitingMinutes": 142,
+        "noShowRate": 0.3333,
+        "cancelRate": 0
+      },
+      "General Medicine|Follow-up|19|Yes": {
+        "count": 15,
+        "avgWaitingMinutes": 72.33,
+        "p90WaitingMinutes": 159,
+        "noShowRate": 0.2,
+        "cancelRate": 0.0667
+      },
+      "Dermatology|Follow-up|15|No": {
+        "count": 15,
+        "avgWaitingMinutes": 93.27,
+        "p90WaitingMinutes": 177,
+        "noShowRate": 0.3333,
+        "cancelRate": 0.1333
+      },
+      "Pediatrics|New|16|Yes": {
+        "count": 7,
+        "avgWaitingMinutes": 60.86,
+        "p90WaitingMinutes": 175,
+        "noShowRate": 0.2857,
+        "cancelRate": 0.1429
+      },
+      "Cardiology|New|19|Yes": {
+        "count": 12,
+        "avgWaitingMinutes": 89.42,
+        "p90WaitingMinutes": 152,
+        "noShowRate": 0.1667,
+        "cancelRate": 0.0833
+      },
+      "Cardiology|Follow-up|11|No": {
+        "count": 9,
+        "avgWaitingMinutes": 105.44,
+        "p90WaitingMinutes": 152,
+        "noShowRate": 0,
+        "cancelRate": 0.1111
+      },
+      "Dermatology|Follow-up|17|Yes": {
+        "count": 11,
+        "avgWaitingMinutes": 67.18,
+        "p90WaitingMinutes": 119,
+        "noShowRate": 0.1818,
+        "cancelRate": 0
+      },
+      "Dermatology|New|10|No": {
+        "count": 12,
+        "avgWaitingMinutes": 89.75,
+        "p90WaitingMinutes": 167,
+        "noShowRate": 0.5833,
+        "cancelRate": 0
+      },
+      "Dermatology|New|10|Yes": {
+        "count": 9,
+        "avgWaitingMinutes": 94.78,
+        "p90WaitingMinutes": 178,
+        "noShowRate": 0.4444,
+        "cancelRate": 0.1111
+      },
+      "Orthopedics|New|15|No": {
+        "count": 12,
+        "avgWaitingMinutes": 105.17,
+        "p90WaitingMinutes": 169,
+        "noShowRate": 0.4167,
+        "cancelRate": 0
+      },
+      "Dermatology|Follow-up|11|No": {
+        "count": 7,
+        "avgWaitingMinutes": 72,
+        "p90WaitingMinutes": 150,
+        "noShowRate": 0.2857,
+        "cancelRate": 0
+      },
+      "Dermatology|New|15|Yes": {
+        "count": 10,
+        "avgWaitingMinutes": 64.5,
+        "p90WaitingMinutes": 121,
+        "noShowRate": 0.4,
+        "cancelRate": 0
+      },
+      "Orthopedics|Follow-up|11|No": {
+        "count": 5,
+        "avgWaitingMinutes": 80.6,
+        "p90WaitingMinutes": 137,
+        "noShowRate": 0,
+        "cancelRate": 0
+      },
+      "Pediatrics|Follow-up|15|Yes": {
+        "count": 5,
+        "avgWaitingMinutes": 137.2,
+        "p90WaitingMinutes": 173,
+        "noShowRate": 0,
+        "cancelRate": 0
+      },
+      "Cardiology|Follow-up|19|Yes": {
+        "count": 8,
+        "avgWaitingMinutes": 83.88,
+        "p90WaitingMinutes": 172,
+        "noShowRate": 0,
+        "cancelRate": 0.125
+      },
+      "General Medicine|New|12|Yes": {
+        "count": 9,
+        "avgWaitingMinutes": 99.33,
+        "p90WaitingMinutes": 172,
+        "noShowRate": 0.1111,
+        "cancelRate": 0.1111
+      },
+      "Dermatology|New|14|Yes": {
+        "count": 9,
+        "avgWaitingMinutes": 79,
+        "p90WaitingMinutes": 116,
+        "noShowRate": 0.2222,
+        "cancelRate": 0.1111
+      },
+      "Pediatrics|New|15|Yes": {
+        "count": 7,
+        "avgWaitingMinutes": 65.86,
+        "p90WaitingMinutes": 104,
+        "noShowRate": 0.5714,
+        "cancelRate": 0
+      },
+      "Cardiology|Follow-up|19|No": {
+        "count": 16,
+        "avgWaitingMinutes": 75.94,
+        "p90WaitingMinutes": 119,
+        "noShowRate": 0.1875,
+        "cancelRate": 0
+      },
+      "Orthopedics|Follow-up|17|Yes": {
+        "count": 12,
+        "avgWaitingMinutes": 99.83,
+        "p90WaitingMinutes": 161,
+        "noShowRate": 0.5,
+        "cancelRate": 0.0833
+      }
+    }
+  },
+  "resourceAllocationModel": {
+    "byDepartmentHour": {
+      "Orthopedics|12": {
+        "observations": 48,
+        "avgWaitingMinutes": 81.52,
+        "noShowRate": 0.1458,
+        "cancelRate": 0.1042,
+        "recommendedDoctors": 2,
+        "recommendedNurses": 3,
+        "recommendedFrontDesk": 2,
+        "riskLevel": "medium"
+      },
+      "Cardiology|9": {
+        "observations": 56,
+        "avgWaitingMinutes": 99.27,
+        "noShowRate": 0.2143,
+        "cancelRate": 0.0893,
+        "recommendedDoctors": 3,
+        "recommendedNurses": 4,
+        "recommendedFrontDesk": 2,
+        "riskLevel": "medium"
+      },
+      "Orthopedics|13": {
+        "observations": 38,
+        "avgWaitingMinutes": 78.16,
+        "noShowRate": 0.2105,
+        "cancelRate": 0.1842,
+        "recommendedDoctors": 2,
+        "recommendedNurses": 3,
+        "recommendedFrontDesk": 1,
+        "riskLevel": "medium"
+      },
+      "Orthopedics|14": {
+        "observations": 46,
+        "avgWaitingMinutes": 93.13,
+        "noShowRate": 0.2826,
+        "cancelRate": 0.1304,
+        "recommendedDoctors": 2,
+        "recommendedNurses": 3,
+        "recommendedFrontDesk": 2,
+        "riskLevel": "medium"
+      },
+      "Pediatrics|8": {
+        "observations": 56,
+        "avgWaitingMinutes": 94.41,
+        "noShowRate": 0.2321,
+        "cancelRate": 0.1071,
+        "recommendedDoctors": 3,
+        "recommendedNurses": 4,
+        "recommendedFrontDesk": 2,
+        "riskLevel": "medium"
+      },
+      "Pediatrics|13": {
+        "observations": 58,
+        "avgWaitingMinutes": 99.38,
+        "noShowRate": 0.2241,
+        "cancelRate": 0.1552,
+        "recommendedDoctors": 3,
+        "recommendedNurses": 4,
+        "recommendedFrontDesk": 2,
+        "riskLevel": "medium"
+      },
+      "Pediatrics|15": {
+        "observations": 36,
+        "avgWaitingMinutes": 94.14,
+        "noShowRate": 0.2778,
+        "cancelRate": 0.0556,
+        "recommendedDoctors": 2,
+        "recommendedNurses": 3,
+        "recommendedFrontDesk": 1,
+        "riskLevel": "medium"
+      },
+      "Cardiology|19": {
+        "observations": 49,
+        "avgWaitingMinutes": 88.14,
+        "noShowRate": 0.1429,
+        "cancelRate": 0.0612,
+        "recommendedDoctors": 3,
+        "recommendedNurses": 4,
+        "recommendedFrontDesk": 2,
+        "riskLevel": "medium"
+      },
+      "General Medicine|19": {
+        "observations": 48,
+        "avgWaitingMinutes": 84.17,
+        "noShowRate": 0.1667,
+        "cancelRate": 0.0833,
+        "recommendedDoctors": 2,
+        "recommendedNurses": 3,
+        "recommendedFrontDesk": 2,
+        "riskLevel": "medium"
+      },
+      "Dermatology|14": {
+        "observations": 53,
+        "avgWaitingMinutes": 76.66,
+        "noShowRate": 0.1698,
+        "cancelRate": 0.0755,
+        "recommendedDoctors": 3,
+        "recommendedNurses": 4,
+        "recommendedFrontDesk": 2,
+        "riskLevel": "medium"
+      },
+      "Pediatrics|17": {
+        "observations": 54,
+        "avgWaitingMinutes": 83.57,
+        "noShowRate": 0.2593,
+        "cancelRate": 0.0556,
+        "recommendedDoctors": 3,
+        "recommendedNurses": 4,
+        "recommendedFrontDesk": 2,
+        "riskLevel": "medium"
+      },
+      "Orthopedics|11": {
+        "observations": 39,
+        "avgWaitingMinutes": 97.41,
+        "noShowRate": 0.3077,
+        "cancelRate": 0.0769,
+        "recommendedDoctors": 2,
+        "recommendedNurses": 3,
+        "recommendedFrontDesk": 1,
+        "riskLevel": "medium"
+      },
+      "Cardiology|17": {
+        "observations": 47,
+        "avgWaitingMinutes": 95.51,
+        "noShowRate": 0.2553,
+        "cancelRate": 0.1064,
+        "recommendedDoctors": 2,
+        "recommendedNurses": 3,
+        "recommendedFrontDesk": 2,
+        "riskLevel": "medium"
+      },
+      "Cardiology|16": {
+        "observations": 55,
+        "avgWaitingMinutes": 81.15,
+        "noShowRate": 0.3091,
+        "cancelRate": 0.0545,
+        "recommendedDoctors": 2,
+        "recommendedNurses": 3,
+        "recommendedFrontDesk": 2,
+        "riskLevel": "medium"
+      },
+      "Orthopedics|17": {
+        "observations": 54,
+        "avgWaitingMinutes": 88.43,
+        "noShowRate": 0.2593,
+        "cancelRate": 0.1296,
+        "recommendedDoctors": 3,
+        "recommendedNurses": 4,
+        "recommendedFrontDesk": 2,
+        "riskLevel": "medium"
+      },
+      "General Medicine|14": {
+        "observations": 54,
+        "avgWaitingMinutes": 89.04,
+        "noShowRate": 0.2593,
+        "cancelRate": 0.1296,
+        "recommendedDoctors": 3,
+        "recommendedNurses": 4,
+        "recommendedFrontDesk": 2,
+        "riskLevel": "medium"
+      },
+      "Dermatology|19": {
+        "observations": 55,
+        "avgWaitingMinutes": 104.16,
+        "noShowRate": 0.1636,
+        "cancelRate": 0.0727,
+        "recommendedDoctors": 3,
+        "recommendedNurses": 4,
+        "recommendedFrontDesk": 2,
+        "riskLevel": "high"
+      },
+      "Cardiology|10": {
+        "observations": 56,
+        "avgWaitingMinutes": 96.21,
+        "noShowRate": 0.3214,
+        "cancelRate": 0.1071,
+        "recommendedDoctors": 3,
+        "recommendedNurses": 4,
+        "recommendedFrontDesk": 2,
+        "riskLevel": "medium"
+      },
+      "Dermatology|9": {
+        "observations": 41,
+        "avgWaitingMinutes": 85.46,
+        "noShowRate": 0.2683,
+        "cancelRate": 0.0976,
+        "recommendedDoctors": 2,
+        "recommendedNurses": 3,
+        "recommendedFrontDesk": 2,
+        "riskLevel": "medium"
+      },
+      "Pediatrics|18": {
+        "observations": 53,
+        "avgWaitingMinutes": 90.17,
+        "noShowRate": 0.1509,
+        "cancelRate": 0.1887,
+        "recommendedDoctors": 3,
+        "recommendedNurses": 4,
+        "recommendedFrontDesk": 2,
+        "riskLevel": "medium"
+      },
+      "Pediatrics|11": {
+        "observations": 53,
+        "avgWaitingMinutes": 77.55,
+        "noShowRate": 0.2075,
+        "cancelRate": 0.2264,
+        "recommendedDoctors": 3,
+        "recommendedNurses": 4,
+        "recommendedFrontDesk": 2,
+        "riskLevel": "medium"
+      },
+      "Cardiology|11": {
+        "observations": 48,
+        "avgWaitingMinutes": 94.38,
+        "noShowRate": 0.1667,
+        "cancelRate": 0.125,
+        "recommendedDoctors": 3,
+        "recommendedNurses": 4,
+        "recommendedFrontDesk": 2,
+        "riskLevel": "medium"
+      },
+      "Dermatology|16": {
+        "observations": 49,
+        "avgWaitingMinutes": 99.69,
+        "noShowRate": 0.2449,
+        "cancelRate": 0.1429,
+        "recommendedDoctors": 2,
+        "recommendedNurses": 3,
+        "recommendedFrontDesk": 2,
+        "riskLevel": "medium"
+      },
+      "Orthopedics|15": {
+        "observations": 44,
+        "avgWaitingMinutes": 104.59,
+        "noShowRate": 0.2045,
+        "cancelRate": 0.0455,
+        "recommendedDoctors": 2,
+        "recommendedNurses": 3,
+        "recommendedFrontDesk": 2,
+        "riskLevel": "high"
+      },
+      "Orthopedics|19": {
+        "observations": 45,
+        "avgWaitingMinutes": 96.42,
+        "noShowRate": 0.2444,
+        "cancelRate": 0.1778,
+        "recommendedDoctors": 2,
+        "recommendedNurses": 3,
+        "recommendedFrontDesk": 2,
+        "riskLevel": "medium"
+      },
+      "Cardiology|15": {
+        "observations": 44,
+        "avgWaitingMinutes": 92.32,
+        "noShowRate": 0.1591,
+        "cancelRate": 0.0909,
+        "recommendedDoctors": 2,
+        "recommendedNurses": 3,
+        "recommendedFrontDesk": 2,
+        "riskLevel": "medium"
+      },
+      "Orthopedics|10": {
+        "observations": 48,
+        "avgWaitingMinutes": 98.81,
+        "noShowRate": 0.125,
+        "cancelRate": 0.0833,
+        "recommendedDoctors": 3,
+        "recommendedNurses": 4,
+        "recommendedFrontDesk": 2,
+        "riskLevel": "medium"
+      },
+      "Dermatology|13": {
+        "observations": 39,
+        "avgWaitingMinutes": 94.38,
+        "noShowRate": 0.2564,
+        "cancelRate": 0.0513,
+        "recommendedDoctors": 2,
+        "recommendedNurses": 3,
+        "recommendedFrontDesk": 2,
+        "riskLevel": "medium"
+      },
+      "General Medicine|16": {
+        "observations": 47,
+        "avgWaitingMinutes": 98.87,
+        "noShowRate": 0.2766,
+        "cancelRate": 0.0426,
+        "recommendedDoctors": 2,
+        "recommendedNurses": 3,
+        "recommendedFrontDesk": 2,
+        "riskLevel": "medium"
+      },
+      "Orthopedics|9": {
+        "observations": 35,
+        "avgWaitingMinutes": 93.34,
+        "noShowRate": 0.1714,
+        "cancelRate": 0.1143,
+        "recommendedDoctors": 2,
+        "recommendedNurses": 3,
+        "recommendedFrontDesk": 1,
+        "riskLevel": "medium"
+      },
+      "General Medicine|18": {
+        "observations": 43,
+        "avgWaitingMinutes": 87.95,
+        "noShowRate": 0.2791,
+        "cancelRate": 0.093,
+        "recommendedDoctors": 2,
+        "recommendedNurses": 3,
+        "recommendedFrontDesk": 2,
+        "riskLevel": "medium"
+      },
+      "General Medicine|9": {
+        "observations": 30,
+        "avgWaitingMinutes": 94.07,
+        "noShowRate": 0.2,
+        "cancelRate": 0.1,
+        "recommendedDoctors": 2,
+        "recommendedNurses": 2,
+        "recommendedFrontDesk": 1,
+        "riskLevel": "medium"
+      },
+      "Cardiology|14": {
+        "observations": 43,
+        "avgWaitingMinutes": 89.67,
+        "noShowRate": 0.186,
+        "cancelRate": 0.1163,
+        "recommendedDoctors": 2,
+        "recommendedNurses": 3,
+        "recommendedFrontDesk": 2,
+        "riskLevel": "medium"
+      },
+      "General Medicine|17": {
+        "observations": 48,
+        "avgWaitingMinutes": 93.06,
+        "noShowRate": 0.2292,
+        "cancelRate": 0.0833,
+        "recommendedDoctors": 2,
+        "recommendedNurses": 3,
+        "recommendedFrontDesk": 2,
+        "riskLevel": "medium"
+      },
+      "Dermatology|15": {
+        "observations": 51,
+        "avgWaitingMinutes": 89.41,
+        "noShowRate": 0.2941,
+        "cancelRate": 0.1373,
+        "recommendedDoctors": 2,
+        "recommendedNurses": 3,
+        "recommendedFrontDesk": 2,
+        "riskLevel": "medium"
+      },
+      "General Medicine|13": {
+        "observations": 51,
+        "avgWaitingMinutes": 87.47,
+        "noShowRate": 0.2353,
+        "cancelRate": 0.098,
+        "recommendedDoctors": 2,
+        "recommendedNurses": 3,
+        "recommendedFrontDesk": 2,
+        "riskLevel": "medium"
+      },
+      "Cardiology|18": {
+        "observations": 47,
+        "avgWaitingMinutes": 96.85,
+        "noShowRate": 0.2766,
+        "cancelRate": 0.0426,
+        "recommendedDoctors": 2,
+        "recommendedNurses": 3,
+        "recommendedFrontDesk": 2,
+        "riskLevel": "medium"
+      },
+      "Orthopedics|16": {
+        "observations": 49,
+        "avgWaitingMinutes": 83,
+        "noShowRate": 0.3061,
+        "cancelRate": 0.0816,
+        "recommendedDoctors": 2,
+        "recommendedNurses": 3,
+        "recommendedFrontDesk": 2,
+        "riskLevel": "medium"
+      },
+      "Dermatology|10": {
+        "observations": 44,
+        "avgWaitingMinutes": 81.2,
+        "noShowRate": 0.2955,
+        "cancelRate": 0.0682,
+        "recommendedDoctors": 2,
+        "recommendedNurses": 3,
+        "recommendedFrontDesk": 2,
+        "riskLevel": "medium"
+      },
+      "Orthopedics|8": {
+        "observations": 49,
+        "avgWaitingMinutes": 82.04,
+        "noShowRate": 0.3469,
+        "cancelRate": 0.0408,
+        "recommendedDoctors": 2,
+        "recommendedNurses": 3,
+        "recommendedFrontDesk": 2,
+        "riskLevel": "medium"
+      },
+      "Dermatology|12": {
+        "observations": 46,
+        "avgWaitingMinutes": 93.52,
+        "noShowRate": 0.3696,
+        "cancelRate": 0.0652,
+        "recommendedDoctors": 2,
+        "recommendedNurses": 3,
+        "recommendedFrontDesk": 2,
+        "riskLevel": "high"
+      },
+      "Pediatrics|9": {
+        "observations": 41,
+        "avgWaitingMinutes": 93.9,
+        "noShowRate": 0.2683,
+        "cancelRate": 0.122,
+        "recommendedDoctors": 2,
+        "recommendedNurses": 3,
+        "recommendedFrontDesk": 2,
+        "riskLevel": "medium"
+      },
+      "Pediatrics|16": {
+        "observations": 45,
+        "avgWaitingMinutes": 74.22,
+        "noShowRate": 0.1778,
+        "cancelRate": 0.0667,
+        "recommendedDoctors": 2,
+        "recommendedNurses": 3,
+        "recommendedFrontDesk": 2,
+        "riskLevel": "medium"
+      },
+      "Cardiology|12": {
+        "observations": 58,
+        "avgWaitingMinutes": 83.62,
+        "noShowRate": 0.2069,
+        "cancelRate": 0.1207,
+        "recommendedDoctors": 3,
+        "recommendedNurses": 4,
+        "recommendedFrontDesk": 2,
+        "riskLevel": "medium"
+      },
+      "Dermatology|8": {
+        "observations": 54,
+        "avgWaitingMinutes": 95.33,
+        "noShowRate": 0.3519,
+        "cancelRate": 0.0926,
+        "recommendedDoctors": 2,
+        "recommendedNurses": 3,
+        "recommendedFrontDesk": 2,
+        "riskLevel": "high"
+      },
+      "General Medicine|10": {
+        "observations": 44,
+        "avgWaitingMinutes": 83,
+        "noShowRate": 0.2955,
+        "cancelRate": 0.1591,
+        "recommendedDoctors": 2,
+        "recommendedNurses": 3,
+        "recommendedFrontDesk": 2,
+        "riskLevel": "medium"
+      },
+      "Dermatology|18": {
+        "observations": 40,
+        "avgWaitingMinutes": 82.92,
+        "noShowRate": 0.175,
+        "cancelRate": 0.225,
+        "recommendedDoctors": 2,
+        "recommendedNurses": 3,
+        "recommendedFrontDesk": 2,
+        "riskLevel": "medium"
+      },
+      "Pediatrics|14": {
+        "observations": 41,
+        "avgWaitingMinutes": 94.49,
+        "noShowRate": 0.3415,
+        "cancelRate": 0.0976,
+        "recommendedDoctors": 2,
+        "recommendedNurses": 3,
+        "recommendedFrontDesk": 2,
+        "riskLevel": "medium"
+      },
+      "Pediatrics|12": {
+        "observations": 42,
+        "avgWaitingMinutes": 87.81,
+        "noShowRate": 0.119,
+        "cancelRate": 0.0952,
+        "recommendedDoctors": 2,
+        "recommendedNurses": 3,
+        "recommendedFrontDesk": 2,
+        "riskLevel": "medium"
+      },
+      "General Medicine|15": {
+        "observations": 53,
+        "avgWaitingMinutes": 88.64,
+        "noShowRate": 0.1887,
+        "cancelRate": 0.0377,
+        "recommendedDoctors": 3,
+        "recommendedNurses": 4,
+        "recommendedFrontDesk": 2,
+        "riskLevel": "medium"
+      },
+      "Pediatrics|19": {
+        "observations": 45,
+        "avgWaitingMinutes": 97.02,
+        "noShowRate": 0.2222,
+        "cancelRate": 0.0889,
+        "recommendedDoctors": 2,
+        "recommendedNurses": 3,
+        "recommendedFrontDesk": 2,
+        "riskLevel": "medium"
+      },
+      "Dermatology|17": {
+        "observations": 49,
+        "avgWaitingMinutes": 81.04,
+        "noShowRate": 0.1429,
+        "cancelRate": 0.102,
+        "recommendedDoctors": 2,
+        "recommendedNurses": 3,
+        "recommendedFrontDesk": 2,
+        "riskLevel": "medium"
+      },
+      "Dermatology|11": {
+        "observations": 42,
+        "avgWaitingMinutes": 81.71,
+        "noShowRate": 0.2143,
+        "cancelRate": 0.0476,
+        "recommendedDoctors": 2,
+        "recommendedNurses": 3,
+        "recommendedFrontDesk": 2,
+        "riskLevel": "medium"
+      },
+      "General Medicine|12": {
+        "observations": 37,
+        "avgWaitingMinutes": 97.7,
+        "noShowRate": 0.1351,
+        "cancelRate": 0.0811,
+        "recommendedDoctors": 2,
+        "recommendedNurses": 3,
+        "recommendedFrontDesk": 2,
+        "riskLevel": "medium"
+      },
+      "Pediatrics|10": {
+        "observations": 49,
+        "avgWaitingMinutes": 76.51,
+        "noShowRate": 0.1837,
+        "cancelRate": 0.0816,
+        "recommendedDoctors": 2,
+        "recommendedNurses": 3,
+        "recommendedFrontDesk": 2,
+        "riskLevel": "medium"
+      },
+      "Cardiology|13": {
+        "observations": 47,
+        "avgWaitingMinutes": 97.55,
+        "noShowRate": 0.2553,
+        "cancelRate": 0.0851,
+        "recommendedDoctors": 2,
+        "recommendedNurses": 3,
+        "recommendedFrontDesk": 2,
+        "riskLevel": "medium"
+      },
+      "General Medicine|11": {
+        "observations": 41,
+        "avgWaitingMinutes": 100.63,
+        "noShowRate": 0.1951,
+        "cancelRate": 0,
+        "recommendedDoctors": 2,
+        "recommendedNurses": 3,
+        "recommendedFrontDesk": 2,
+        "riskLevel": "high"
+      },
+      "Orthopedics|18": {
+        "observations": 43,
+        "avgWaitingMinutes": 88.65,
+        "noShowRate": 0.3023,
+        "cancelRate": 0.0465,
+        "recommendedDoctors": 2,
+        "recommendedNurses": 3,
+        "recommendedFrontDesk": 2,
+        "riskLevel": "medium"
+      },
+      "General Medicine|8": {
+        "observations": 36,
+        "avgWaitingMinutes": 95.67,
+        "noShowRate": 0.1111,
+        "cancelRate": 0.1111,
+        "recommendedDoctors": 2,
+        "recommendedNurses": 3,
+        "recommendedFrontDesk": 2,
+        "riskLevel": "medium"
+      },
+      "Cardiology|8": {
+        "observations": 44,
+        "avgWaitingMinutes": 87.5,
+        "noShowRate": 0.2045,
+        "cancelRate": 0.1364,
+        "recommendedDoctors": 2,
+        "recommendedNurses": 3,
+        "recommendedFrontDesk": 2,
+        "riskLevel": "medium"
+      }
+    }
+  },
+  "llmInsights": {
+    "provider": "mistral",
+    "model": "mistral-small-latest",
+    "generated": false,
+    "notes": [
+      "MISTRAL_API_KEY not provided. Deterministic model artifact generated without LLM insights."
+    ]
+  }
+}

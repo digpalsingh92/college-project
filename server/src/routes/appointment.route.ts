@@ -1,0 +1,23 @@
+import express from "express";
+import {
+  createAppointmentController,
+  getPatientAppointmentsController,
+  getDoctorAppointmentsController,
+  cancelAppointmentController,
+  completeAppointmentController,
+} from "../controllers/appointment.controller.js";
+import { asyncHandler } from "../utils/async-handler.js";
+import { requireAuth, requireRole } from "../middleware/auth.middleware.js";
+
+const router = express.Router();
+
+// Patient endpoints
+router.get("/my", requireAuth, requireRole("patient"), asyncHandler(getPatientAppointmentsController));
+router.post("/", requireAuth, requireRole("patient"), asyncHandler(createAppointmentController));
+router.patch("/:id/cancel", requireAuth, asyncHandler(cancelAppointmentController));
+
+// Doctor endpoints
+router.get("/doctor/my", requireAuth, requireRole("doctor"), asyncHandler(getDoctorAppointmentsController));
+router.patch("/:id/complete", requireAuth, requireRole("doctor"), asyncHandler(completeAppointmentController));
+
+export default router;

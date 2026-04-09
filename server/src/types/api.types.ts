@@ -15,7 +15,6 @@ export interface AuthResponse {
     specialization: string;
     role: Role;
     createdAt: Date;
-    specialization?: string;
     experience?: number;
     consultationFee?: number;
   };

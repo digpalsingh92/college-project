@@ -95,7 +95,10 @@ const createUser = async (
     },
   });
 
-  return buildAuthResponse(user);
+  return buildAuthResponse({
+    ...user,
+    role: payload.role,
+  });
 };
 
 export const registerDoctor = async (input: RegisterDoctorInput): Promise<AuthResponse> => {
@@ -142,5 +145,8 @@ export const loginByRole = async (input: LoginInput, role: UserRole): Promise<Au
     throw new AppError("Invalid email or password", 401);
   }
 
-  return buildAuthResponse(user);
+  return buildAuthResponse({
+    ...user,
+    role,
+  });
 };

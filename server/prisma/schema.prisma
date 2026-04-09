@@ -40,6 +40,7 @@ model User {
 
   doctorProfile DoctorProfile?
   schedules Schedule[]
+  unavailableSlots DoctorUnavailability[]
   appointmentsAsPatient Appointment[] @relation("PatientAppointments")
   appointmentsAsDoctor  Appointment[] @relation("DoctorAppointments")
 }
@@ -67,12 +68,28 @@ model Schedule {
   appointments Appointment[]
 }
 
+model DoctorUnavailability {
+  id        String   @id @default(uuid())
+  doctorId  String
+  date      DateTime
+  startTime Int
+  endTime   Int
+  reason    String?
+  createdAt DateTime @default(now())
+
+  doctor User @relation(fields: [doctorId], references: [id])
+
+  @@index([doctorId, date])
+}
+
 model Appointment {
   id         String   @id @default(uuid())
   patientId  String
   doctorId   String
   scheduleId String
   date       DateTime
+  startTime  Int
+  endTime    Int
   status     AppointmentStatus @default(booked)
 
   createdAt DateTime @default(now())
