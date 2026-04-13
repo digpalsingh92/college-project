@@ -6,17 +6,20 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { ROLE_HOME, ROUTES } from "@/constants/routes";
+import { mapAuthUserDto, setCredentials } from "@/store/authSlice";
 import {
   useRegisterDoctorMutation,
   useRegisterPatientMutation,
 } from "@/store/apiSlice";
 import { useAuth } from "@/hooks/useAuth";
+import { useAppDispatch } from "@/store/hooks";
 import type { UserRole } from "@/types";
 
 type RoleTab = "patient" | "doctor";
 
 export default function Page() {
   const router = useRouter();
+  const dispatch = useAppDispatch();
   const { isAuthenticated, user } = useAuth();
   const [tab, setTab] = useState<RoleTab>("patient");
   const [name, setName] = useState("");
@@ -45,8 +48,14 @@ export default function Page() {
               experience: Number(experience),
               consultationFee: Number(consultationFee),
             }).unwrap();
-      router.push(ROLE_HOME[result.user.role as UserRole]);
-      router.refresh();
+
+      dispatch(
+        setCredentials({
+          token: result.token,
+          user: mapAuthUserDto(result.user),
+        })
+      );
+      router.replace(ROLE_HOME[result.user.role as UserRole]);
     } catch {
       /* toasts from API layer */
     }

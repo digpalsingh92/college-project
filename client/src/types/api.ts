@@ -76,7 +76,19 @@ export interface AppointmentDto {
   startTime: string;
   endTime: string;
   status: string;
+  remarks?: string | null;
   createdAt: string;
+  patient?: {
+    name: string;
+  };
+  doctor?: {
+    name: string;
+    email?: string;
+    doctorProfile?: {
+      specialization?: string;
+      consultationFee?: number;
+    };
+  };
 }
 
 export interface AppointmentCreateResponse {
@@ -89,6 +101,11 @@ export interface AppointmentsListResponse {
 
 export interface AppointmentMutationResponse {
   appointment: AppointmentDto;
+}
+
+export interface UpdateAppointmentByDoctorRequest {
+  status: "booked" | "completed" | "no_show" | "cancelled";
+  remarks?: string;
 }
 
 export type DayOfWeek =
@@ -115,6 +132,58 @@ export interface AddUnavailabilityRequest {
   endTime: string;
   reason?: string;
 }
+
+export interface ScheduleDto {
+  id: string;
+  doctorId: string;
+  dayOfWeek: DayOfWeek;
+  startTime: string;
+  endTime: string;
+  slotDurationMinutes: number;
+}
+
+export interface SchedulesListResponse {
+  schedules: ScheduleDto[];
+}
+
+export interface UpdateScheduleRequest {
+  dayOfWeek?: DayOfWeek;
+  startTime: string;
+  endTime: string;
+}
+
+export interface UnavailabilityDto {
+  id: string;
+  doctorId: string;
+  date: string;
+  startTime: string;
+  endTime: string;
+  reason?: string | null;
+}
+
+export interface UnavailabilitiesListResponse {
+  unavailabilities: UnavailabilityDto[];
+}
+
+export interface DeleteResponse {
+  success: boolean;
+}
+
+export interface DoctorAvailabilitySlotDto {
+  startTime: string;
+  endTime: string;
+  isAvailable: boolean;
+  status: "available" | "booked" | "unavailable";
+}
+
+export interface DoctorAvailabilityResponse {
+  doctorId: string;
+  date: string;
+  slotDurationMinutes: number;
+  slots: Array<{ startTime: string; endTime: string }>;
+  allSlots: DoctorAvailabilitySlotDto[];
+}
+
 
 export interface WaitingTimePredictionRequest {
   department: string;

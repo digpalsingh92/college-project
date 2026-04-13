@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default function Page() {
   return (
-    <Card>
+    <Card className="space-y-4">
       <CardHeader
         title="Patients"
         description="Patient roster and visit history will appear here."
@@ -15,6 +15,9 @@ export default function Page() {
         </Link>
         .
       </p>
+      <div className="rounded-lg border border-emerald-100 bg-emerald-50/60 p-4 text-sm text-emerald-900">
+        Upcoming additions in this section: searchable patient list, last visit snapshot, and follow-up notes.
+      </div>
     </Card>
   );
 }

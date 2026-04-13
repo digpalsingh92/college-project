@@ -3,9 +3,12 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { ROLE_HOME, ROUTES } from "@/constants/routes";
+import { mapAuthUserDto, setCredentials } from "@/store/authSlice";
+import { useAppDispatch } from "@/store/hooks";
 import type { UserRole } from "@/types";
 import {
   useLoginDoctorMutation,
@@ -17,6 +20,7 @@ type RoleTab = "patient" | "doctor";
 
 export default function Page() {
   const router = useRouter();
+  const dispatch = useAppDispatch();
   const { isAuthenticated, user } = useAuth();
   const [tab, setTab] = useState<RoleTab>("patient");
   const [email, setEmail] = useState("");
@@ -34,8 +38,18 @@ export default function Page() {
         tab === "patient"
           ? await loginPatient({ email, password }).unwrap()
           : await loginDoctor({ email, password }).unwrap();
-      router.push(ROLE_HOME[result.user.role as UserRole]);
-      router.refresh();
+
+      const mappedUser = mapAuthUserDto(result.user);
+      const destination = ROLE_HOME[mappedUser.role] ?? (tab === "doctor" ? ROUTES.doctor : ROUTES.patient);
+
+      dispatch(
+        setCredentials({
+          token: result.token,
+          user: mappedUser,
+        })
+      );
+      toast.success("Logged in successfully");
+      router.replace(destination);
     } catch {
       /* errors surfaced via API layer toasts */
     }

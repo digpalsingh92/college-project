@@ -1,16 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { CalendarCheck, Stethoscope } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Card, CardHeader } from "@/components/ui/Card";
 import { Input } from "@/components/ui/Input";
 import { Table } from "@/components/ui/Table";
 import { TableColumn } from "@/types";
-import type { AppointmentDto, DoctorListItem } from "@/types/api";
+import type { AppointmentDto, DoctorAvailabilitySlotDto, DoctorListItem } from "@/types/api";
 import {
   useCancelAppointmentMutation,
   useCreateAppointmentMutation,
+  useGetDoctorAvailabilityQuery,
   useGetDoctorsQuery,
   useGetPatientAppointmentsQuery,
 } from "@/store/apiSlice";
@@ -24,8 +25,34 @@ export function PatientDashboardPage() {
 
   const [doctorId, setDoctorId] = useState("");
   const [date, setDate] = useState("");
-  const [startTime, setStartTime] = useState("09:00");
-  const [endTime, setEndTime] = useState("09:30");
+  const [startTime, setStartTime] = useState("");
+  const [endTime, setEndTime] = useState("");
+  const [rescheduleFromId, setRescheduleFromId] = useState<string | null>(null);
+
+  const { data: availability, isFetching: loadingSlots } = useGetDoctorAvailabilityQuery(
+    {
+      doctorId,
+      date,
+    },
+    {
+      skip: !doctorId || !date,
+    }
+  );
+
+  const slots: DoctorAvailabilitySlotDto[] = useMemo(() => {
+    if (!availability) return [];
+    if (availability.allSlots?.length) return availability.allSlots;
+    return availability.slots.map((slot) => ({
+      ...slot,
+      isAvailable: true,
+      status: "available",
+    }));
+  }, [availability]);
+
+  useEffect(() => {
+    setStartTime("");
+    setEndTime("");
+  }, [doctorId, date]);
 
   const columns: Array<TableColumn<AppointmentDto>> = [
     { key: "date", header: "Date", render: (row) => new Date(row.date).toLocaleDateString() },
@@ -48,25 +75,49 @@ export function PatientDashboardPage() {
       ),
     },
     {
+      key: "remarks",
+      header: "Doctor Remarks",
+      render: (row) => row.remarks?.trim() ? row.remarks : <span className="text-muted">—</span>,
+    },
+    {
       key: "actions",
       header: "Actions",
       render: (row) =>
-        row.status === "booked" ? (
-          <Button
-            size="sm"
-            variant="dangerSoft"
-            loading={cancelling}
-            type="button"
-            onClick={async () => {
-              try {
-                await cancelAppointment(row.id).unwrap();
-              } catch {
-                /* toast via API layer */
-              }
-            }}
-          >
-            Cancel
-          </Button>
+        row.status === "booked" || row.status === "no_show" ? (
+          <div className="flex flex-wrap gap-2">
+            <Button
+              size="sm"
+              variant="dangerSoft"
+              loading={cancelling}
+              type="button"
+              onClick={async () => {
+                try {
+                  await cancelAppointment(row.id).unwrap();
+                  if (rescheduleFromId === row.id) {
+                    setRescheduleFromId(null);
+                  }
+                } catch {
+                  /* toast via API layer */
+                }
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              type="button"
+              onClick={() => {
+                setRescheduleFromId(row.id);
+                setDoctorId(row.doctorId);
+                setDate("");
+                setStartTime("");
+                setEndTime("");
+              }}
+            >
+              Reschedule
+            </Button>
+          </div>
         ) : (
           <span className="text-muted">—</span>
         ),
@@ -75,13 +126,21 @@ export function PatientDashboardPage() {
 
   async function handleBook(event: React.FormEvent) {
     event.preventDefault();
+    if (!startTime || !endTime) return;
+
     try {
+      if (rescheduleFromId) {
+        await cancelAppointment(rescheduleFromId).unwrap();
+      }
+
       await createAppointment({
         doctorId,
         date,
         startTime,
         endTime,
       }).unwrap();
+
+      setRescheduleFromId(null);
     } catch {
       /* toast via API layer */
     }
@@ -140,7 +199,14 @@ export function PatientDashboardPage() {
         </Card>
 
         <Card>
-          <CardHeader title="Book a visit" description="Choose slot details — times use 24h format (e.g. 09:30)" />
+          <CardHeader
+            title={rescheduleFromId ? "Reschedule appointment" : "Book a visit"}
+            description={
+              rescheduleFromId
+                ? "Reschedule flow: your old appointment is cancelled first, then a new slot is booked."
+                : "Pick a date, then choose one of the doctor’s available time slots."
+            }
+          />
           <form className="space-y-4" onSubmit={handleBook}>
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="sm:col-span-2">
@@ -164,18 +230,70 @@ export function PatientDashboardPage() {
                 </select>
               </div>
               <Input type="date" label="Date" value={date} onChange={(e) => setDate(e.target.value)} required />
-              <Input label="Start time" value={startTime} onChange={(e) => setStartTime(e.target.value)} required />
-              <Input
-                label="End time"
-                className="sm:col-span-2"
-                value={endTime}
-                onChange={(e) => setEndTime(e.target.value)}
-                required
-              />
+              {startTime && endTime ? (
+                <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-800">
+                  Selected slot: <span className="font-semibold">{startTime} - {endTime}</span>
+                </div>
+              ) : null}
+              <div className="sm:col-span-2 space-y-2">
+                <p className="text-sm font-medium text-slate-800">Time slots</p>
+                {!doctorId || !date ? (
+                  <p className="text-sm text-muted">Choose doctor and date to load slots.</p>
+                ) : loadingSlots ? (
+                  <p className="text-sm text-muted">Loading slots…</p>
+                ) : slots.length === 0 ? (
+                  <p className="text-sm text-muted">No available slots for this date.</p>
+                ) : (
+                  <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                    {slots.map((slot) => {
+                      const selected = slot.startTime === startTime && slot.endTime === endTime;
+                      return (
+                        <button
+                          key={`${slot.startTime}-${slot.endTime}`}
+                          type="button"
+                          disabled={!slot.isAvailable}
+                          onClick={() => {
+                            if (!slot.isAvailable) return;
+                            setStartTime(slot.startTime);
+                            setEndTime(slot.endTime);
+                          }}
+                          className={cn(
+                            "rounded-lg border px-3 py-2 text-left text-sm transition-colors",
+                            slot.isAvailable
+                              ? "border-emerald-300 bg-white text-slate-800 hover:bg-emerald-50"
+                              : "cursor-not-allowed border-slate-200 bg-slate-100 text-slate-400 line-through",
+                            selected && "border-emerald-600 bg-emerald-50 ring-1 ring-emerald-200"
+                          )}
+                        >
+                          <div className="font-medium">
+                            {slot.startTime} - {slot.endTime}
+                          </div>
+                          <div className="mt-0.5 text-xs uppercase tracking-wide">
+                            {slot.isAvailable ? "Available" : slot.status === "booked" ? "Booked" : "Unavailable"}
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
             </div>
-            <Button type="submit" loading={creating} disabled={creating || !doctorId}>
-              Schedule appointment
+            <Button
+              type="submit"
+              loading={creating || (Boolean(rescheduleFromId) && cancelling)}
+              disabled={creating || cancelling || !doctorId || !date || !startTime || !endTime}
+            >
+              {rescheduleFromId ? "Confirm reschedule" : "Schedule appointment"}
             </Button>
+            {rescheduleFromId ? (
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setRescheduleFromId(null)}
+              >
+                Cancel reschedule mode
+              </Button>
+            ) : null}
           </form>
         </Card>
       </div>

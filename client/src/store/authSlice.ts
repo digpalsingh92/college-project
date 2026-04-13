@@ -6,6 +6,7 @@ import {
   clearToken,
   getStoredUserJson,
   getToken,
+  isTokenExpired,
   setAuthCookie,
   setStoredUserJson,
   setToken,
@@ -60,7 +61,17 @@ const authSlice = createSlice({
       if (typeof window === "undefined") return;
       const token = getToken();
       const raw = getStoredUserJson();
+
+      // No token stored — nothing to hydrate
       if (!token || !raw) return;
+
+      // Token exists but is expired — clear everything, treat as logged out
+      if (isTokenExpired(token)) {
+        clearToken();
+        clearAuthCookie();
+        return;
+      }
+
       try {
         const user = JSON.parse(raw) as AuthUser;
         state.token = token;
