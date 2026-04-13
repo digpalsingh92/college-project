@@ -4,7 +4,7 @@ import { ReactNode, useEffect } from "react";
 import { Provider } from "react-redux";
 import { Toaster, toast } from "sonner";
 import { getJwtExpiryMs } from "@/lib/auth";
-import { hydrateFromStorage, logout } from "@/store/authSlice";
+import { logout } from "@/store/authSlice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { store } from "@/store/store";
 
@@ -33,10 +33,9 @@ function SessionExpiryWatcher() {
 }
 
 export function Providers({ children }: { children: ReactNode }) {
-  useEffect(() => {
-    store.dispatch(hydrateFromStorage());
-  }, []);
-
+  // NOTE: store.ts already dispatches hydrateFromStorage() synchronously at
+  // module load time — before any component renders and fires RTK Query requests.
+  // Do NOT dispatch it again here via useEffect (that caused the race condition).
   return (
     <Provider store={store}>
       <SessionExpiryWatcher />
@@ -45,3 +44,4 @@ export function Providers({ children }: { children: ReactNode }) {
     </Provider>
   );
 }
+

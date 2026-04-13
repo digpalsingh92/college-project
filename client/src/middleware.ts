@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { withRoleGuard } from "@/middleware/index";
+import { withRoleGuard } from "@/middleware-guard";
 
 export function middleware(request: NextRequest) {
   return withRoleGuard(request);

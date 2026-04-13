@@ -1,6 +1,6 @@
 "use client";
 
-import { Mail, Stethoscope } from "lucide-react";
+import { Mail, Stethoscope, CheckCircle2, CalendarCheck, XCircle, Clock } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Card, CardHeader } from "@/components/ui/Card";
 import { Table } from "@/components/ui/Table";
@@ -12,6 +12,9 @@ import {
   useGetDoctorProfileQuery,
 } from "@/store/apiSlice";
 import { cn } from "@/helpers/cn";
+
+import { DoctorChartsPanel } from "./DoctorChartsPanel";
+
 
 export function DoctorDashboardPage() {
   const { data: profile, isLoading: profileLoading } = useGetDoctorProfileQuery();
@@ -64,9 +67,25 @@ export function DoctorDashboardPage() {
   ];
 
   const d = profile?.doctor;
+  const appointments = appts?.appointments ?? [];
+  const bookedCount = appointments.filter((a) => a.status === "booked").length;
+  const completedCount = appointments.filter((a) => a.status === "completed").length;
+  const cancelledCount = appointments.filter((a) => a.status === "cancelled").length;
 
   return (
     <div className="space-y-8">
+      {/* ── Stat strip ── */}
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+        <MiniStat icon={<CalendarCheck className="h-5 w-5 text-amber-500" />} label="Booked" value={bookedCount} bg="bg-amber-50" />
+        <MiniStat icon={<CheckCircle2 className="h-5 w-5 text-emerald-500" />} label="Completed" value={completedCount} bg="bg-emerald-50" />
+        <MiniStat icon={<XCircle className="h-5 w-5 text-slate-400" />} label="Cancelled" value={cancelledCount} bg="bg-slate-50" />
+        <MiniStat icon={<Clock className="h-5 w-5 text-blue-500" />} label="Total" value={appointments.length} bg="bg-blue-50" />
+      </div>
+
+      {/* ── Charts ── */}
+      <DoctorChartsPanel />
+
+      {/* ── Profile + appointments grid ──
       <div className="grid gap-6 lg:grid-cols-3">
         <Card className="lg:col-span-1">
           <CardHeader title="Profile" description="How patients see you" />
@@ -130,6 +149,28 @@ export function DoctorDashboardPage() {
             emptyState="No appointments yet."
           />
         </Card>
+      </div> */}
+    </div>
+  );
+}
+
+function MiniStat({
+  icon,
+  label,
+  value,
+  bg,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: number;
+  bg: string;
+}) {
+  return (
+    <div className={`flex items-center gap-3 rounded-xl px-4 py-4 ${bg}`}>
+      {icon}
+      <div>
+        <p className="text-xl font-bold text-foreground">{value}</p>
+        <p className="text-xs text-muted">{label}</p>
       </div>
     </div>
   );

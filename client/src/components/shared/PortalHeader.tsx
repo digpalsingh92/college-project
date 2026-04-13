@@ -7,12 +7,14 @@ import type { UserRole } from "@/types";
 import { Input } from "@/components/ui/Input";
 
 function titleForPath(pathname: string, role: UserRole): string {
+  if (pathname.endsWith("/settings")) return "Settings";
   if (role === "admin") {
     if (pathname.startsWith("/admin/users")) return "Users";
     return "Dashboard Overview";
   }
   if (role === "doctor") {
     if (pathname.startsWith("/doctor/patients")) return "Patients";
+    if (pathname.startsWith("/doctor/schedules")) return "Schedules";
     return "Doctor dashboard";
   }
   if (pathname.startsWith("/patient/appointments")) return "Appointments";
@@ -20,6 +22,7 @@ function titleForPath(pathname: string, role: UserRole): string {
 }
 
 function subtitleForPath(pathname: string, role: UserRole): string {
+  if (pathname.endsWith("/settings")) return "View your profile and manage your account.";
   if (role === "admin") {
     return "Quick summary of platform activity and tools.";
   }

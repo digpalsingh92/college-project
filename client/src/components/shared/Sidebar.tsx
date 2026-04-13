@@ -4,9 +4,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   Activity,
-  BarChart3,
+  CalendarClock,
   CalendarDays,
-  HelpCircle,
   LayoutDashboard,
   Settings,
   Shield,
@@ -14,6 +13,7 @@ import {
   Users,
 } from "lucide-react";
 import { cn } from "@/helpers/cn";
+import { useAppSelector } from "@/store/hooks";
 import type { UserRole } from "@/types";
 
 interface NavItem {
@@ -29,12 +29,20 @@ const navByRole: Record<UserRole, NavItem[]> = {
   ],
   doctor: [
     { href: "/doctor", label: "Dashboard", icon: LayoutDashboard },
+    { href: "/doctor/appointments", label: "Visit Updates", icon: CalendarDays },
     { href: "/doctor/patients", label: "Patients", icon: Stethoscope },
+    { href: "/doctor/schedules", label: "Schedules", icon: CalendarClock },
   ],
   patient: [
     { href: "/patient", label: "Dashboard", icon: LayoutDashboard },
     { href: "/patient/appointments", label: "Appointments", icon: CalendarDays },
   ],
+};
+
+const settingsHref: Record<UserRole, string> = {
+  admin: "/admin/settings",
+  doctor: "/doctor/settings",
+  patient: "/patient/settings",
 };
 
 interface SidebarProps {
@@ -43,11 +51,21 @@ interface SidebarProps {
 
 export function Sidebar({ role }: SidebarProps) {
   const pathname = usePathname() ?? "";
+  const user = useAppSelector((s) => s.auth.user);
   const isAdmin = role === "admin";
 
-  const activeRing = isAdmin ? "border-blue-600 bg-blue-50 text-blue-700" : "border-emerald-600 bg-emerald-50 text-emerald-800";
-  const brandIcon = isAdmin ? Shield : Activity;
-  const BrandIcon = brandIcon;
+  const activeBorder = isAdmin
+    ? "border-blue-600 bg-blue-50 text-blue-700"
+    : "border-emerald-600 bg-emerald-50 text-emerald-800";
+  const brandBg = isAdmin ? "bg-blue-600" : "bg-emerald-600";
+  const BrandIcon = isAdmin ? Shield : Activity;
+
+  const initials = (user?.name ?? "?")
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
 
   function isActive(href: string): boolean {
     if (href === "/admin" || href === "/doctor" || href === "/patient") {
@@ -56,15 +74,13 @@ export function Sidebar({ role }: SidebarProps) {
     return pathname === href || pathname.startsWith(`${href}/`);
   }
 
+  const settingsActive = pathname === settingsHref[role];
+
   return (
-    <aside className="flex w-64 shrink-0 flex-col border-r border-border bg-surface">
+    <aside className="flex h-full w-64 shrink-0 flex-col border-r border-border bg-surface overflow-hidden">
+      {/* Brand */}
       <div className="flex items-center gap-2 border-b border-border px-4 py-5">
-        <div
-          className={cn(
-            "flex h-9 w-9 items-center justify-center rounded-lg text-white",
-            isAdmin ? "bg-blue-600" : "bg-emerald-600"
-          )}
-        >
+        <div className={cn("flex h-9 w-9 items-center justify-center rounded-lg text-white", brandBg)}>
           <BrandIcon className="h-5 w-5" strokeWidth={2} />
         </div>
         <div className="min-w-0">
@@ -73,7 +89,8 @@ export function Sidebar({ role }: SidebarProps) {
         </div>
       </div>
 
-      <div className="px-3 py-4">
+      {/* Main nav */}
+      <div className="flex-1 overflow-y-auto px-3 py-4">
         <p className="mb-2 px-2 text-xs font-medium uppercase tracking-wide text-muted">Menu</p>
         <nav className="space-y-0.5">
           {navByRole[role].map((item) => {
@@ -85,7 +102,7 @@ export function Sidebar({ role }: SidebarProps) {
                 href={item.href}
                 className={cn(
                   "flex items-center gap-3 rounded-lg border-l-4 px-3 py-2.5 text-sm font-medium transition-colors",
-                  active ? activeRing : "border-transparent text-slate-600 hover:bg-slate-50"
+                  active ? activeBorder : "border-transparent text-slate-600 hover:bg-slate-50"
                 )}
               >
                 <Icon className="h-4 w-4 shrink-0 opacity-90" strokeWidth={2} />
@@ -96,31 +113,24 @@ export function Sidebar({ role }: SidebarProps) {
         </nav>
       </div>
 
-      <div className="mt-auto border-t border-border px-3 py-4">
+      {/* Bottom: Settings + user strip */}
+      <div className="mt-auto border-t border-border px-3 py-4 space-y-1">
         <p className="mb-2 px-2 text-xs font-medium uppercase tracking-wide text-muted">More</p>
-        <nav className="space-y-0.5">
-          <Link
-            href="/about"
-            className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-600 hover:bg-slate-50"
-          >
-            <Settings className="h-4 w-4" strokeWidth={2} />
-            Organization
-          </Link>
-          <Link
-            href="/contact"
-            className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-600 hover:bg-slate-50"
-          >
-            <HelpCircle className="h-4 w-4" strokeWidth={2} />
-            Help center
-          </Link>
-          <Link
-            href="/about"
-            className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-600 hover:bg-slate-50"
-          >
-            <BarChart3 className="h-4 w-4" strokeWidth={2} />
-            About
-          </Link>
-        </nav>
+
+        {/* Settings link */}
+        <Link
+          href={settingsHref[role]}
+          className={cn(
+            "flex items-center gap-3 rounded-lg border-l-4 px-3 py-2.5 text-sm font-medium transition-colors",
+            settingsActive
+              ? activeBorder
+              : "border-transparent text-slate-600 hover:bg-slate-50"
+          )}
+        >
+          <Settings className="h-4 w-4 shrink-0" strokeWidth={2} />
+          Settings
+        </Link>
+
       </div>
     </aside>
   );

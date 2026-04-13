@@ -10,12 +10,13 @@ interface PortalLayoutProps {
 
 export function PortalLayout({ role, children }: PortalLayoutProps) {
   return (
-    <div className="flex min-h-screen bg-[#f3f4f6]">
+    <div className="flex h-screen overflow-hidden bg-[#f3f4f6]">
       <Sidebar role={role} />
-      <div className="flex min-h-0 min-w-0 flex-1 flex-col">
+      <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
         <PortalHeader role={role} />
-        <main className="flex-1 overflow-auto p-6 md:p-8">{children}</main>
+        <main className="flex-1 overflow-y-auto p-6 md:p-8">{children}</main>
       </div>
     </div>
   );
 }
+

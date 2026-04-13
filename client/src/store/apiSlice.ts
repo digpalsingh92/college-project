@@ -13,13 +13,21 @@ import type {
   AuthResponse,
   CreateAppointmentRequest,
   CreateScheduleRequest,
+  DeleteResponse,
+  DoctorAvailabilityResponse,
   DoctorResponse,
   DoctorsListResponse,
   LoginRequest,
   RegisterDoctorRequest,
   RegisterPatientRequest,
   ResourceAllocationPredictionRequest,
+  ScheduleDto,
+  SchedulesListResponse,
   TrainModelRequest,
+  UnavailabilitiesListResponse,
+  UnavailabilityDto,
+  UpdateScheduleRequest,
+  UpdateAppointmentByDoctorRequest,
   WaitingTimePredictionRequest,
 } from "@/types/api";
 
@@ -70,7 +78,7 @@ async function runRequest<T>(
 export const api = createApi({
   reducerPath: "api",
   baseQuery: fakeBaseQuery(),
-  tagTypes: ["Appointment", "Doctor", "DoctorProfile"],
+  tagTypes: ["Appointment", "Doctor", "DoctorProfile", "Schedule", "Unavailability", "Availability"],
   endpoints: (builder) => ({
     loginPatient: builder.mutation<AuthResponse, LoginRequest>({
       async queryFn(body, api: BaseQueryApi): Promise<ApiResult<AuthResponse>> {
@@ -210,7 +218,7 @@ export const api = createApi({
           api
         );
       },
-      invalidatesTags: ["DoctorProfile"],
+      invalidatesTags: ["DoctorProfile", "Schedule"],
     }),
     addDoctorUnavailability: builder.mutation<unknown, AddUnavailabilityRequest>({
       async queryFn(body, api: BaseQueryApi): Promise<ApiResult<unknown>> {
@@ -221,24 +229,80 @@ export const api = createApi({
           api
         );
       },
-      invalidatesTags: ["DoctorProfile"],
+      invalidatesTags: ["DoctorProfile", "Unavailability"],
     }),
     getDoctorAvailability: builder.query<
-      unknown,
+      DoctorAvailabilityResponse,
       { doctorId: string; date: string; slotDurationMinutes?: number }
     >({
       async queryFn(
         { doctorId, date, slotDurationMinutes },
         api: BaseQueryApi
-      ): Promise<ApiResult<unknown>> {
+      ): Promise<ApiResult<DoctorAvailabilityResponse>> {
         return runRequest(
-          apiHandler.get<unknown>(`doctors/${doctorId}/availability`, {
+          apiHandler.get<DoctorAvailabilityResponse>(`doctors/${doctorId}/availability`, {
             token: (api.getState() as RootState).auth.token,
             params: { date, slotDurationMinutes },
           }),
           api
         );
       },
+      providesTags: ["Availability"],
+    }),
+    getDoctorSchedules: builder.query<SchedulesListResponse, string>({
+      async queryFn(doctorId, api: BaseQueryApi): Promise<ApiResult<SchedulesListResponse>> {
+        return runRequest(
+          apiHandler.get<SchedulesListResponse>(`doctors/${doctorId}/schedules`, {
+            token: (api.getState() as RootState).auth.token,
+          }),
+          api
+        );
+      },
+      providesTags: ["Schedule"],
+    }),
+    updateDoctorSchedule: builder.mutation<ScheduleDto, { scheduleId: string; data: UpdateScheduleRequest }>({
+      async queryFn({ scheduleId, data }, api: BaseQueryApi): Promise<ApiResult<ScheduleDto>> {
+        return runRequest(
+          apiHandler.put<ScheduleDto>(`doctors/schedules/${scheduleId}`, data, {
+            token: (api.getState() as RootState).auth.token,
+          }),
+          api
+        );
+      },
+      invalidatesTags: ["Schedule"],
+    }),
+    deleteDoctorSchedule: builder.mutation<DeleteResponse, string>({
+      async queryFn(scheduleId, api: BaseQueryApi): Promise<ApiResult<DeleteResponse>> {
+        return runRequest(
+          apiHandler.delete<DeleteResponse>(`doctors/schedules/${scheduleId}`, {
+            token: (api.getState() as RootState).auth.token,
+          }),
+          api
+        );
+      },
+      invalidatesTags: ["Schedule"],
+    }),
+    getDoctorUnavailabilities: builder.query<UnavailabilitiesListResponse, string>({
+      async queryFn(doctorId, api: BaseQueryApi): Promise<ApiResult<UnavailabilitiesListResponse>> {
+        return runRequest(
+          apiHandler.get<UnavailabilitiesListResponse>(`doctors/${doctorId}/unavailability`, {
+            token: (api.getState() as RootState).auth.token,
+          }),
+          api
+        );
+      },
+      providesTags: ["Unavailability"],
+    }),
+    deleteDoctorUnavailability: builder.mutation<DeleteResponse, string>({
+      async queryFn(unavailabilityId, api: BaseQueryApi): Promise<ApiResult<DeleteResponse>> {
+        return runRequest(
+          apiHandler.delete<DeleteResponse>(`doctors/unavailability/${unavailabilityId}`, {
+            token: (api.getState() as RootState).auth.token,
+          }),
+          api
+        );
+      },
+      invalidatesTags: ["Unavailability"],
     }),
 
     getPatientAppointments: builder.query<AppointmentsListResponse, void>({
@@ -272,7 +336,7 @@ export const api = createApi({
           api
         );
       },
-      invalidatesTags: ["Appointment"],
+      invalidatesTags: ["Appointment", "Availability"],
     }),
     cancelAppointment: builder.mutation<AppointmentMutationResponse, string>({
       async queryFn(id, api: BaseQueryApi): Promise<ApiResult<AppointmentMutationResponse>> {
@@ -283,12 +347,26 @@ export const api = createApi({
           api
         );
       },
-      invalidatesTags: ["Appointment"],
+      invalidatesTags: ["Appointment", "Availability"],
     }),
     completeAppointment: builder.mutation<AppointmentMutationResponse, string>({
       async queryFn(id, api: BaseQueryApi): Promise<ApiResult<AppointmentMutationResponse>> {
         return runRequest(
           apiHandler.patch<AppointmentMutationResponse>(`appointments/${id}/complete`, undefined, {
+            token: (api.getState() as RootState).auth.token,
+          }),
+          api
+        );
+      },
+      invalidatesTags: ["Appointment"],
+    }),
+    updateAppointmentByDoctor: builder.mutation<
+      AppointmentMutationResponse,
+      { id: string; data: UpdateAppointmentByDoctorRequest }
+    >({
+      async queryFn({ id, data }, api: BaseQueryApi): Promise<ApiResult<AppointmentMutationResponse>> {
+        return runRequest(
+          apiHandler.patch<AppointmentMutationResponse>(`appointments/${id}/doctor-update`, data, {
             token: (api.getState() as RootState).auth.token,
           }),
           api
@@ -349,7 +427,12 @@ export const {
   useGetDoctorByIdQuery,
   useGetDoctorProfileQuery,
   useCreateDoctorScheduleMutation,
+  useGetDoctorSchedulesQuery,
+  useUpdateDoctorScheduleMutation,
+  useDeleteDoctorScheduleMutation,
   useAddDoctorUnavailabilityMutation,
+  useGetDoctorUnavailabilitiesQuery,
+  useDeleteDoctorUnavailabilityMutation,
   useGetDoctorAvailabilityQuery,
   useLazyGetDoctorAvailabilityQuery,
   useGetPatientAppointmentsQuery,
@@ -357,6 +440,7 @@ export const {
   useCreateAppointmentMutation,
   useCancelAppointmentMutation,
   useCompleteAppointmentMutation,
+  useUpdateAppointmentByDoctorMutation,
   usePredictWaitingTimeMutation,
   usePredictResourceAllocationMutation,
   useTrainPredictionModelMutation,
