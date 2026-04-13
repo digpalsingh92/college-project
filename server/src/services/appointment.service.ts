@@ -1,5 +1,8 @@
 import prisma from "../lib/prisma.js";
-import { CreateAppointmentInput } from "../schemas/appointment.schemas.js";
+import {
+  CreateAppointmentInput,
+  UpdateAppointmentByDoctorInput,
+} from "../schemas/appointment.schemas.js";
 import { AppError } from "../utils/app-error.js";
 import { minutesToLabel, normalizeDateOnly, parseTimeToMinutes } from "../utils/time.js";
 
@@ -17,6 +20,10 @@ const dayNameByIndex = [
   "SATURDAY",
 ] as const;
 
+const DEFAULT_DAY_START_MINUTES = 10 * 60;
+const DEFAULT_DAY_END_MINUTES = 19 * 60;
+const DEFAULT_SLOT_DURATION_MINUTES = 30;
+
 const formatAppointment = (appointment: {
   id: string;
   patientId: string;
@@ -26,6 +33,7 @@ const formatAppointment = (appointment: {
   startTime: number;
   endTime: number;
   status: string;
+  remarks: string | null;
   createdAt: Date;
 }) => ({
   id: appointment.id,
@@ -36,6 +44,7 @@ const formatAppointment = (appointment: {
   startTime: minutesToLabel(appointment.startTime),
   endTime: minutesToLabel(appointment.endTime),
   status: appointment.status,
+  remarks: appointment.remarks,
   createdAt: appointment.createdAt,
 });
 
@@ -71,9 +80,40 @@ export const createAppointment = async (input: CreateAppointmentPayload) => {
       endTime: { gte: endTime },
     },
   });
+  let effectiveSchedule = schedule;
 
-  if (!schedule) {
-    throw new AppError("Requested time is outside doctor schedule", 400);
+  if (!effectiveSchedule) {
+    const isWithinDefaultWindow =
+      startTime >= DEFAULT_DAY_START_MINUTES &&
+      endTime <= DEFAULT_DAY_END_MINUTES &&
+      endTime - startTime === DEFAULT_SLOT_DURATION_MINUTES &&
+      (startTime - DEFAULT_DAY_START_MINUTES) % DEFAULT_SLOT_DURATION_MINUTES === 0;
+
+    if (!isWithinDefaultWindow) {
+      throw new AppError("Requested time is outside doctor schedule", 400);
+    }
+
+    const existingDefaultSchedule = await prisma.schedule.findFirst({
+      where: {
+        doctorId: input.doctorId,
+        dayOfWeek,
+        startTime: DEFAULT_DAY_START_MINUTES,
+        endTime: DEFAULT_DAY_END_MINUTES,
+        slotDurationMinutes: DEFAULT_SLOT_DURATION_MINUTES,
+      },
+    });
+
+    effectiveSchedule =
+      existingDefaultSchedule ??
+      (await prisma.schedule.create({
+        data: {
+          doctorId: input.doctorId,
+          dayOfWeek,
+          startTime: DEFAULT_DAY_START_MINUTES,
+          endTime: DEFAULT_DAY_END_MINUTES,
+          slotDurationMinutes: DEFAULT_SLOT_DURATION_MINUTES,
+        },
+      }));
   }
 
   const blocked = await prisma.doctorUnavailability.findFirst({
@@ -107,11 +147,12 @@ export const createAppointment = async (input: CreateAppointmentPayload) => {
     data: {
       patientId: input.patientId,
       doctorId: input.doctorId,
-      scheduleId: schedule.id,
+      scheduleId: effectiveSchedule.id,
       date,
       startTime,
       endTime,
       status: "booked",
+      remarks: null,
     },
   });
 
@@ -186,7 +227,7 @@ export const cancelAppointmentById = async (
 
   const updated = await prisma.appointment.update({
     where: { id: appointmentId },
-    data: { status: "cancelled" },
+    data: { status: "cancelled", remarks: appointment.remarks },
   });
 
   return formatAppointment(updated);
@@ -215,6 +256,36 @@ export const completeAppointmentById = async (
   const updated = await prisma.appointment.update({
     where: { id: appointmentId },
     data: { status: "completed" },
+  });
+
+  return formatAppointment(updated);
+};
+
+export const updateAppointmentByDoctor = async (
+  appointmentId: string,
+  doctorId: string,
+  input: UpdateAppointmentByDoctorInput
+) => {
+  const appointment = await prisma.appointment.findUnique({ where: { id: appointmentId } });
+
+  if (!appointment) {
+    throw new AppError("Appointment not found", 404);
+  }
+
+  if (appointment.doctorId !== doctorId) {
+    throw new AppError("You can only update your own appointments", 403);
+  }
+
+  if (appointment.status === "completed" || appointment.status === "cancelled") {
+    throw new AppError("Completed or cancelled appointments cannot be changed", 400);
+  }
+
+  const updated = await prisma.appointment.update({
+    where: { id: appointmentId },
+    data: {
+      status: input.status,
+      remarks: input.remarks ?? appointment.remarks,
+    },
   });
 
   return formatAppointment(updated);

@@ -7,4 +7,10 @@ export const createAppointmentSchema = z.object({
   endTime: z.string().trim().min(1),
 });
 
+export const updateAppointmentByDoctorSchema = z.object({
+  status: z.enum(["booked", "completed", "no_show", "cancelled"]),
+  remarks: z.string().trim().max(500).optional(),
+});
+
 export type CreateAppointmentInput = z.infer<typeof createAppointmentSchema>;
+export type UpdateAppointmentByDoctorInput = z.infer<typeof updateAppointmentByDoctorSchema>;

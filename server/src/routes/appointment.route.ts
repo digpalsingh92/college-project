@@ -5,6 +5,7 @@ import {
   getDoctorAppointmentsController,
   cancelAppointmentController,
   completeAppointmentController,
+  updateAppointmentByDoctorController,
 } from "../controllers/appointment.controller.js";
 import { asyncHandler } from "../utils/async-handler.js";
 import { requireAuth, requireRole } from "../middleware/auth.middleware.js";
@@ -19,5 +20,6 @@ router.patch("/:id/cancel", requireAuth, asyncHandler(cancelAppointmentControlle
 // Doctor endpoints
 router.get("/doctor/my", requireAuth, requireRole("doctor"), asyncHandler(getDoctorAppointmentsController));
 router.patch("/:id/complete", requireAuth, requireRole("doctor"), asyncHandler(completeAppointmentController));
+router.patch("/:id/doctor-update", requireAuth, requireRole("doctor"), asyncHandler(updateAppointmentByDoctorController));
 
 export default router;

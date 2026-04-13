@@ -33,6 +33,13 @@ export const getAvailabilityQuerySchema = z.object({
   slotDurationMinutes: z.coerce.number().int().min(10).max(120).optional(),
 });
 
+export const updateScheduleSchema = z.object({
+  dayOfWeek: dayOfWeekSchema.optional(),
+  startTime: timeSchema,
+  endTime: timeSchema,
+});
+
 export type CreateScheduleInput = z.infer<typeof createScheduleSchema>;
+export type UpdateScheduleInput = z.infer<typeof updateScheduleSchema>;
 export type UpsertUnavailabilityInput = z.infer<typeof upsertUnavailabilitySchema>;
 export type GetAvailabilityQuery = z.infer<typeof getAvailabilityQuerySchema>;

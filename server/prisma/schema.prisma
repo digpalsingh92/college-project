@@ -61,6 +61,7 @@ model Schedule {
   dayOfWeek DayOfWeek
   startTime Int   // minutes
   endTime   Int
+  slotDurationMinutes Int @default(30)
 
   doctor User @relation(fields: [doctorId], references: [id])
 
@@ -91,6 +92,7 @@ model Appointment {
   startTime  Int
   endTime    Int
   status     AppointmentStatus @default(booked)
+  remarks    String?
 
   createdAt DateTime @default(now())
 
