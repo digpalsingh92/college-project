@@ -27,6 +27,11 @@ export function Navbar() {
           </Link>
           {isAuthenticated && user ? (
             <>
+              {user.role === "patient" ? (
+                <Link href={ROUTES.booking} className="font-medium text-emerald-700 hover:text-emerald-800">
+                  Book visit
+                </Link>
+              ) : null}
               <Link href={ROLE_HOME[user.role]} className="font-medium text-emerald-700 hover:text-emerald-800">
                 Dashboard
               </Link>

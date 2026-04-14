@@ -1,6 +1,7 @@
 import express from 'express';
 import authRoutes from './routes/auth.route.js';
 import doctorRoutes from './routes/schedule.route.js';
+import recommendationRoutes from './routes/recommendations.route.js';
 import appointmentRoutes from './routes/appointment.route.js';
 import predictionRoutes from './routes/prediction.route.js';
 import { AppError } from './utils/app-error.js';
@@ -11,6 +12,7 @@ app.use(express.json());
 
 app.use('/api/auth', authRoutes);
 app.use('/api/doctors', doctorRoutes);
+app.use('/api/doctors', recommendationRoutes);
 app.use('/api/appointments', appointmentRoutes);
 app.use('/api/predictions', predictionRoutes);
 

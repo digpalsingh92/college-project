@@ -1,4 +1,5 @@
 import prisma from "../lib/prisma.js";
+import { invalidateDoctorRecommendationCache } from "./recommendationCache.js";
 import {
   CreateAppointmentInput,
   UpdateAppointmentByDoctorInput,
@@ -156,6 +157,8 @@ export const createAppointment = async (input: CreateAppointmentPayload) => {
     },
   });
 
+  invalidateDoctorRecommendationCache(input.doctorId, date.toISOString().slice(0, 10));
+
   return formatAppointment(appointment);
 };
 
@@ -230,6 +233,8 @@ export const cancelAppointmentById = async (
     data: { status: "cancelled", remarks: appointment.remarks },
   });
 
+  invalidateDoctorRecommendationCache(appointment.doctorId, appointment.date.toISOString().slice(0, 10));
+
   return formatAppointment(updated);
 };
 
@@ -257,6 +262,8 @@ export const completeAppointmentById = async (
     where: { id: appointmentId },
     data: { status: "completed" },
   });
+
+  invalidateDoctorRecommendationCache(appointment.doctorId, appointment.date.toISOString().slice(0, 10));
 
   return formatAppointment(updated);
 };
@@ -287,6 +294,8 @@ export const updateAppointmentByDoctor = async (
       remarks: input.remarks ?? appointment.remarks,
     },
   });
+
+  invalidateDoctorRecommendationCache(appointment.doctorId, appointment.date.toISOString().slice(0, 10));
 
   return formatAppointment(updated);
 };

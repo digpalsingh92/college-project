@@ -50,8 +50,8 @@ export default function Page() {
       );
       toast.success("Logged in successfully");
       router.replace(destination);
-    } catch {
-      /* errors surfaced via API layer toasts */
+    } catch (error) {
+      toast.error("Failed to log in");
     }
   }
 

@@ -17,6 +17,7 @@ function titleForPath(pathname: string, role: UserRole): string {
     if (pathname.startsWith("/doctor/schedules")) return "Schedules";
     return "Doctor dashboard";
   }
+  if (pathname.startsWith("/patient/booking") || pathname.startsWith("/booking")) return "Booking";
   if (pathname.startsWith("/patient/appointments")) return "Appointments";
   return "Patient care";
 }
@@ -28,6 +29,9 @@ function subtitleForPath(pathname: string, role: UserRole): string {
   }
   if (role === "doctor") {
     return "Schedule, visits, and your practice overview.";
+  }
+  if (pathname.startsWith("/patient/booking") || pathname.startsWith("/booking")) {
+    return "Compare smart slot recommendations and choose the best time.";
   }
   return "Book visits and track your health journey.";
 }

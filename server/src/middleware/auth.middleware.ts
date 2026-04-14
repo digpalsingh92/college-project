@@ -22,30 +22,51 @@ const extractBearerToken = (headerValue?: string): string => {
 	return token;
 };
 
+const attachUserFromToken = (req: Request, token: string): void => {
+	const decoded = verifyToken(token);
+	if (typeof decoded === "string") {
+		throw new AppError("Invalid token", 401);
+	}
+
+	const payload = decoded as Partial<TokenPayload>;
+	if (!payload.id || !payload.email || !payload.role) {
+		throw new AppError("Invalid token payload", 401);
+	}
+
+	req.user = {
+		id: payload.id,
+		email: payload.email,
+		role: payload.role,
+	};
+};
+
 export const requireAuth = (req: Request, _res: Response, next: NextFunction): void => {
 	const token = extractBearerToken(req.headers.authorization);
 
 	try {
-		const decoded = verifyToken(token);
-		if (typeof decoded === "string") {
-			throw new AppError("Invalid token", 401);
-		}
-
-		const payload = decoded as Partial<TokenPayload>;
-		if (!payload.id || !payload.email || !payload.role) {
-			throw new AppError("Invalid token payload", 401);
-		}
-
-		req.user = {
-			id: payload.id,
-			email: payload.email,
-			role: payload.role,
-		};
+		attachUserFromToken(req, token);
 
 		next();
 	} catch (_error) {
 		throw new AppError("Unauthorized. Please login again", 401);
 	}
+};
+
+export const optionalAuth = (req: Request, _res: Response, next: NextFunction): void => {
+	const headerValue = req.headers.authorization;
+	if (!headerValue) {
+		next();
+		return;
+	}
+
+	try {
+		const token = extractBearerToken(headerValue);
+		attachUserFromToken(req, token);
+	} catch (_error) {
+		// Public endpoint: ignore invalid auth and continue as anonymous.
+	}
+
+	next();
 };
 
 export const requireRole = (...allowedRoles: Role[]) => {

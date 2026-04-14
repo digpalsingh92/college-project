@@ -20,6 +20,8 @@ import type {
   LoginRequest,
   RegisterDoctorRequest,
   RegisterPatientRequest,
+  SlotRecommendationsRequest,
+  SlotRecommendationsResponse,
   ResourceAllocationPredictionRequest,
   ScheduleDto,
   SchedulesListResponse,
@@ -78,7 +80,7 @@ async function runRequest<T>(
 export const api = createApi({
   reducerPath: "api",
   baseQuery: fakeBaseQuery(),
-  tagTypes: ["Appointment", "Doctor", "DoctorProfile", "Schedule", "Unavailability", "Availability"],
+  tagTypes: ["Appointment", "Doctor", "DoctorProfile", "Schedule", "Unavailability", "Availability", "Recommendation"],
   endpoints: (builder) => ({
     loginPatient: builder.mutation<AuthResponse, LoginRequest>({
       async queryFn(body, api: BaseQueryApi): Promise<ApiResult<AuthResponse>> {
@@ -336,7 +338,7 @@ export const api = createApi({
           api
         );
       },
-      invalidatesTags: ["Appointment", "Availability"],
+      invalidatesTags: ["Appointment", "Availability", "Recommendation"],
     }),
     cancelAppointment: builder.mutation<AppointmentMutationResponse, string>({
       async queryFn(id, api: BaseQueryApi): Promise<ApiResult<AppointmentMutationResponse>> {
@@ -347,7 +349,7 @@ export const api = createApi({
           api
         );
       },
-      invalidatesTags: ["Appointment", "Availability"],
+      invalidatesTags: ["Appointment", "Availability", "Recommendation"],
     }),
     completeAppointment: builder.mutation<AppointmentMutationResponse, string>({
       async queryFn(id, api: BaseQueryApi): Promise<ApiResult<AppointmentMutationResponse>> {
@@ -358,7 +360,7 @@ export const api = createApi({
           api
         );
       },
-      invalidatesTags: ["Appointment"],
+      invalidatesTags: ["Appointment", "Recommendation"],
     }),
     updateAppointmentByDoctor: builder.mutation<
       AppointmentMutationResponse,
@@ -372,7 +374,20 @@ export const api = createApi({
           api
         );
       },
-      invalidatesTags: ["Appointment"],
+      invalidatesTags: ["Appointment", "Recommendation"],
+    }),
+
+    getDoctorSlotRecommendations: builder.query<SlotRecommendationsResponse, SlotRecommendationsRequest>({
+      async queryFn({ doctorId, date }, api: BaseQueryApi): Promise<ApiResult<SlotRecommendationsResponse>> {
+        return runRequest(
+          apiHandler.get<SlotRecommendationsResponse>(`doctors/${doctorId}/recommend-slots`, {
+            token: (api.getState() as RootState).auth.token,
+            params: { date },
+          }),
+          api
+        );
+      },
+      providesTags: (_result, _error, arg) => [{ type: "Recommendation", id: `${arg.doctorId}:${arg.date}` }],
     }),
 
     predictWaitingTime: builder.mutation<unknown, WaitingTimePredictionRequest>({
@@ -441,6 +456,7 @@ export const {
   useCancelAppointmentMutation,
   useCompleteAppointmentMutation,
   useUpdateAppointmentByDoctorMutation,
+  useGetDoctorSlotRecommendationsQuery,
   usePredictWaitingTimeMutation,
   usePredictResourceAllocationMutation,
   useTrainPredictionModelMutation,

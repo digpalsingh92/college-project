@@ -1,41 +1,45 @@
 "use client";
 
-import { Button } from "@/components/ui/Button";
+import { cn } from "@/helpers/cn";
+import { Button, type ButtonSize, type ButtonVariant } from "@/components/ui/Button";
 
-interface TableActionsProps {
-  onView?: () => void;
-  onEdit?: () => void;
-  onDelete?: () => void;
-  viewLabel?: string;
-  editLabel?: string;
-  deleteLabel?: string;
+export interface TableActionItem {
+  id: string;
+  label: string;
+  onClick: () => void;
+  variant?: ButtonVariant;
+  disabled?: boolean;
+  loading?: boolean;
 }
 
-export function TableActions({
-  onView,
-  onEdit,
-  onDelete,
-  viewLabel = "View",
-  editLabel = "Edit",
-  deleteLabel = "Delete",
-}: TableActionsProps) {
+interface TableActionsProps {
+  actions: TableActionItem[];
+  size?: ButtonSize;
+  className?: string;
+}
+
+export function TableActions({ actions, size = "sm", className }: TableActionsProps) {
+  if (!actions.length) {
+    return <span className="text-muted">-</span>;
+  }
+
   return (
-    <div className="flex items-center gap-2">
-      {onView ? (
-        <Button variant="outline" size="sm" onClick={onView}>
-          {viewLabel}
+    <div className={cn("flex flex-wrap items-center gap-2", className)}>
+      {actions.map((action) => (
+        <Button
+          key={action.id}
+          type="button"
+          size={size}
+          variant={action.variant ?? "outline"}
+          onClick={action.onClick}
+          disabled={action.disabled}
+          loading={action.loading}
+        >
+          {action.label}
         </Button>
-      ) : null}
-      {onEdit ? (
-        <Button variant="secondary" size="sm" onClick={onEdit}>
-          {editLabel}
-        </Button>
-      ) : null}
-      {onDelete ? (
-        <Button variant="danger" size="sm" onClick={onDelete}>
-          {deleteLabel}
-        </Button>
-      ) : null}
+      ))}
     </div>
   );
 }
+
+export type { TableActionsProps };

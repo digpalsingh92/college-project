@@ -184,6 +184,33 @@ export interface DoctorAvailabilityResponse {
   allSlots: DoctorAvailabilitySlotDto[];
 }
 
+export interface SlotRecommendationDto {
+  time: string;
+  endTime: string;
+  estimatedWait: number;
+  noShowProbability: number;
+  score: number;
+  label: "recommended" | "normal" | "avoid";
+  confidence: number;
+  queueAhead: number;
+  available: boolean;
+}
+
+export interface SlotRecommendationsResponse {
+  doctorId: string;
+  date: string;
+  generatedAt: string;
+  confidence: number;
+  slots: SlotRecommendationDto[];
+  recommendedTime?: string;
+  avoidTime?: string;
+}
+
+export interface SlotRecommendationsRequest {
+  doctorId: string;
+  date: string;
+}
+
 
 export interface WaitingTimePredictionRequest {
   department: string;

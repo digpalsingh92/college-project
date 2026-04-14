@@ -1,5 +1,6 @@
 import { DayOfWeek } from "@prisma/client";
 import prisma from "../lib/prisma.js";
+import { invalidateDoctorRecommendationCache } from "./recommendationCache.js";
 import { AppError } from "../utils/app-error.js";
 import {
   CreateScheduleInput,
@@ -65,6 +66,8 @@ export const createDoctorSchedule = async (input: CreateScheduleInput) => {
     },
   });
 
+  invalidateDoctorRecommendationCache(input.doctorId);
+
   return {
     id: schedule.id,
     doctorId: schedule.doctorId,
@@ -129,6 +132,8 @@ export const updateDoctorSchedule = async (scheduleId: string, doctorId: string,
     },
   });
 
+  invalidateDoctorRecommendationCache(doctorId);
+
   return {
     id: updated.id,
     doctorId: updated.doctorId,
@@ -145,6 +150,7 @@ export const deleteDoctorSchedule = async (scheduleId: string, doctorId: string)
     throw new AppError("Schedule not found", 404);
   }
   await prisma.schedule.delete({ where: { id: scheduleId } });
+  invalidateDoctorRecommendationCache(doctorId);
   return { success: true };
 };
 
@@ -172,6 +178,7 @@ export const deleteDoctorUnavailability = async (unavailabilityId: string, docto
     throw new AppError("Unavailability record not found", 404);
   }
   await prisma.doctorUnavailability.delete({ where: { id: unavailabilityId } });
+  invalidateDoctorRecommendationCache(doctorId, existing.date.toISOString().slice(0, 10));
   return { success: true };
 };
 
@@ -222,6 +229,8 @@ export const addDoctorUnavailability = async (input: UpsertUnavailabilityInput) 
       reason: input.reason,
     },
   });
+
+  invalidateDoctorRecommendationCache(input.doctorId, date.toISOString().slice(0, 10));
 
   return {
     id: blocked.id,

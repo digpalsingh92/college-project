@@ -1,11 +1,13 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import { CalendarCheck, Stethoscope } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Card, CardHeader } from "@/components/ui/Card";
 import { Input } from "@/components/ui/Input";
 import { Table } from "@/components/ui/Table";
+import { ROUTES } from "@/constants/routes";
 import { TableColumn } from "@/types";
 import type { AppointmentDto, DoctorAvailabilitySlotDto, DoctorListItem } from "@/types/api";
 import {
@@ -156,6 +158,12 @@ export function PatientDashboardPage() {
           <p className="mt-1 text-sm text-muted">Your visits, providers, and scheduling in one calm view.</p>
         </div>
         <div className="flex gap-3">
+          <Link
+            href={ROUTES.booking}
+            className="inline-flex h-12 items-center justify-center rounded-md border border-emerald-200 bg-white px-4 text-sm font-medium text-emerald-700 shadow-sm transition-colors hover:bg-emerald-50"
+          >
+            Smart booking
+          </Link>
           <Card className="flex items-center gap-3 border-emerald-100 bg-emerald-50/50 px-4 py-3 shadow-none" padding="none">
             <CalendarCheck className="h-8 w-8 text-emerald-600" strokeWidth={1.75} />
             <div>
