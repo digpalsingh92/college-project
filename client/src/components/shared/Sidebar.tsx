@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import {
   Activity,
   CalendarClock,
+  CalendarCheck,
   CalendarDays,
   LayoutDashboard,
   Settings,
@@ -29,6 +30,7 @@ const navByRole: Record<UserRole, NavItem[]> = {
   ],
   doctor: [
     { href: "/doctor", label: "Dashboard", icon: LayoutDashboard },
+    { href: "/doctor/appointments-list", label: "Appointments", icon: CalendarCheck },
     { href: "/doctor/appointments", label: "Visit Updates", icon: CalendarDays },
     { href: "/doctor/patients", label: "Patients", icon: Stethoscope },
     { href: "/doctor/schedules", label: "Schedules", icon: CalendarClock },
@@ -47,9 +49,10 @@ const settingsHref: Record<UserRole, string> = {
 
 interface SidebarProps {
   role: UserRole;
+  onNavigate?: () => void;
 }
 
-export function Sidebar({ role }: SidebarProps) {
+export function Sidebar({ role, onNavigate }: SidebarProps) {
   const pathname = usePathname() ?? "";
   const user = useAppSelector((s) => s.auth.user);
   const isAdmin = role === "admin";
@@ -100,6 +103,7 @@ export function Sidebar({ role }: SidebarProps) {
               <Link
                 key={item.href}
                 href={item.href}
+                onClick={onNavigate}
                 className={cn(
                   "flex items-center gap-3 rounded-lg border-l-4 px-3 py-2.5 text-sm font-medium transition-colors",
                   active ? activeBorder : "border-transparent text-slate-600 hover:bg-slate-50"
@@ -120,6 +124,7 @@ export function Sidebar({ role }: SidebarProps) {
         {/* Settings link */}
         <Link
           href={settingsHref[role]}
+          onClick={onNavigate}
           className={cn(
             "flex items-center gap-3 rounded-lg border-l-4 px-3 py-2.5 text-sm font-medium transition-colors",
             settingsActive

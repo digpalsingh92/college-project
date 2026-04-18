@@ -1,6 +1,6 @@
 "use client";
 
-import { Bell, Search } from "lucide-react";
+import { Bell, Menu, Search } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 import type { UserRole } from "@/types";
@@ -34,24 +34,38 @@ function subtitleForPath(pathname: string, role: UserRole): string {
 
 interface PortalHeaderProps {
   role: UserRole;
+  onMenuClick?: () => void;
 }
 
-export function PortalHeader({ role }: PortalHeaderProps) {
+export function PortalHeader({ role, onMenuClick }: PortalHeaderProps) {
   const pathname = usePathname();
   const { user } = useAuth();
   const title = titleForPath(pathname ?? "", role);
   const subtitle = subtitleForPath(pathname ?? "", role);
 
   return (
-    <header className="sticky top-0 z-10 border-b border-border bg-surface/95 backdrop-blur supports-[backdrop-filter]:bg-surface/80">
+    <header className="sticky top-0 z-10 border-b border-border bg-surface/95 backdrop-blur supports-backdrop-filter:bg-surface/80">
       <div className="flex flex-col gap-4 px-6 py-4 md:flex-row md:items-center md:justify-between md:px-8">
-        <div>
-          <h1 className="text-xl font-semibold text-foreground md:text-2xl">{title}</h1>
-          <p className="mt-0.5 text-sm text-muted">{subtitle}</p>
+        <div className="flex items-start gap-3">
+          {onMenuClick ? (
+            <button
+              type="button"
+              onClick={onMenuClick}
+              className="mt-0.5 inline-flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 bg-surface text-slate-700 hover:bg-slate-50 lg:hidden"
+              aria-label="Open navigation menu"
+            >
+              <Menu className="h-5 w-5" />
+            </button>
+          ) : null}
+
+          <div>
+            <h1 className="text-xl font-semibold text-foreground md:text-2xl">{title}</h1>
+            <p className="mt-0.5 text-sm text-muted">{subtitle}</p>
+          </div>
         </div>
 
         <div className="flex w-full flex-col gap-3 sm:flex-row sm:items-center sm:justify-end md:w-auto">
-          <div className="relative hidden min-w-[220px] sm:block">
+          <div className="relative hidden min-w-55 sm:block">
             <Search
               className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted"
               aria-hidden
@@ -74,7 +88,7 @@ export function PortalHeader({ role }: PortalHeaderProps) {
             </button>
 
             <div className="flex items-center gap-3 rounded-lg border border-slate-200 bg-slate-50 py-1.5 pl-2 pr-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 text-sm font-semibold text-white">
+              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-linear-to-br from-emerald-500 to-teal-600 text-sm font-semibold text-white">
                 {(user?.name ?? "?")
                   .split(" ")
                   .map((n) => n[0])
