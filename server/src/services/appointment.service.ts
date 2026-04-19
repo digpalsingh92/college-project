@@ -5,6 +5,11 @@ import {
 } from "../schemas/appointment.schemas.js";
 import { AppError } from "../utils/app-error.js";
 import { minutesToLabel, normalizeDateOnly, parseTimeToMinutes } from "../utils/time.js";
+import {
+  calculateExpectedPatients,
+  calculateWaitTime,
+  predictNoShow,
+} from "./predictionService.js";
 
 type CreateAppointmentPayload = CreateAppointmentInput & {
   patientId: string;
@@ -23,6 +28,105 @@ const dayNameByIndex = [
 const DEFAULT_DAY_START_MINUTES = 10 * 60;
 const DEFAULT_DAY_END_MINUTES = 19 * 60;
 const DEFAULT_SLOT_DURATION_MINUTES = 30;
+const DEFAULT_AVG_CONSULTATION_TIME_MINUTES = 15;
+
+type WaitLevel = "low" | "moderate" | "high";
+
+type SlotPrediction = {
+  time: string;
+  startTime: string;
+  endTime: string;
+  estimatedWaitTime: number;
+  waitLevel: WaitLevel;
+};
+
+type PredictedSlotResponse = {
+  slots: SlotPrediction[];
+  recommendedSlot: string | null;
+  avoidSlot: string | null;
+};
+
+type AdminPredictionInsights = {
+  totalAppointments: number;
+  expectedPatients: number;
+  predictedNoShows: number;
+};
+
+type PatientHistoryStats = {
+  totalPastAppointments: number;
+  previousNoShows: number;
+};
+
+const waitLevelForMinutes = (minutes: number): WaitLevel => {
+  if (minutes <= 15) return "low";
+  if (minutes <= 30) return "moderate";
+  return "high";
+};
+
+const getPatientHistoryMap = async (
+  patientIds: string[],
+  cutoffDate: Date
+): Promise<Map<string, PatientHistoryStats>> => {
+  if (patientIds.length === 0) return new Map();
+
+  const history = await prisma.appointment.findMany({
+    where: {
+      patientId: { in: patientIds },
+      date: { lt: cutoffDate },
+      status: { in: ["completed", "no_show"] },
+    },
+    select: {
+      patientId: true,
+      status: true,
+    },
+  });
+
+  const map = new Map<string, PatientHistoryStats>();
+  for (const record of history) {
+    const existing = map.get(record.patientId) ?? { totalPastAppointments: 0, previousNoShows: 0 };
+    existing.totalPastAppointments += 1;
+    if (record.status === "no_show") {
+      existing.previousNoShows += 1;
+    }
+    map.set(record.patientId, existing);
+  }
+
+  return map;
+};
+
+const getNoShowProbability = (
+  patientId: string,
+  appointmentDate: Date,
+  startTimeMinutes: number,
+  historyByPatientId: Map<string, PatientHistoryStats>
+): number => {
+  const stats = historyByPatientId.get(patientId) ?? {
+    totalPastAppointments: 0,
+    previousNoShows: 0,
+  };
+  const now = Date.now();
+  const slotTimestamp = new Date(appointmentDate).getTime() + startTimeMinutes * 60 * 1000;
+  const leadHours = Math.max(0, Math.round((slotTimestamp - now) / (60 * 60 * 1000)));
+
+  return predictNoShow({
+    previousNoShows: stats.previousNoShows,
+    totalPastAppointments: stats.totalPastAppointments,
+    leadHours,
+    hasPriorVisits: stats.totalPastAppointments > 0,
+  });
+};
+
+const estimateWaitForSlot = (
+  slotStartMinutes: number,
+  bookedAppointments: Array<{ startTime: number; noShowProbability: number }>,
+  avgConsultationTimeMinutes = DEFAULT_AVG_CONSULTATION_TIME_MINUTES
+): number => {
+  const precedingProbabilities = bookedAppointments
+    .filter((appointment) => appointment.startTime < slotStartMinutes)
+    .map((appointment) => appointment.noShowProbability);
+  const expectedPatients = calculateExpectedPatients(precedingProbabilities);
+  return calculateWaitTime(expectedPatients, avgConsultationTimeMinutes);
+};
 
 const formatAppointment = (appointment: {
   id: string;
@@ -159,45 +263,124 @@ export const createAppointment = async (input: CreateAppointmentPayload) => {
   return formatAppointment(appointment);
 };
 
-export const getAppointmentsForPatient = async (patientId: string) => {
-  const appointments = await prisma.appointment.findMany({
-    where: { patientId },
-    orderBy: { date: "desc" },
-    include: {
-      doctor: {
-        select: {
-          id: true,
-          name: true,
-          email: true,
-          doctorProfile: {
-            select: { specialization: true, consultationFee: true },
+export const getAppointmentsForPatient = async (
+  patientId: string,
+  page = 1,
+  limit = 10
+) => {
+  const skip = (page - 1) * limit;
+  const where = { patientId };
+
+  const [total, appointments] = await Promise.all([
+    prisma.appointment.count({ where }),
+    prisma.appointment.findMany({
+      where,
+      orderBy: { date: "desc" },
+      skip,
+      take: limit,
+      include: {
+        doctor: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            doctorProfile: {
+              select: { specialization: true, consultationFee: true },
+            },
           },
         },
       },
-    },
-  });
+    }),
+  ]);
 
-  return appointments.map((a) => ({
-    ...formatAppointment(a),
-    doctor: a.doctor,
-  }));
+  const bookedByDoctorDateKey = new Map<string, Array<{ startTime: number; noShowProbability: number }>>();
+
+  const bookingKeys = Array.from(
+    new Set(
+      appointments
+        .filter((appointment) => appointment.status === "booked")
+        .map((appointment) => `${appointment.doctorId}|${appointment.date.toISOString().slice(0, 10)}`)
+    )
+  );
+
+  for (const key of bookingKeys) {
+    const [doctorId, datePart] = key.split("|");
+    const date = normalizeDateOnly(datePart);
+    const bookedAppointments = await prisma.appointment.findMany({
+      where: {
+        doctorId,
+        date,
+        status: "booked",
+      },
+      select: {
+        patientId: true,
+        startTime: true,
+      },
+      orderBy: { startTime: "asc" },
+    });
+
+    const patientHistoryMap = await getPatientHistoryMap(
+      Array.from(new Set(bookedAppointments.map((item) => item.patientId))),
+      date
+    );
+
+    bookedByDoctorDateKey.set(
+      key,
+      bookedAppointments.map((item) => ({
+        startTime: item.startTime,
+        noShowProbability: getNoShowProbability(item.patientId, date, item.startTime, patientHistoryMap),
+      }))
+    );
+  }
+
+  return {
+    appointments: appointments.map((a) => {
+      const formatted = formatAppointment(a);
+      if (a.status !== "booked") {
+        return { ...formatted, doctor: a.doctor, estimatedWaitTime: null };
+      }
+
+      const key = `${a.doctorId}|${a.date.toISOString().slice(0, 10)}`;
+      const dayAppointments = bookedByDoctorDateKey.get(key) ?? [];
+      const estimatedWaitTime = estimateWaitForSlot(a.startTime, dayAppointments);
+
+      return { ...formatted, doctor: a.doctor, estimatedWaitTime };
+    }),
+    total,
+    page,
+    totalPages: Math.max(1, Math.ceil(total / limit)),
+  };
 };
 
-export const getAppointmentsForDoctor = async (doctorId: string) => {
-  const appointments = await prisma.appointment.findMany({
-    where: { doctorId },
-    orderBy: { date: "desc" },
-    include: {
-      patient: {
-        select: { id: true, name: true, email: true },
-      },
-    },
-  });
+export const getAppointmentsForDoctor = async (
+  doctorId: string,
+  page = 1,
+  limit = 10
+) => {
+  const skip = (page - 1) * limit;
+  const where = { doctorId };
 
-  return appointments.map((a) => ({
-    ...formatAppointment(a),
-    patient: a.patient,
-  }));
+  const [total, appointments] = await Promise.all([
+    prisma.appointment.count({ where }),
+    prisma.appointment.findMany({
+      where,
+      orderBy: { date: "desc" },
+      skip,
+      take: limit,
+      include: {
+        patient: {
+          select: { id: true, name: true, email: true },
+        },
+      },
+    }),
+  ]);
+
+  return {
+    appointments: appointments.map((a) => ({ ...formatAppointment(a), patient: a.patient })),
+    total,
+    page,
+    totalPages: Math.max(1, Math.ceil(total / limit)),
+  };
 };
 
 export const cancelAppointmentById = async (
@@ -289,4 +472,172 @@ export const updateAppointmentByDoctor = async (
   });
 
   return formatAppointment(updated);
+};
+
+export const getPredictedSlotsForDoctor = async (
+  doctorId: string,
+  dateInput: string,
+  avgConsultationTimeMinutes = DEFAULT_AVG_CONSULTATION_TIME_MINUTES
+): Promise<PredictedSlotResponse> => {
+  const doctor = await prisma.user.findUnique({ where: { id: doctorId } });
+  if (!doctor || doctor.role !== "doctor") {
+    throw new AppError("Doctor account not found", 404);
+  }
+
+  const date = normalizeDateOnly(dateInput);
+  const dayOfWeek = dayNameByIndex[new Date(date).getUTCDay()];
+
+  const schedules = await prisma.schedule.findMany({
+    where: {
+      doctorId,
+      dayOfWeek,
+    },
+    orderBy: { startTime: "asc" },
+    select: {
+      startTime: true,
+      endTime: true,
+      slotDurationMinutes: true,
+    },
+  });
+
+  const scheduleWindows =
+    schedules.length > 0
+      ? schedules
+      : [
+          {
+            startTime: DEFAULT_DAY_START_MINUTES,
+            endTime: DEFAULT_DAY_END_MINUTES,
+            slotDurationMinutes: DEFAULT_SLOT_DURATION_MINUTES,
+          },
+        ];
+
+  const [blocks, bookedAppointments] = await Promise.all([
+    prisma.doctorUnavailability.findMany({
+      where: {
+        doctorId,
+        date,
+      },
+      select: {
+        startTime: true,
+        endTime: true,
+      },
+    }),
+    prisma.appointment.findMany({
+      where: {
+        doctorId,
+        date,
+        status: "booked",
+      },
+      select: {
+        patientId: true,
+        startTime: true,
+        endTime: true,
+      },
+      orderBy: { startTime: "asc" },
+    }),
+  ]);
+
+  const patientHistoryMap = await getPatientHistoryMap(
+    Array.from(new Set(bookedAppointments.map((item) => item.patientId))),
+    date
+  );
+
+  const bookedWithPrediction = bookedAppointments.map((appointment) => ({
+    startTime: appointment.startTime,
+    noShowProbability: getNoShowProbability(
+      appointment.patientId,
+      date,
+      appointment.startTime,
+      patientHistoryMap
+    ),
+  }));
+
+  const predictedSlots: SlotPrediction[] = [];
+
+  for (const schedule of scheduleWindows) {
+    for (
+      let current = schedule.startTime;
+      current + schedule.slotDurationMinutes <= schedule.endTime;
+      current += schedule.slotDurationMinutes
+    ) {
+      const slotStart = current;
+      const slotEnd = current + schedule.slotDurationMinutes;
+
+      const blocked = blocks.some((block) => block.startTime < slotEnd && block.endTime > slotStart);
+      const reserved = bookedAppointments.some(
+        (item) => item.startTime < slotEnd && item.endTime > slotStart
+      );
+
+      if (blocked || reserved) {
+        continue;
+      }
+
+      const estimatedWaitTime = estimateWaitForSlot(
+        slotStart,
+        bookedWithPrediction,
+        avgConsultationTimeMinutes
+      );
+
+      predictedSlots.push({
+        time: minutesToLabel(slotStart),
+        startTime: minutesToLabel(slotStart),
+        endTime: minutesToLabel(slotEnd),
+        estimatedWaitTime,
+        waitLevel: waitLevelForMinutes(estimatedWaitTime),
+      });
+    }
+  }
+
+  if (predictedSlots.length === 0) {
+    return {
+      slots: [],
+      recommendedSlot: null,
+      avoidSlot: null,
+    };
+  }
+
+  const byWaitAsc = [...predictedSlots].sort((a, b) => a.estimatedWaitTime - b.estimatedWaitTime);
+
+  return {
+    slots: predictedSlots,
+    recommendedSlot: byWaitAsc[0].time,
+    avoidSlot: byWaitAsc[byWaitAsc.length - 1].time,
+  };
+};
+
+export const getAdminAppointmentPredictionInsights = async (): Promise<AdminPredictionInsights> => {
+  const [totalAppointments, upcomingBooked] = await Promise.all([
+    prisma.appointment.count(),
+    prisma.appointment.findMany({
+      where: {
+        status: "booked",
+        date: {
+          gte: normalizeDateOnly(new Date().toISOString()),
+        },
+      },
+      select: {
+        patientId: true,
+        startTime: true,
+        date: true,
+      },
+    }),
+  ]);
+
+  const patientHistoryMap = await getPatientHistoryMap(
+    Array.from(new Set(upcomingBooked.map((item) => item.patientId))),
+    normalizeDateOnly(new Date().toISOString())
+  );
+
+  const noShowProbabilities = upcomingBooked.map((appointment) =>
+    getNoShowProbability(appointment.patientId, appointment.date, appointment.startTime, patientHistoryMap)
+  );
+
+  const expectedPatients = calculateExpectedPatients(noShowProbabilities);
+  const predictedNoShows = Number((upcomingBooked.length - expectedPatients).toFixed(2));
+
+  return {
+    totalAppointments,
+    expectedPatients,
+    predictedNoShows,
+  };
 };

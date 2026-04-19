@@ -570,7 +570,7 @@ export function DoctorSchedulesPage() {
   const activeDays = DAYS.filter((d) => grouped[d].length > 0);
   const totalSlots = schedules.length;
   const upcomingExceptions = unavailabilities.filter(
-    (u) => new Date(u.date) >= new Date(new Date().toDateString())
+    (u: UnavailabilityDto) => new Date(u.date) >= new Date(new Date().toDateString())
   );
 
   return (
@@ -763,7 +763,7 @@ export function DoctorSchedulesPage() {
             />
           ) : (
             <div className="space-y-3">
-              {unavailabilities.map((u) => (
+              {unavailabilities.map((u: UnavailabilityDto) => (
                 <UnavailabilityRow key={u.id} record={u} />
               ))}
             </div>

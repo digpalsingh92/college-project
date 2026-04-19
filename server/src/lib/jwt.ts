@@ -5,7 +5,7 @@ export const tokenSecret = process.env.JWT_SECRET;
 
 export const signToken = (
   payload: object,
-  expiresIn: jwt.SignOptions["expiresIn"] = "1h"
+  expiresIn: jwt.SignOptions["expiresIn"] = "1d"
 ): string => {
   if (!tokenSecret) {
     throw new AppError(

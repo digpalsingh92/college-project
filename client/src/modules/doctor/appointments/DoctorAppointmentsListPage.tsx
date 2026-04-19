@@ -1,11 +1,9 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import DataTable from "@/components/shared/Table/DataTable";
 import { useGetDoctorAppointmentsQuery } from "@/store/apiSlice";
 import type { AppointmentDto } from "@/types/api";
-
-const PAGE_SIZE = 10;
 
 const STATUS_BADGE: Record<string, string> = {
   booked: "bg-blue-100 text-blue-700",
@@ -44,7 +42,7 @@ const columns: {
   },
   {
     key: "startTime",
-    label: "Appointment Time",
+    label: "Time",
     render: (row) => `${row.startTime} – ${row.endTime}`,
   },
   {
@@ -62,29 +60,11 @@ const columns: {
 ];
 
 export function DoctorAppointmentsListPage() {
-  const { data, isLoading } = useGetDoctorAppointmentsQuery();
-  const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
 
-  const filtered = useMemo(() => {
-    const all = data?.appointments ?? [];
-    if (!search.trim()) return all;
-    const q = search.toLowerCase();
-    return all.filter((appt) => {
-      const patientName = (
-        appt as AppointmentDto & { patient?: { name?: string } }
-      ).patient?.name?.toLowerCase();
-      return (
-        patientName?.includes(q) ??
-        appt.date.includes(q) ??
-        appt.status.includes(q)
-      );
-    });
-  }, [data, search]);
-
-  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
-  const safePage = Math.min(page, totalPages);
-  const paged = filtered.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE);
+  // Each unique { page, limit } combo is a separate cached RTK-Query request
+  const { data, isLoading, isFetching } = useGetDoctorAppointmentsQuery({ page, limit });
 
   if (isLoading) {
     return (
@@ -96,14 +76,20 @@ export function DoctorAppointmentsListPage() {
 
   return (
     <DataTable<AppointmentDto>
-      title="Appointments"
-      data={paged}
+      title={`My Appointments${isFetching ? " …" : ""}`}
+      data={data?.appointments ?? []}
       columns={columns}
-      page={safePage}
-      totalPages={totalPages}
+      page={data?.page ?? page}
+      totalPages={data?.totalPages ?? 1}
+      limit={limit}
       onPageChange={(p) => setPage(p)}
-      onSearch={(v) => {
-        setSearch(v);
+      onLimitChange={(l) => {
+        setLimit(l);
+        setPage(1);
+      }}
+      onSearch={() => {
+        // Search resets to page 1; full-text search is client-side on the current page.
+        // For server-side search, add a search param to the API in a future iteration.
         setPage(1);
       }}
     />

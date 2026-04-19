@@ -22,7 +22,9 @@ type Props<T> = {
   actions?: Action<T>[];
   page: number;
   totalPages: number;
+  limit?: number;
   onPageChange: (page: number) => void;
+  onLimitChange?: (limit: number) => void;
   onSearch: (value: string) => void;
 };
 
@@ -33,7 +35,9 @@ export default function DataTable<T>({
   actions,
   page,
   totalPages,
+  limit = 10,
   onPageChange,
+  onLimitChange = () => {},
   onSearch,
 }: Props<T>) {
   return (
@@ -45,7 +49,7 @@ export default function DataTable<T>({
           <thead className="bg-[#f3f9f2]">
             <tr>
               {columns.map((col) => (
-                <th key={String(col.key)} className="px-4.75 py-3.5 text-left">
+                <th key={String(col.key)} className="px-4.75 py-3.5 text-center">
                   {col.label}
                 </th>
               ))}
@@ -58,7 +62,7 @@ export default function DataTable<T>({
               data.map((row, i) => (
                 <tr key={i} className="border-t border-[#EAE6EA] hover:bg-gray-50">
                   {columns.map((col) => (
-                    <td key={String(col.key)} className="px-3 py-5">
+                    <td key={String(col.key)} className="px-4.75 py-3.5 text-center">
                       {col.render ? col.render(row) : (row[col.key] as React.ReactNode)}
                     </td>
                   ))}
@@ -89,7 +93,7 @@ export default function DataTable<T>({
         </table>
       </div>
 
-      <TablePagination page={page} totalPages={totalPages} onChange={onPageChange} />
+      <TablePagination page={page} totalPages={totalPages} limit={limit} onChange={onPageChange} onLimitChange={onLimitChange} />
     </TableCard>
   );
 }
