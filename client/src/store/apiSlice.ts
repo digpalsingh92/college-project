@@ -44,6 +44,8 @@ import type {
   UpdateScheduleRequest,
   UpdateAppointmentByDoctorRequest,
   WaitingTimePredictionRequest,
+  AssistantRequest,
+  AssistantResponse,
 } from "@/types/api";
 
 type ApiResult<T> =
@@ -671,6 +673,17 @@ export const api = createApi({
       },
     }),
 
+    askAssistant: builder.mutation<AssistantResponse, AssistantRequest>({
+      async queryFn(body, api: BaseQueryApi): Promise<ApiResult<AssistantResponse>> {
+        return runRequest(
+          apiHandler.post<AssistantResponse>("assistant", body, {
+            token: (api.getState() as ApiAuthState).auth.token,
+          }),
+          api
+        );
+      },
+    }),
+
     trainPrice: builder.mutation<unknown, void>({
       async queryFn(_arg, api: BaseQueryApi): Promise<ApiResult<unknown>> {
         return runRequest(
@@ -739,4 +752,5 @@ export const {
   useTrainNoShowMutation,
   useTrainPriceMutation,
   useTrainBedMutation,
+  useAskAssistantMutation,
 } = api;

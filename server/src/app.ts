@@ -4,6 +4,7 @@ import doctorRoutes from './routes/schedule.route.js';
 import appointmentRoutes from './routes/appointment.route.js';
 import patientRoutes from './routes/patient.route.js';
 import predictionRoutes from './routes/prediction.route.js';
+import assistantRoutes from './routes/assistant.route.js';
 import { AppError } from './utils/app-error.js';
 import cors from "cors"
 import rateLimit from 'express-rate-limit';
@@ -29,6 +30,7 @@ app.use('/api/doctors', doctorRoutes);
 app.use('/api/appointments', appointmentRoutes);
 app.use('/api/predictions', predictionRoutes);
 app.use('/api/patients', patientRoutes);
+app.use('/api/assistant', assistantRoutes);
 
 app.use((err: unknown, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
 	if (err instanceof AppError) {

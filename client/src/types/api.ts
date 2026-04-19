@@ -372,3 +372,20 @@ export interface RecommendationsResponse {
   message: string;
 }
 
+// ── Assistant ──
+
+export interface AssistantRequest {
+  message: string;
+}
+
+export interface AssistantResponse {
+  success: boolean;
+  type?: "price" | "wait-time" | "bed" | "general";
+  message?: string;
+  data?: {
+    priceRange?: string;
+    waitTime?: string;
+    bedsAvailable?: string;
+  };
+}
+

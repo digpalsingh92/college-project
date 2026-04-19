@@ -97,6 +97,7 @@ export interface PriceBucket {
 export interface PriceModel {
   version: string;
   trainedAt: string;
+  currency?: "USD" | "INR";
   datasetRecords: number;
   byProcedure: Record<string, PriceBucket>;
   procedures: string[];

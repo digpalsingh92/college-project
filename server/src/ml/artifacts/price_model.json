@@ -1,879 +1,880 @@
 {
   "version": "1.0.0",
-  "trainedAt": "2026-04-19T18:44:58.825Z",
+  "trainedAt": "2026-04-19T20:35:28.283Z",
+  "currency": "INR",
   "datasetRecords": 164049,
   "byProcedure": {
     "angioplasty": {
       "procedure": "Angioplasty",
       "count": 65,
-      "min": 15000,
-      "max": 15000,
-      "avg": 15000,
-      "median": 15000
+      "min": 1245000,
+      "max": 1245000,
+      "avg": 1245000,
+      "median": 1245000
     },
     "insulin therapy": {
       "procedure": "Insulin Therapy",
       "count": 65,
-      "min": 2000,
-      "max": 2000,
-      "avg": 2000,
-      "median": 2000
+      "min": 166000,
+      "max": 166000,
+      "avg": 166000,
+      "median": 166000
     },
     "x ray and splint": {
       "procedure": "X-Ray and Splint",
       "count": 66,
-      "min": 500,
-      "max": 500,
-      "avg": 500,
-      "median": 500
+      "min": 41500,
+      "max": 41500,
+      "avg": 41500,
+      "median": 41500
     },
     "ct scan and medication": {
       "procedure": "CT Scan and Medication",
       "count": 66,
-      "min": 10000,
-      "max": 10000,
-      "avg": 10000,
-      "median": 10000
+      "min": 830000,
+      "max": 830000,
+      "avg": 830000,
+      "median": 830000
     },
     "surgery and chemotherapy": {
       "procedure": "Surgery and Chemotherapy",
       "count": 66,
-      "min": 25000,
-      "max": 25000,
-      "avg": 25000,
-      "median": 25000
+      "min": 2075000,
+      "max": 2075000,
+      "avg": 2075000,
+      "median": 2075000
     },
     "medication and counseling": {
       "procedure": "Medication and Counseling",
       "count": 66,
-      "min": 1000,
-      "max": 1000,
-      "avg": 1000,
-      "median": 1000
+      "min": 83000,
+      "max": 83000,
+      "avg": 83000,
+      "median": 83000
     },
     "appendectomy": {
       "procedure": "Appendectomy",
       "count": 66,
-      "min": 8000,
-      "max": 8000,
-      "avg": 8000,
-      "median": 8000
+      "min": 664000,
+      "max": 664000,
+      "avg": 664000,
+      "median": 664000
     },
     "cast and physical therapy": {
       "procedure": "Cast and Physical Therapy",
       "count": 67,
-      "min": 3000,
-      "max": 3000,
-      "avg": 3000,
-      "median": 3000
+      "min": 249000,
+      "max": 249000,
+      "avg": 249000,
+      "median": 249000
     },
     "cardiac catheterization": {
       "procedure": "Cardiac Catheterization",
       "count": 67,
-      "min": 18000,
-      "max": 18000,
-      "avg": 18000,
-      "median": 18000
+      "min": 1494000,
+      "max": 1494000,
+      "avg": 1494000,
+      "median": 1494000
     },
     "epinephrine injection": {
       "procedure": "Epinephrine Injection",
       "count": 66,
-      "min": 100,
-      "max": 100,
-      "avg": 100,
-      "median": 100
+      "min": 8300,
+      "max": 8300,
+      "avg": 8300,
+      "median": 8300
     },
     "antibiotics and rest": {
       "procedure": "Antibiotics and Rest",
       "count": 65,
-      "min": 800,
-      "max": 800,
-      "avg": 800,
-      "median": 800
+      "min": 66400,
+      "max": 66400,
+      "avg": 66400,
+      "median": 66400
     },
     "radiation therapy": {
       "procedure": "Radiation Therapy",
       "count": 65,
-      "min": 20000,
-      "max": 20000,
-      "avg": 20000,
-      "median": 20000
+      "min": 1660000,
+      "max": 1660000,
+      "avg": 1660000,
+      "median": 1660000
     },
     "delivery and postnatal care": {
       "procedure": "Delivery and Postnatal Care",
       "count": 65,
-      "min": 12000,
-      "max": 12000,
-      "avg": 12000,
-      "median": 12000
+      "min": 996000,
+      "max": 996000,
+      "avg": 996000,
+      "median": 996000
     },
     "lithotripsy": {
       "procedure": "Lithotripsy",
       "count": 65,
-      "min": 6000,
-      "max": 6000,
-      "avg": 6000,
-      "median": 6000
+      "min": 498000,
+      "max": 498000,
+      "avg": 498000,
+      "median": 498000
     },
     "physical therapy and pain management": {
       "procedure": "Physical Therapy and Pain Management",
       "count": 64,
-      "min": 4000,
-      "max": 4000,
-      "avg": 4000,
-      "median": 4000
+      "min": 332000,
+      "max": 332000,
+      "avg": 332000,
+      "median": 332000
     },
     "extracranial procedures w o cc mcc": {
       "procedure": "EXTRACRANIAL PROCEDURES W/O CC/MCC",
       "count": 1079,
-      "min": 66,
-      "max": 1632,
-      "avg": 339,
-      "median": 296
+      "min": 5516,
+      "max": 135467,
+      "avg": 28111,
+      "median": 24578
     },
     "degenerative nervous system disorders w o mcc": {
       "procedure": "DEGENERATIVE NERVOUS SYSTEM DISORDERS W/O MCC",
       "count": 1201,
-      "min": 62,
-      "max": 1646,
-      "avg": 270,
-      "median": 227
+      "min": 5181,
+      "max": 136607,
+      "avg": 22417,
+      "median": 18863
     },
     "transient ischemia": {
       "procedure": "TRANSIENT ISCHEMIA",
       "count": 1962,
-      "min": 49,
-      "max": 1334,
-      "avg": 236,
-      "median": 204
+      "min": 4047,
+      "max": 110704,
+      "avg": 19547,
+      "median": 16916
     },
     "intracranial hemorrhage or cerebral infarction w mcc": {
       "procedure": "INTRACRANIAL HEMORRHAGE OR CEREBRAL INFARCTION W MCC",
       "count": 1659,
-      "min": 106,
-      "max": 2610,
-      "avg": 539,
-      "median": 455
+      "min": 8797,
+      "max": 216642,
+      "avg": 44776,
+      "median": 37768
     },
     "intracranial hemorrhage or cerebral infarction w cc": {
       "procedure": "INTRACRANIAL HEMORRHAGE OR CEREBRAL INFARCTION W CC",
       "count": 2269,
-      "min": 58,
-      "max": 1810,
-      "avg": 328,
-      "median": 279
+      "min": 4816,
+      "max": 150251,
+      "avg": 27198,
+      "median": 23195
     },
     "intracranial hemorrhage or cerebral infarction w o cc mcc": {
       "procedure": "INTRACRANIAL HEMORRHAGE OR CEREBRAL INFARCTION W/O CC/MCC",
       "count": 1806,
-      "min": 60,
-      "max": 1309,
-      "avg": 262,
-      "median": 222
+      "min": 4973,
+      "max": 108666,
+      "avg": 21758,
+      "median": 18423
     },
     "cranial peripheral nerve disorders w o mcc": {
       "procedure": "CRANIAL & PERIPHERAL NERVE DISORDERS W/O MCC",
       "count": 979,
-      "min": 63,
-      "max": 1131,
-      "avg": 279,
-      "median": 245
+      "min": 5252,
+      "max": 93844,
+      "avg": 23191,
+      "median": 20295
     },
     "seizures w o mcc": {
       "procedure": "SEIZURES W/O MCC",
       "count": 1593,
-      "min": 53,
-      "max": 1213,
-      "avg": 239,
-      "median": 205
+      "min": 4367,
+      "max": 100652,
+      "avg": 19840,
+      "median": 17027
     },
     "dysequilibrium": {
       "procedure": "DYSEQUILIBRIUM",
       "count": 988,
-      "min": 44,
-      "max": 863,
-      "avg": 210,
-      "median": 183
+      "min": 3672,
+      "max": 71657,
+      "avg": 17403,
+      "median": 15209
     },
     "pulmonary embolism w o mcc": {
       "procedure": "PULMONARY EMBOLISM W/O MCC",
       "count": 1396,
-      "min": 68,
-      "max": 1434,
-      "avg": 297,
-      "median": 255
+      "min": 5632,
+      "max": 119039,
+      "avg": 24658,
+      "median": 21130
     },
     "respiratory infections inflammations w mcc": {
       "procedure": "RESPIRATORY INFECTIONS & INFLAMMATIONS W MCC",
       "count": 1894,
-      "min": 78,
-      "max": 2584,
-      "avg": 563,
-      "median": 471
+      "min": 6441,
+      "max": 214465,
+      "avg": 46710,
+      "median": 39127
     },
     "pulmonary edema respiratory failure": {
       "procedure": "PULMONARY EDEMA & RESPIRATORY FAILURE",
       "count": 2096,
-      "min": 80,
-      "max": 1887,
-      "avg": 381,
-      "median": 314
+      "min": 6640,
+      "max": 156623,
+      "avg": 31610,
+      "median": 26035
     },
     "respiratory infections inflammations w cc": {
       "procedure": "RESPIRATORY INFECTIONS & INFLAMMATIONS W CC",
       "count": 1953,
-      "min": 64,
-      "max": 2044,
-      "avg": 390,
-      "median": 326
+      "min": 5344,
+      "max": 169679,
+      "avg": 32333,
+      "median": 27070
     },
     "chronic obstructive pulmonary disease w mcc": {
       "procedure": "CHRONIC OBSTRUCTIVE PULMONARY DISEASE W MCC",
       "count": 2713,
-      "min": 53,
-      "max": 1564,
-      "avg": 324,
-      "median": 269
+      "min": 4376,
+      "max": 129823,
+      "avg": 26874,
+      "median": 22316
     },
     "chronic obstructive pulmonary disease w cc": {
       "procedure": "CHRONIC OBSTRUCTIVE PULMONARY DISEASE W CC",
       "count": 2720,
-      "min": 51,
-      "max": 1253,
-      "avg": 260,
-      "median": 216
+      "min": 4258,
+      "max": 103959,
+      "avg": 21578,
+      "median": 17916
     },
     "simple pneumonia pleurisy w mcc": {
       "procedure": "SIMPLE PNEUMONIA & PLEURISY W MCC",
       "count": 2575,
-      "min": 74,
-      "max": 1951,
-      "avg": 416,
-      "median": 348
+      "min": 6161,
+      "max": 161950,
+      "avg": 34499,
+      "median": 28861
     },
     "simple pneumonia pleurisy w cc": {
       "procedure": "SIMPLE PNEUMONIA & PLEURISY W CC",
       "count": 3023,
-      "min": 57,
-      "max": 1378,
-      "avg": 273,
-      "median": 231
+      "min": 4696,
+      "max": 114402,
+      "avg": 22640,
+      "median": 19153
     },
     "chronic obstructive pulmonary disease w o cc mcc": {
       "procedure": "CHRONIC OBSTRUCTIVE PULMONARY DISEASE W/O CC/MCC",
       "count": 2671,
-      "min": 35,
-      "max": 1108,
-      "avg": 197,
-      "median": 167
+      "min": 2890,
+      "max": 91936,
+      "avg": 16353,
+      "median": 13870
     },
     "simple pneumonia pleurisy w o cc mcc": {
       "procedure": "SIMPLE PNEUMONIA & PLEURISY W/O CC/MCC",
       "count": 2576,
-      "min": 45,
-      "max": 984,
-      "avg": 199,
-      "median": 167
+      "min": 3762,
+      "max": 81635,
+      "avg": 16495,
+      "median": 13850
     },
     "bronchitis asthma w cc mcc": {
       "procedure": "BRONCHITIS & ASTHMA W CC/MCC",
       "count": 1384,
-      "min": 44,
-      "max": 1383,
-      "avg": 258,
-      "median": 217
+      "min": 3637,
+      "max": 114752,
+      "avg": 21397,
+      "median": 18002
     },
     "bronchitis asthma w o cc mcc": {
       "procedure": "BRONCHITIS & ASTHMA W/O CC/MCC",
       "count": 894,
-      "min": 35,
-      "max": 812,
-      "avg": 188,
-      "median": 161
+      "min": 2872,
+      "max": 67423,
+      "avg": 15572,
+      "median": 13373
     },
     "respiratory system diagnosis w ventilator support 96 hours": {
       "procedure": "RESPIRATORY SYSTEM DIAGNOSIS W VENTILATOR SUPPORT 96+ HOURS",
       "count": 3156,
-      "min": 137,
-      "max": 10324,
-      "avg": 1025,
-      "median": 795
+      "min": 11379,
+      "max": 856854,
+      "avg": 85080,
+      "median": 66012
     },
     "major cardiovasc procedures w o mcc": {
       "procedure": "MAJOR CARDIOVASC PROCEDURES W/O MCC",
       "count": 1054,
-      "min": 250,
-      "max": 3377,
-      "avg": 945,
-      "median": 867
+      "min": 20713,
+      "max": 280283,
+      "avg": 78399,
+      "median": 71925
     },
     "other vascular procedures w mcc": {
       "procedure": "OTHER VASCULAR PROCEDURES W MCC",
       "count": 1151,
-      "min": 165,
-      "max": 4328,
-      "avg": 928,
-      "median": 830
+      "min": 13664,
+      "max": 359183,
+      "avg": 77008,
+      "median": 68892
     },
     "other vascular procedures w cc": {
       "procedure": "OTHER VASCULAR PROCEDURES W CC",
       "count": 1203,
-      "min": 157,
-      "max": 3189,
-      "avg": 779,
-      "median": 704
+      "min": 13051,
+      "max": 264667,
+      "avg": 64692,
+      "median": 58468
     },
     "other vascular procedures w o cc mcc": {
       "procedure": "OTHER VASCULAR PROCEDURES W/O CC/MCC",
       "count": 920,
-      "min": 106,
-      "max": 1632,
-      "avg": 533,
-      "median": 483
+      "min": 8815,
+      "max": 135434,
+      "avg": 44277,
+      "median": 40050
     },
     "heart failure shock w mcc": {
       "procedure": "HEART FAILURE & SHOCK W MCC",
       "count": 2687,
-      "min": 81,
-      "max": 1925,
-      "avg": 399,
-      "median": 335
+      "min": 6735,
+      "max": 159775,
+      "avg": 33110,
+      "median": 27831
     },
     "permanent cardiac pacemaker implant w cc": {
       "procedure": "PERMANENT CARDIAC PACEMAKER IMPLANT W CC",
       "count": 1150,
-      "min": 219,
-      "max": 2350,
-      "avg": 754,
-      "median": 691
+      "min": 18211,
+      "max": 195082,
+      "avg": 62587,
+      "median": 57344
     },
     "permanent cardiac pacemaker implant w o cc mcc": {
       "procedure": "PERMANENT CARDIAC PACEMAKER IMPLANT W/O CC/MCC",
       "count": 1075,
-      "min": 168,
-      "max": 1863,
-      "avg": 597,
-      "median": 546
+      "min": 13951,
+      "max": 154591,
+      "avg": 49514,
+      "median": 45346
     },
     "perc cardiovasc proc w drug eluting stent w mcc or 4 vessels stents": {
       "procedure": "PERC CARDIOVASC PROC W DRUG-ELUTING STENT W MCC OR 4+ VESSELS/STENTS",
       "count": 917,
-      "min": 235,
-      "max": 3687,
-      "avg": 1071,
-      "median": 938
+      "min": 19492,
+      "max": 306002,
+      "avg": 88855,
+      "median": 77883
     },
     "perc cardiovasc proc w drug eluting stent w o mcc": {
       "procedure": "PERC CARDIOVASC PROC W DRUG-ELUTING STENT W/O MCC",
       "count": 1408,
-      "min": 128,
-      "max": 2488,
-      "avg": 742,
-      "median": 660
+      "min": 10641,
+      "max": 206490,
+      "avg": 61547,
+      "median": 54747
     },
     "perc cardiovasc proc w non drug eluting stent w o mcc": {
       "procedure": "PERC CARDIOVASC PROC W NON-DRUG-ELUTING STENT W/O MCC",
       "count": 955,
-      "min": 123,
-      "max": 2487,
-      "avg": 656,
-      "median": 585
+      "min": 10233,
+      "max": 206399,
+      "avg": 54459,
+      "median": 48552
     },
     "perc cardiovasc proc w o coronary artery stent w o mcc": {
       "procedure": "PERC CARDIOVASC PROC W/O CORONARY ARTERY STENT W/O MCC",
       "count": 727,
-      "min": 148,
-      "max": 2261,
-      "avg": 689,
-      "median": 640
+      "min": 12278,
+      "max": 187693,
+      "avg": 57218,
+      "median": 53124
     },
     "acute myocardial infarction": {
       "procedure": "ACUTE MYOCARDIAL INFARCTION",
       "count": 4553,
-      "min": 49,
-      "max": 2336,
-      "avg": 392,
-      "median": 320
+      "min": 4102,
+      "max": 193878,
+      "avg": 32518,
+      "median": 26578
     },
     "heart failure shock w cc": {
       "procedure": "HEART FAILURE & SHOCK W CC",
       "count": 2953,
-      "min": 51,
-      "max": 1345,
-      "avg": 261,
-      "median": 219
+      "min": 4263,
+      "max": 111662,
+      "avg": 21689,
+      "median": 18173
     },
     "circulatory disorders except ami": {
       "procedure": "CIRCULATORY DISORDERS EXCEPT AMI",
       "count": 2638,
-      "min": 73,
-      "max": 3909,
-      "avg": 485,
-      "median": 406
+      "min": 6051,
+      "max": 324436,
+      "avg": 40215,
+      "median": 33695
     },
     "heart failure shock w o cc mcc": {
       "procedure": "HEART FAILURE & SHOCK W/O CC/MCC",
       "count": 2514,
-      "min": 37,
-      "max": 1023,
-      "avg": 187,
-      "median": 157
+      "min": 3074,
+      "max": 84897,
+      "avg": 15553,
+      "median": 13007
     },
     "peripheral vascular disorders w cc": {
       "procedure": "PERIPHERAL VASCULAR DISORDERS W CC",
       "count": 1523,
-      "min": 58,
-      "max": 1355,
-      "avg": 268,
-      "median": 228
+      "min": 4852,
+      "max": 112442,
+      "avg": 22218,
+      "median": 18935
     },
     "peripheral vascular disorders w o cc mcc": {
       "procedure": "PERIPHERAL VASCULAR DISORDERS W/O CC/MCC",
       "count": 877,
-      "min": 52,
-      "max": 1006,
-      "avg": 191,
-      "median": 166
+      "min": 4286,
+      "max": 83490,
+      "avg": 15818,
+      "median": 13780
     },
     "atherosclerosis w o mcc": {
       "procedure": "ATHEROSCLEROSIS W/O MCC",
       "count": 1249,
-      "min": 34,
-      "max": 769,
-      "avg": 185,
-      "median": 157
+      "min": 2831,
+      "max": 63815,
+      "avg": 15346,
+      "median": 13022
     },
     "hypertension w o mcc": {
       "procedure": "HYPERTENSION W/O MCC",
       "count": 1129,
-      "min": 33,
-      "max": 766,
-      "avg": 195,
-      "median": 172
+      "min": 2727,
+      "max": 63598,
+      "avg": 16155,
+      "median": 14291
     },
     "cardiac arrhythmia conduction disorders w mcc": {
       "procedure": "CARDIAC ARRHYTHMIA & CONDUCTION DISORDERS W MCC",
       "count": 1880,
-      "min": 89,
-      "max": 1611,
-      "avg": 359,
-      "median": 300
+      "min": 7395,
+      "max": 133695,
+      "avg": 29832,
+      "median": 24914
     },
     "syncope collapse": {
       "procedure": "SYNCOPE & COLLAPSE",
       "count": 2288,
-      "min": 42,
-      "max": 1197,
-      "avg": 221,
-      "median": 189
+      "min": 3510,
+      "max": 99322,
+      "avg": 18331,
+      "median": 15682
     },
     "cardiac arrhythmia conduction disorders w cc": {
       "procedure": "CARDIAC ARRHYTHMIA & CONDUCTION DISORDERS W CC",
       "count": 2363,
-      "min": 45,
-      "max": 1184,
-      "avg": 237,
-      "median": 201
+      "min": 3751,
+      "max": 98247,
+      "avg": 19677,
+      "median": 16651
     },
     "cardiac arrhythmia conduction disorders w o cc mcc": {
       "procedure": "CARDIAC ARRHYTHMIA & CONDUCTION DISORDERS W/O CC/MCC",
       "count": 2403,
-      "min": 30,
-      "max": 925,
-      "avg": 166,
-      "median": 142
+      "min": 2492,
+      "max": 76782,
+      "avg": 13772,
+      "median": 11775
     },
     "chest pain": {
       "procedure": "CHEST PAIN",
       "count": 2230,
-      "min": 27,
-      "max": 901,
-      "avg": 188,
-      "median": 163
+      "min": 2268,
+      "max": 74776,
+      "avg": 15630,
+      "median": 13520
     },
     "other circulatory system diagnoses w mcc": {
       "procedure": "OTHER CIRCULATORY SYSTEM DIAGNOSES W MCC",
       "count": 1554,
-      "min": 104,
-      "max": 2581,
-      "avg": 535,
-      "median": 452
+      "min": 8659,
+      "max": 214223,
+      "avg": 44445,
+      "median": 37533
     },
     "other circulatory system diagnoses w cc": {
       "procedure": "OTHER CIRCULATORY SYSTEM DIAGNOSES W CC",
       "count": 859,
-      "min": 69,
-      "max": 1291,
-      "avg": 288,
-      "median": 244
+      "min": 5739,
+      "max": 107129,
+      "avg": 23902,
+      "median": 20287
     },
     "major small large bowel procedures w cc": {
       "procedure": "MAJOR SMALL & LARGE BOWEL PROCEDURES W CC",
       "count": 1682,
-      "min": 176,
-      "max": 3413,
-      "avg": 735,
-      "median": 633
+      "min": 14580,
+      "max": 283272,
+      "avg": 60970,
+      "median": 52532
     },
     "g i hemorrhage w mcc": {
       "procedure": "G.I. HEMORRHAGE W MCC",
       "count": 1679,
-      "min": 108,
-      "max": 2195,
-      "avg": 514,
-      "median": 441
+      "min": 8976,
+      "max": 182212,
+      "avg": 42632,
+      "median": 36573
     },
     "major small large bowel procedures w mcc": {
       "procedure": "MAJOR SMALL & LARGE BOWEL PROCEDURES W MCC",
       "count": 1476,
-      "min": 353,
-      "max": 6199,
-      "avg": 1504,
-      "median": 1288
+      "min": 29331,
+      "max": 514509,
+      "avg": 124805,
+      "median": 106870
     },
     "major gastrointestinal disorders peritoneal infections w cc": {
       "procedure": "MAJOR GASTROINTESTINAL DISORDERS & PERITONEAL INFECTIONS W CC",
       "count": 1233,
-      "min": 58,
-      "max": 1674,
-      "avg": 337,
-      "median": 285
+      "min": 4773,
+      "max": 138910,
+      "avg": 27973,
+      "median": 23692
     },
     "g i hemorrhage w cc": {
       "procedure": "G.I. HEMORRHAGE W CC",
       "count": 2562,
-      "min": 77,
-      "max": 1419,
-      "avg": 282,
-      "median": 244
+      "min": 6409,
+      "max": 117748,
+      "avg": 23424,
+      "median": 20214
     },
     "g i hemorrhage w o cc mcc": {
       "procedure": "G.I. HEMORRHAGE W/O CC/MCC",
       "count": 1455,
-      "min": 51,
-      "max": 730,
-      "avg": 206,
-      "median": 180
+      "min": 4209,
+      "max": 60617,
+      "avg": 17101,
+      "median": 14899
     },
     "g i obstruction w cc": {
       "procedure": "G.I. OBSTRUCTION W CC",
       "count": 1779,
-      "min": 56,
-      "max": 1686,
-      "avg": 273,
-      "median": 235
+      "min": 4618,
+      "max": 139906,
+      "avg": 22655,
+      "median": 19537
     },
     "g i obstruction w o cc mcc": {
       "procedure": "G.I. OBSTRUCTION W/O CC/MCC",
       "count": 1438,
-      "min": 45,
-      "max": 895,
-      "avg": 193,
-      "median": 166
+      "min": 3725,
+      "max": 74253,
+      "avg": 16009,
+      "median": 13760
     },
     "esophagitis": {
       "procedure": "ESOPHAGITIS",
       "count": 4520,
-      "min": 28,
-      "max": 1537,
-      "avg": 264,
-      "median": 222
+      "min": 2326,
+      "max": 127606,
+      "avg": 21940,
+      "median": 18457
     },
     "other digestive system diagnoses w cc": {
       "procedure": "OTHER DIGESTIVE SYSTEM DIAGNOSES W CC",
       "count": 1545,
-      "min": 68,
-      "max": 1146,
-      "avg": 302,
-      "median": 260
+      "min": 5657,
+      "max": 95132,
+      "avg": 25026,
+      "median": 21604
     },
     "disorders of pancreas except malignancy w cc": {
       "procedure": "DISORDERS OF PANCREAS EXCEPT MALIGNANCY W CC",
       "count": 955,
-      "min": 73,
-      "max": 1469,
-      "avg": 303,
-      "median": 262
+      "min": 6031,
+      "max": 121926,
+      "avg": 25148,
+      "median": 21728
     },
     "spinal fusion except cervical w o mcc": {
       "procedure": "SPINAL FUSION EXCEPT CERVICAL W/O MCC",
       "count": 1332,
-      "min": 213,
-      "max": 5235,
-      "avg": 1062,
-      "median": 950
+      "min": 17694,
+      "max": 434478,
+      "avg": 88135,
+      "median": 78824
     },
     "cervical spinal fusion w o cc mcc": {
       "procedure": "CERVICAL SPINAL FUSION W/O CC/MCC",
       "count": 846,
-      "min": 140,
-      "max": 2436,
-      "avg": 605,
-      "median": 554
+      "min": 11603,
+      "max": 202218,
+      "avg": 50241,
+      "median": 45965
     },
     "laparoscopic cholecystectomy w o c d e w cc": {
       "procedure": "LAPAROSCOPIC CHOLECYSTECTOMY W/O C.D.E. W CC",
       "count": 959,
-      "min": 130,
-      "max": 1931,
-      "avg": 536,
-      "median": 471
+      "min": 10780,
+      "max": 160256,
+      "avg": 44504,
+      "median": 39084
     },
     "laparoscopic cholecystectomy w o c d e w o cc mcc": {
       "procedure": "LAPAROSCOPIC CHOLECYSTECTOMY W/O C.D.E. W/O CC/MCC",
       "count": 871,
-      "min": 75,
-      "max": 1561,
-      "avg": 386,
-      "median": 340
+      "min": 6225,
+      "max": 129526,
+      "avg": 32023,
+      "median": 28192
     },
     "major joint replacement or reattachment of lower extremity w mcc": {
       "procedure": "MAJOR JOINT REPLACEMENT OR REATTACHMENT OF LOWER EXTREMITY W MCC",
       "count": 932,
-      "min": 223,
-      "max": 3577,
-      "avg": 908,
-      "median": 796
+      "min": 18535,
+      "max": 296880,
+      "avg": 75349,
+      "median": 66032
     },
     "major joint replacement or reattachment of lower extremity w o mcc": {
       "procedure": "MAJOR JOINT REPLACEMENT OR REATTACHMENT OF LOWER EXTREMITY W/O MCC",
       "count": 2750,
-      "min": 59,
-      "max": 2482,
-      "avg": 578,
-      "median": 514
+      "min": 4891,
+      "max": 205999,
+      "avg": 48014,
+      "median": 42624
     },
     "hip femur procedures except major joint w mcc": {
       "procedure": "HIP & FEMUR PROCEDURES EXCEPT MAJOR JOINT W MCC",
       "count": 929,
-      "min": 198,
-      "max": 3601,
-      "avg": 837,
-      "median": 726
+      "min": 16456,
+      "max": 298924,
+      "avg": 69480,
+      "median": 60272
     },
     "hip femur procedures except major joint w cc": {
       "procedure": "HIP & FEMUR PROCEDURES EXCEPT MAJOR JOINT W CC",
       "count": 2090,
-      "min": 149,
-      "max": 2188,
-      "avg": 545,
-      "median": 477
+      "min": 12381,
+      "max": 181626,
+      "avg": 45210,
+      "median": 39577
     },
     "fractures of hip pelvis w o mcc": {
       "procedure": "FRACTURES OF HIP & PELVIS W/O MCC",
       "count": 1142,
-      "min": 44,
-      "max": 711,
-      "avg": 194,
-      "median": 168
+      "min": 3676,
+      "max": 59037,
+      "avg": 16122,
+      "median": 13966
     },
     "hip femur procedures except major joint w o cc mcc": {
       "procedure": "HIP & FEMUR PROCEDURES EXCEPT MAJOR JOINT W/O CC/MCC",
       "count": 1040,
-      "min": 122,
-      "max": 2114,
-      "avg": 442,
-      "median": 387
+      "min": 10153,
+      "max": 175422,
+      "avg": 36647,
+      "median": 32154
     },
     "medical back problems w o mcc": {
       "procedure": "MEDICAL BACK PROBLEMS W/O MCC",
       "count": 1801,
-      "min": 49,
-      "max": 1436,
-      "avg": 249,
-      "median": 216
+      "min": 4032,
+      "max": 119195,
+      "avg": 20646,
+      "median": 17905
     },
     "back neck proc exc spinal fusion w o cc mcc": {
       "procedure": "BACK & NECK PROC EXC SPINAL FUSION W/O CC/MCC",
       "count": 975,
-      "min": 74,
-      "max": 1518,
-      "avg": 342,
-      "median": 296
+      "min": 6180,
+      "max": 125975,
+      "avg": 28355,
+      "median": 24538
     },
     "fx": {
       "procedure": "FX",
       "count": 984,
-      "min": 50,
-      "max": 927,
-      "avg": 217,
-      "median": 187
+      "min": 4163,
+      "max": 76916,
+      "avg": 17977,
+      "median": 15510
     },
     "cellulitis w mcc": {
       "procedure": "CELLULITIS W MCC",
       "count": 945,
-      "min": 87,
-      "max": 2225,
-      "avg": 421,
-      "median": 362
+      "min": 7209,
+      "max": 184644,
+      "avg": 34973,
+      "median": 30007
     },
     "cellulitis w o mcc": {
       "procedure": "CELLULITIS W/O MCC",
       "count": 2807,
-      "min": 31,
-      "max": 1175,
-      "avg": 211,
-      "median": 180
+      "min": 2578,
+      "max": 97531,
+      "avg": 17493,
+      "median": 14929
     },
     "diabetes w cc": {
       "procedure": "DIABETES W CC",
       "count": 1820,
-      "min": 47,
-      "max": 1452,
-      "avg": 240,
-      "median": 201
+      "min": 3865,
+      "max": 120525,
+      "avg": 19917,
+      "median": 16687
     },
     "misc disorders of nutrition": {
       "procedure": "MISC DISORDERS OF NUTRITION",
       "count": 4651,
-      "min": 33,
-      "max": 1606,
-      "avg": 235,
-      "median": 194
+      "min": 2762,
+      "max": 133258,
+      "avg": 19533,
+      "median": 16096
     },
     "renal failure w mcc": {
       "procedure": "RENAL FAILURE W MCC",
       "count": 2144,
-      "min": 90,
-      "max": 2685,
-      "avg": 444,
-      "median": 372
+      "min": 7500,
+      "max": 222858,
+      "avg": 36821,
+      "median": 30903
     },
     "renal failure w cc": {
       "procedure": "RENAL FAILURE W CC",
       "count": 2508,
-      "min": 57,
-      "max": 1239,
-      "avg": 274,
-      "median": 229
+      "min": 4771,
+      "max": 102844,
+      "avg": 22769,
+      "median": 19043
     },
     "renal failure w o cc mcc": {
       "procedure": "RENAL FAILURE W/O CC/MCC",
       "count": 1008,
-      "min": 50,
-      "max": 752,
-      "avg": 189,
-      "median": 164
+      "min": 4111,
+      "max": 62443,
+      "avg": 15703,
+      "median": 13626
     },
     "kidney urinary tract infections w mcc": {
       "procedure": "KIDNEY & URINARY TRACT INFECTIONS W MCC",
       "count": 1952,
-      "min": 69,
-      "max": 1473,
-      "avg": 324,
-      "median": 275
+      "min": 5739,
+      "max": 122257,
+      "avg": 26921,
+      "median": 22842
     },
     "kidney urinary tract infections w o mcc": {
       "procedure": "KIDNEY & URINARY TRACT INFECTIONS W/O MCC",
       "count": 2989,
-      "min": 40,
-      "max": 1019,
-      "avg": 203,
-      "median": 170
+      "min": 3355,
+      "max": 84563,
+      "avg": 16858,
+      "median": 14147
     },
     "red blood cell disorders w mcc": {
       "procedure": "RED BLOOD CELL DISORDERS W MCC",
       "count": 1135,
-      "min": 72,
-      "max": 1575,
-      "avg": 381,
-      "median": 323
+      "min": 5996,
+      "max": 130726,
+      "avg": 31613,
+      "median": 26781
     },
     "other kidney urinary tract diagnoses w mcc": {
       "procedure": "OTHER KIDNEY & URINARY TRACT DIAGNOSES W MCC",
       "count": 874,
-      "min": 111,
-      "max": 2171,
-      "avg": 456,
-      "median": 381
+      "min": 9227,
+      "max": 180214,
+      "avg": 37852,
+      "median": 31585
     },
     "other kidney urinary tract diagnoses w cc": {
       "procedure": "OTHER KIDNEY & URINARY TRACT DIAGNOSES W CC",
       "count": 920,
-      "min": 71,
-      "max": 1181,
-      "avg": 291,
-      "median": 254
+      "min": 5932,
+      "max": 98009,
+      "avg": 24125,
+      "median": 21063
     },
     "red blood cell disorders w o mcc": {
       "procedure": "RED BLOOD CELL DISORDERS W/O MCC",
       "count": 2321,
-      "min": 39,
-      "max": 1848,
-      "avg": 219,
-      "median": 190
+      "min": 3259,
+      "max": 153423,
+      "avg": 18189,
+      "median": 15730
     },
     "infectious parasitic diseases w o r procedure w mcc": {
       "procedure": "INFECTIOUS & PARASITIC DISEASES W O.R. PROCEDURE W MCC",
       "count": 1376,
-      "min": 313,
-      "max": 6403,
-      "avg": 1547,
-      "median": 1324
+      "min": 25970,
+      "max": 531473,
+      "avg": 128361,
+      "median": 109908
     },
     "psychoses": {
       "procedure": "PSYCHOSES",
       "count": 613,
-      "min": 31,
-      "max": 1606,
-      "avg": 221,
-      "median": 176
+      "min": 2536,
+      "max": 133282,
+      "avg": 18379,
+      "median": 14614
     },
     "septicemia or severe sepsis w mv 96 hours": {
       "procedure": "SEPTICEMIA OR SEVERE SEPSIS W MV 96+ HOURS",
       "count": 939,
-      "min": 419,
-      "max": 7082,
-      "avg": 1814,
-      "median": 1565
+      "min": 34795,
+      "max": 587804,
+      "avg": 150532,
+      "median": 129889
     },
     "septicemia or severe sepsis w o mv 96 hours w mcc": {
       "procedure": "SEPTICEMIA OR SEVERE SEPSIS W/O MV 96+ HOURS W MCC",
       "count": 2812,
-      "min": 77,
-      "max": 2405,
-      "avg": 510,
-      "median": 430
+      "min": 6383,
+      "max": 199604,
+      "avg": 42362,
+      "median": 35659
     },
     "septicemia or severe sepsis w o mv 96 hours w o mcc": {
       "procedure": "SEPTICEMIA OR SEVERE SEPSIS W/O MV 96+ HOURS W/O MCC",
       "count": 2505,
-      "min": 60,
-      "max": 1525,
-      "avg": 308,
-      "median": 262
+      "min": 4998,
+      "max": 126541,
+      "avg": 25553,
+      "median": 21724
     },
     "alcohol drug abuse or dependence w o rehabilitation therapy w o mcc": {
       "procedure": "ALCOHOL/DRUG ABUSE OR DEPENDENCE W/O REHABILITATION THERAPY W/O MCC",
       "count": 906,
-      "min": 28,
-      "max": 888,
-      "avg": 195,
-      "median": 168
+      "min": 2340,
+      "max": 73716,
+      "avg": 16221,
+      "median": 13905
     },
     "signs symptoms w o mcc": {
       "procedure": "SIGNS & SYMPTOMS W/O MCC",
       "count": 1793,
-      "min": 39,
-      "max": 943,
-      "avg": 205,
-      "median": 178
+      "min": 3214,
+      "max": 78247,
+      "avg": 16980,
+      "median": 14737
     },
     "poisoning toxic effects of drugs w mcc": {
       "procedure": "POISONING & TOXIC EFFECTS OF DRUGS W MCC",
       "count": 843,
-      "min": 76,
-      "max": 2627,
-      "avg": 448,
-      "median": 378
+      "min": 6280,
+      "max": 218065,
+      "avg": 37208,
+      "median": 31358
     },
     "poisoning toxic effects of drugs w o mcc": {
       "procedure": "POISONING & TOXIC EFFECTS OF DRUGS W/O MCC",
       "count": 1382,
-      "min": 44,
-      "max": 889,
-      "avg": 190,
-      "median": 162
+      "min": 3649,
+      "max": 73746,
+      "avg": 15805,
+      "median": 13411
     }
   },
   "procedures": [
