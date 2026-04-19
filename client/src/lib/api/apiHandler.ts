@@ -22,12 +22,34 @@ type RequestOptions = {
   headers?: Record<string, string>;
 };
 
+type ApiSuccessEnvelope<T> = {
+  status: true;
+  statusCode: number;
+  message: string;
+  result: {
+    data: T;
+  };
+};
+
 const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL ?? "/api";
 
 function getMessageFromAxiosError(error: AxiosError<ApiErrorBody>): string {
   const data = error.response?.data;
   if (data && typeof data.message === "string") return data.message;
   return error.message || "Request failed";
+}
+
+function isApiSuccessEnvelope<T>(payload: unknown): payload is ApiSuccessEnvelope<T> {
+  if (!payload || typeof payload !== "object") return false;
+  const candidate = payload as Partial<ApiSuccessEnvelope<T>>;
+  return (
+    candidate.status === true &&
+    typeof candidate.statusCode === "number" &&
+    typeof candidate.message === "string" &&
+    !!candidate.result &&
+    typeof candidate.result === "object" &&
+    "data" in candidate.result
+  );
 }
 
 class ApiHandler {
@@ -49,6 +71,11 @@ class ApiHandler {
           ...(options.headers ?? {}),
         },
       });
+
+      const payload = response.data as unknown;
+      if (isApiSuccessEnvelope<T>(payload)) {
+        return payload.result.data;
+      }
 
       return response.data;
     } catch (error) {

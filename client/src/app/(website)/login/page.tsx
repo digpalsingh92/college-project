@@ -9,7 +9,6 @@ import { Input } from "@/components/ui/Input";
 import { ROLE_HOME, ROUTES } from "@/constants/routes";
 import { mapAuthUserDto, setCredentials } from "@/store/authSlice";
 import { useAppDispatch } from "@/store/hooks";
-import type { UserRole } from "@/types";
 import {
   useLoginDoctorMutation,
   useLoginPatientMutation,
@@ -17,6 +16,25 @@ import {
 import { useAuth } from "@/hooks/useAuth";
 
 type RoleTab = "patient" | "doctor";
+
+function getLoginErrorMessage(error: unknown): string {
+  if (typeof error === "object" && error !== null) {
+    const candidate = error as {
+      data?: { message?: string };
+      message?: string;
+    };
+
+    if (typeof candidate.data?.message === "string") {
+      return candidate.data.message;
+    }
+
+    if (typeof candidate.message === "string") {
+      return candidate.message;
+    }
+  }
+
+  return "Login failed. Please try again.";
+}
 
 export default function Page() {
   const router = useRouter();
@@ -50,8 +68,8 @@ export default function Page() {
       );
       toast.success("Logged in successfully");
       router.replace(destination);
-    } catch {
-      /* errors surfaced via API layer toasts */
+    } catch (error) {
+      toast.error(getLoginErrorMessage(error));
     }
   }
 

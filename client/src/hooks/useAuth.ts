@@ -21,7 +21,7 @@ export function useAuth() {
 
   const roleHome = useMemo(() => {
     if (!user) return ROUTES.home;
-    return ROLE_HOME[user.role];
+    return ROLE_HOME[user.role as keyof typeof ROLE_HOME];
   }, [user]);
 
   return {

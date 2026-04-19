@@ -1,5 +1,7 @@
 import express from "express";
 import {
+  getAdminAppointmentInsightsController,
+  getPredictedSlotsController,
   createAppointmentController,
   getPatientAppointmentsController,
   getDoctorAppointmentsController,
@@ -14,8 +16,17 @@ const router = express.Router();
 
 // Patient endpoints
 router.get("/my", requireAuth, requireRole("patient"), asyncHandler(getPatientAppointmentsController));
+router.get("/slots", requireAuth, asyncHandler(getPredictedSlotsController));
 router.post("/", requireAuth, requireRole("patient"), asyncHandler(createAppointmentController));
 router.patch("/:id/cancel", requireAuth, asyncHandler(cancelAppointmentController));
+
+// Admin endpoint
+router.get(
+  "/admin/insights",
+  requireAuth,
+  requireRole("admin"),
+  asyncHandler(getAdminAppointmentInsightsController)
+);
 
 // Doctor endpoints
 router.get("/doctor/my", requireAuth, requireRole("doctor"), asyncHandler(getDoctorAppointmentsController));

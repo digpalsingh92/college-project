@@ -92,7 +92,7 @@ const mapAppointmentToDraft = (appointment: AppointmentDto): VisitDraft => {
 };
 
 export function DoctorAppointmentUpdatesPage() {
-  const { data, isLoading } = useGetDoctorAppointmentsQuery();
+  const { data, isLoading } = useGetDoctorAppointmentsQuery({});
   const [updateAppointmentByDoctor, { isLoading: isSavingUpdate }] = useUpdateAppointmentByDoctorMutation();
   const [rows, setRows] = useState<VisitDraft[]>([]);
   const [activeSaveId, setActiveSaveId] = useState<string | null>(null);

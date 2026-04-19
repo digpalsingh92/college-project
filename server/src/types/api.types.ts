@@ -6,21 +6,48 @@ export interface JwtPayload {
   role: Role;
 }
 
-export interface AuthResponse {
+export interface PaginationMeta {
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
+export interface ApiResult<T> {
+  data: T;
+  pagination?: PaginationMeta;
+}
+
+// Generic success response envelope
+export interface ApiResponse<T> {
+  status: true;
+  statusCode: number;
+  message: string;
+  result: ApiResult<T>;
+}
+
+// Generic error response envelope
+export interface ApiErrorResponse {
+  status: false;
+  statusCode: number;
+  message: string;
+}
+
+// Auth payload only
+export interface AuthData {
   token: string;
-  data: {
+  user: {
     id: string;
     name: string;
     email: string;
-    specialization: string;
     role: Role;
     createdAt: Date;
-    experience?: number;
-    consultationFee?: number;
+    doctorProfile?: {
+      specialization: string;
+      experience: number;
+      consultationFee: number;
+    };
   };
 }
 
-export interface ApiErrorBody {
-  message: string;
-  details?: unknown;
-}
+export type AuthResponse = ApiResponse<AuthData>;

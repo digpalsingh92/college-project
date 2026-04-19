@@ -77,6 +77,7 @@ export interface AppointmentDto {
   endTime: string;
   status: string;
   remarks?: string | null;
+  estimatedWaitTime?: number | null;
   createdAt: string;
   patient?: {
     name: string;
@@ -91,12 +92,37 @@ export interface AppointmentDto {
   };
 }
 
+export type WaitLevel = "low" | "moderate" | "high";
+
+export interface SlotPredictionDto {
+  time: string;
+  startTime: string;
+  endTime: string;
+  estimatedWaitTime: number;
+  waitLevel: WaitLevel;
+}
+
+export interface AppointmentSlotsResponse {
+  slots: SlotPredictionDto[];
+  recommendedSlot: string | null;
+  avoidSlot: string | null;
+}
+
+export interface AdminAppointmentInsightsResponse {
+  totalAppointments: number;
+  expectedPatients: number;
+  predictedNoShows: number;
+}
+
 export interface AppointmentCreateResponse {
   appointment: AppointmentDto;
 }
 
 export interface AppointmentsListResponse {
   appointments: AppointmentDto[];
+  total: number;
+  page: number;
+  totalPages: number;
 }
 
 export interface AppointmentMutationResponse {
@@ -202,3 +228,109 @@ export interface ResourceAllocationPredictionRequest {
 export interface TrainModelRequest {
   datasetPath?: string;
 }
+
+// ── Slot analysis ──
+
+export interface SlotAnalysisSlot {
+  startTime: string;
+  endTime: string;
+  estimatedWaitMinutes: number;
+  level: "low" | "medium" | "high";
+  noShowAdjustedQueue: number;
+}
+
+export interface SlotAnalysisResponse {
+  doctorId: string;
+  date: string;
+  slots: SlotAnalysisSlot[];
+  recommendedSlot: SlotAnalysisSlot | null;
+  avoidSlot: SlotAnalysisSlot | null;
+}
+
+// ── No-show prediction ──
+
+export interface NoShowPredictionRequest {
+  age: number;
+  gender: string;
+  daysDiff: number;
+  smsReceived: boolean;
+  conditions?: string[];
+}
+
+export interface NoShowPredictionResponse {
+  probability: number;
+  willShow: boolean;
+}
+
+// ── Surgery planner ──
+
+export interface SurgeryPlanRequest {
+  surgeryType: string;
+  patientAge: number;
+  conditions?: string[];
+}
+
+export interface SurgeryPlanResponse {
+  surgeryType: string;
+  estimatedCostRange: { min: number; max: number; avg: number };
+  bedAvailability: {
+    available: number;
+    occupancyRate: number;
+    level: "low" | "medium" | "high";
+  };
+  waitingDays: number;
+  surgeryDuration: string;
+  recoveryDays: number;
+  confidence: number;
+}
+
+// ── Price estimation ──
+
+export interface PriceEstimationRequest {
+  procedure: string;
+  condition?: string;
+}
+
+export interface PriceEstimationResponse {
+  procedure: string;
+  count: number;
+  min: number;
+  max: number;
+  avg: number;
+  median: number;
+}
+
+// ── Bed availability ──
+
+export interface BedAvailabilityRequest {
+  department?: string;
+}
+
+export interface BedAvailabilityResponse {
+  department: string;
+  totalBeds: number;
+  freeBeds: number;
+  occupancyRate: number;
+  level: "low" | "medium" | "high";
+  icuAvailable: number;
+  staffOnDuty: number;
+}
+
+// ── Queue status ──
+
+export interface QueueStatusResponse {
+  doctorId: string;
+  currentQueue: number;
+  expectedPatients: number;
+  avgWaitTime: number;
+  delayLevel: "low" | "medium" | "high";
+}
+
+// ── Recommendations ──
+
+export interface RecommendationsResponse {
+  bestTime: string;
+  worstTime: string;
+  message: string;
+}
+

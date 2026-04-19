@@ -6,12 +6,18 @@ import {
 	patientRegister,
 } from '../controllers/auth.controller.js';
 import { asyncHandler } from '../utils/async-handler.js';
+import { validateRequest } from '../middleware/validate-request.middleware.js';
+import {
+	loginSchema,
+	registerDoctorSchema,
+	registerPatientSchema,
+} from '../schemas/auth.schemas.js';
 
 const router = express.Router();
 
-router.post('/doctor/register', asyncHandler(doctorRegister));
-router.post('/doctor/login', asyncHandler(doctorLogin));
-router.post('/register', asyncHandler(patientRegister));
-router.post('/login', asyncHandler(patientLogin));
+router.post('/doctor/register', validateRequest({ body: registerDoctorSchema }), asyncHandler(doctorRegister));
+router.post('/doctor/login', validateRequest({ body: loginSchema }), asyncHandler(doctorLogin));
+router.post('/register', validateRequest({ body: registerPatientSchema }), asyncHandler(patientRegister));
+router.post('/login', validateRequest({ body: loginSchema }), asyncHandler(patientLogin));
 
 export default router

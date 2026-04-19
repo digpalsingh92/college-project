@@ -33,7 +33,7 @@ const tooltipStyle = {
 };
 
 export function DoctorChartsPanel() {
-  const { data: appts } = useGetDoctorAppointmentsQuery();
+  const { data: appts } = useGetDoctorAppointmentsQuery({ page: 1, limit: 10 });
   const appointments = appts?.appointments ?? [];
 
   // ── Status breakdown (donut) ───────────────────────────────────────────────
@@ -49,18 +49,33 @@ export function DoctorChartsPanel() {
 
   const pieData = useMemo(
     () => [
-      { name: "Booked",    value: statusCounts.booked,    color: STATUS_COLORS.booked },
-      { name: "Completed", value: statusCounts.completed, color: STATUS_COLORS.completed },
-      { name: "Cancelled", value: statusCounts.cancelled, color: STATUS_COLORS.cancelled },
+      {
+        name: "Booked",
+        value: statusCounts.booked,
+        color: STATUS_COLORS.booked,
+      },
+      {
+        name: "Completed",
+        value: statusCounts.completed,
+        color: STATUS_COLORS.completed,
+      },
+      {
+        name: "Cancelled",
+        value: statusCounts.cancelled,
+        color: STATUS_COLORS.cancelled,
+      },
     ],
-    [statusCounts]
+    [statusCounts],
   );
 
   // ── Weekly grouped bar ─────────────────────────────────────────────────────
   const weeklyData = useMemo(() => {
     const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
     const now = new Date();
-    const counts: Record<string, { booked: number; completed: number; cancelled: number }> = {};
+    const counts: Record<
+      string,
+      { booked: number; completed: number; cancelled: number }
+    > = {};
     for (const d of days) counts[d] = { booked: 0, completed: 0, cancelled: 0 };
 
     for (const a of appointments) {
@@ -110,7 +125,12 @@ export function DoctorChartsPanel() {
           {hasData ? (
             <>
               <div className="h-52 w-full min-w-0">
-                <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
+                <ResponsiveContainer
+                  width="100%"
+                  height="100%"
+                  minWidth={0}
+                  minHeight={0}
+                >
                   <PieChart>
                     <Pie
                       data={pieData}
@@ -132,12 +152,20 @@ export function DoctorChartsPanel() {
               {/* Legend */}
               <div className="mt-3 flex flex-col gap-2">
                 {pieData.map((entry) => (
-                  <div key={entry.name} className="flex items-center justify-between text-sm">
+                  <div
+                    key={entry.name}
+                    className="flex items-center justify-between text-sm"
+                  >
                     <div className="flex items-center gap-2">
-                      <span className="h-2.5 w-2.5 rounded-full" style={{ background: entry.color }} />
+                      <span
+                        className="h-2.5 w-2.5 rounded-full"
+                        style={{ background: entry.color }}
+                      />
                       <span className="text-slate-600">{entry.name}</span>
                     </div>
-                    <span className="font-semibold text-foreground">{entry.value}</span>
+                    <span className="font-semibold text-foreground">
+                      {entry.value}
+                    </span>
                   </div>
                 ))}
               </div>
@@ -156,16 +184,57 @@ export function DoctorChartsPanel() {
             description="Booked · Completed · Cancelled per day"
           />
           <div className="h-64 w-full min-w-0">
-            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
-              <BarChart data={weeklyData} margin={{ top: 8, right: 8, left: -20, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" className="stroke-slate-100" vertical={false} />
-                <XAxis dataKey="day" tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={false} tickLine={false} />
-                <YAxis allowDecimals={false} tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={false} tickLine={false} />
+            <ResponsiveContainer
+              width="100%"
+              height="100%"
+              minWidth={0}
+              minHeight={0}
+            >
+              <BarChart
+                data={weeklyData}
+                margin={{ top: 8, right: 8, left: -20, bottom: 0 }}
+              >
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  className="stroke-slate-100"
+                  vertical={false}
+                />
+                <XAxis
+                  dataKey="day"
+                  tick={{ fill: "#94a3b8", fontSize: 11 }}
+                  axisLine={false}
+                  tickLine={false}
+                />
+                <YAxis
+                  allowDecimals={false}
+                  tick={{ fill: "#94a3b8", fontSize: 11 }}
+                  axisLine={false}
+                  tickLine={false}
+                />
                 <Tooltip contentStyle={tooltipStyle} />
-                <Legend iconType="circle" iconSize={8} wrapperStyle={{ fontSize: 11, paddingTop: 8 }} />
-                <Bar dataKey="booked"    name="Booked"    fill={STATUS_COLORS.booked}    radius={[4, 4, 0, 0]} />
-                <Bar dataKey="completed" name="Completed" fill={STATUS_COLORS.completed} radius={[4, 4, 0, 0]} />
-                <Bar dataKey="cancelled" name="Cancelled" fill={STATUS_COLORS.cancelled} radius={[4, 4, 0, 0]} />
+                <Legend
+                  iconType="circle"
+                  iconSize={8}
+                  wrapperStyle={{ fontSize: 11, paddingTop: 8 }}
+                />
+                <Bar
+                  dataKey="booked"
+                  name="Booked"
+                  fill={STATUS_COLORS.booked}
+                  radius={[4, 4, 0, 0]}
+                />
+                <Bar
+                  dataKey="completed"
+                  name="Completed"
+                  fill={STATUS_COLORS.completed}
+                  radius={[4, 4, 0, 0]}
+                />
+                <Bar
+                  dataKey="cancelled"
+                  name="Cancelled"
+                  fill={STATUS_COLORS.cancelled}
+                  radius={[4, 4, 0, 0]}
+                />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -184,9 +253,16 @@ export function DoctorChartsPanel() {
           }
         />
         <div className="h-48 w-full min-w-0">
-          <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
+          <ResponsiveContainer
+            width="100%"
+            height="100%"
+            minWidth={0}
+            minHeight={0}
+          >
             <AreaChart
-              data={trendData.length > 0 ? trendData : [{ date: "—", count: 0 }]}
+              data={
+                trendData.length > 0 ? trendData : [{ date: "—", count: 0 }]
+              }
               margin={{ top: 8, right: 8, left: -20, bottom: 0 }}
             >
               <defs>
@@ -195,9 +271,23 @@ export function DoctorChartsPanel() {
                   <stop offset="100%" stopColor="#10b981" stopOpacity={0} />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" className="stroke-slate-100" vertical={false} />
-              <XAxis dataKey="date" tick={{ fill: "#94a3b8", fontSize: 10 }} axisLine={false} tickLine={false} />
-              <YAxis allowDecimals={false} tick={{ fill: "#94a3b8", fontSize: 11 }} axisLine={false} tickLine={false} />
+              <CartesianGrid
+                strokeDasharray="3 3"
+                className="stroke-slate-100"
+                vertical={false}
+              />
+              <XAxis
+                dataKey="date"
+                tick={{ fill: "#94a3b8", fontSize: 10 }}
+                axisLine={false}
+                tickLine={false}
+              />
+              <YAxis
+                allowDecimals={false}
+                tick={{ fill: "#94a3b8", fontSize: 11 }}
+                axisLine={false}
+                tickLine={false}
+              />
               <Tooltip contentStyle={tooltipStyle} />
               <Area
                 type="monotone"

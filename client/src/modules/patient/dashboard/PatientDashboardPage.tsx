@@ -6,20 +6,21 @@ import { Button } from "@/components/ui/Button";
 import { Card, CardHeader } from "@/components/ui/Card";
 import { Input } from "@/components/ui/Input";
 import { Table } from "@/components/ui/Table";
+import { SlotCard } from "@/components/SlotCard";
 import { TableColumn } from "@/types";
-import type { AppointmentDto, DoctorAvailabilitySlotDto, DoctorListItem } from "@/types/api";
+import type { AppointmentDto, AppointmentSlotsResponse, DoctorListItem } from "@/types/api";
 import {
   useCancelAppointmentMutation,
   useCreateAppointmentMutation,
-  useGetDoctorAvailabilityQuery,
   useGetDoctorsQuery,
+  useGetAppointmentSlotsQuery,
   useGetPatientAppointmentsQuery,
 } from "@/store/apiSlice";
 import { cn } from "@/helpers/cn";
 
 export function PatientDashboardPage() {
   const { data: doctorsData, isLoading: doctorsLoading } = useGetDoctorsQuery();
-  const { data: appts, isLoading: apptsLoading } = useGetPatientAppointmentsQuery();
+  const { data: appts, isLoading: apptsLoading } = useGetPatientAppointmentsQuery({});
   const [createAppointment, { isLoading: creating }] = useCreateAppointmentMutation();
   const [cancelAppointment, { isLoading: cancelling }] = useCancelAppointmentMutation();
 
@@ -29,7 +30,7 @@ export function PatientDashboardPage() {
   const [endTime, setEndTime] = useState("");
   const [rescheduleFromId, setRescheduleFromId] = useState<string | null>(null);
 
-  const { data: availability, isFetching: loadingSlots } = useGetDoctorAvailabilityQuery(
+  const { data: slotPredictions, isFetching: loadingSlots } = useGetAppointmentSlotsQuery(
     {
       doctorId,
       date,
@@ -39,20 +40,38 @@ export function PatientDashboardPage() {
     }
   );
 
-  const slots: DoctorAvailabilitySlotDto[] = useMemo(() => {
-    if (!availability) return [];
-    if (availability.allSlots?.length) return availability.allSlots;
-    return availability.slots.map((slot) => ({
-      ...slot,
-      isAvailable: true,
-      status: "available",
-    }));
-  }, [availability]);
+  const slots = (slotPredictions?.slots ?? []) as AppointmentSlotsResponse["slots"];
 
   useEffect(() => {
     setStartTime("");
     setEndTime("");
   }, [doctorId, date]);
+
+  const upcomingAppointment = useMemo(() => {
+    const now = Date.now();
+    const bookedAppointments = (appts?.appointments ?? []).filter(
+      (appointment: AppointmentDto) => appointment.status === "booked"
+    );
+
+    return bookedAppointments
+      .map((appointment: AppointmentDto) => {
+        const appointmentDate = new Date(appointment.date);
+        const [timePart, period] = appointment.startTime.split(" ");
+        const [hoursStr, minutesStr] = timePart.split(":");
+        const rawHours = Number(hoursStr);
+        const minutes = Number(minutesStr);
+        const hours24 = (rawHours % 12) + (period === "PM" ? 12 : 0);
+
+        appointmentDate.setUTCHours(hours24, minutes, 0, 0);
+
+        return {
+          appointment,
+          timestamp: appointmentDate.getTime(),
+        };
+      })
+      .filter((item: { appointment: AppointmentDto; timestamp: number }) => item.timestamp >= now)
+      .sort((a: { timestamp: number }, b: { timestamp: number }) => a.timestamp - b.timestamp)[0]?.appointment;
+  }, [appts]);
 
   const columns: Array<TableColumn<AppointmentDto>> = [
     { key: "date", header: "Date", render: (row) => new Date(row.date).toLocaleDateString() },
@@ -146,7 +165,7 @@ export function PatientDashboardPage() {
     }
   }
 
-  const booked = appts?.appointments?.filter((a) => a.status === "booked").length ?? 0;
+  const booked = appts?.appointments?.filter((a: AppointmentDto) => a.status === "booked").length ?? 0;
 
   return (
     <div className="space-y-8">
@@ -161,6 +180,19 @@ export function PatientDashboardPage() {
             <div>
               <p className="text-xs font-medium uppercase tracking-wide text-emerald-800/80">Upcoming</p>
               <p className="text-lg font-semibold text-emerald-900">{booked} active</p>
+            </div>
+          </Card>
+          <Card className="flex items-center gap-3 border-slate-200 bg-white px-4 py-3 shadow-none" padding="none">
+            <div>
+              <p className="text-xs font-medium uppercase tracking-wide text-slate-600">Next visit</p>
+              <p className="text-sm font-semibold text-slate-900">
+                {upcomingAppointment
+                  ? `${new Date(upcomingAppointment.date).toLocaleDateString()} ${upcomingAppointment.startTime}`
+                  : "No upcoming visit"}
+              </p>
+              <p className="text-xs text-slate-600">
+                Expected wait: {upcomingAppointment?.estimatedWaitTime ?? 0} mins
+              </p>
             </div>
           </Card>
         </div>
@@ -244,37 +276,40 @@ export function PatientDashboardPage() {
                 ) : slots.length === 0 ? (
                   <p className="text-sm text-muted">No available slots for this date.</p>
                 ) : (
+                  <>
+                    <div className="flex flex-wrap gap-2">
+                      {slotPredictions?.recommendedSlot ? (
+                        <span className="inline-flex rounded-full bg-emerald-600 px-2 py-1 text-xs font-medium text-white">
+                          Recommended: {slotPredictions.recommendedSlot}
+                        </span>
+                      ) : null}
+                      {slotPredictions?.avoidSlot ? (
+                        <span className="inline-flex rounded-full bg-red-600 px-2 py-1 text-xs font-medium text-white">
+                          Avoid: {slotPredictions.avoidSlot}
+                        </span>
+                      ) : null}
+                    </div>
                   <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                     {slots.map((slot) => {
                       const selected = slot.startTime === startTime && slot.endTime === endTime;
                       return (
-                        <button
+                        <SlotCard
                           key={`${slot.startTime}-${slot.endTime}`}
-                          type="button"
-                          disabled={!slot.isAvailable}
-                          onClick={() => {
-                            if (!slot.isAvailable) return;
+                          time={slot.time}
+                          waitTime={slot.estimatedWaitTime}
+                          waitLevel={slot.waitLevel}
+                          isRecommended={slotPredictions?.recommendedSlot === slot.time}
+                          isAvoid={slotPredictions?.avoidSlot === slot.time}
+                          selected={selected}
+                          onSelect={() => {
                             setStartTime(slot.startTime);
                             setEndTime(slot.endTime);
                           }}
-                          className={cn(
-                            "rounded-lg border px-3 py-2 text-left text-sm transition-colors",
-                            slot.isAvailable
-                              ? "border-emerald-300 bg-white text-slate-800 hover:bg-emerald-50"
-                              : "cursor-not-allowed border-slate-200 bg-slate-100 text-slate-400 line-through",
-                            selected && "border-emerald-600 bg-emerald-50 ring-1 ring-emerald-200"
-                          )}
-                        >
-                          <div className="font-medium">
-                            {slot.startTime} - {slot.endTime}
-                          </div>
-                          <div className="mt-0.5 text-xs uppercase tracking-wide">
-                            {slot.isAvailable ? "Available" : slot.status === "booked" ? "Booked" : "Unavailable"}
-                          </div>
-                        </button>
+                        />
                       );
                     })}
                   </div>
+                  </>
                 )}
               </div>
             </div>

@@ -1,3 +1,5 @@
+// ── Existing types (wait-time / resource) ──
+
 export type ReminderSent = "Yes" | "No";
 
 export type AppointmentStatus = "Completed" | "No-Show" | "Cancelled";
@@ -60,4 +62,112 @@ export interface TrainedPredictionModel {
     notes: string[];
     rawResponse?: string;
   };
+}
+
+// ── No-Show model ──
+
+export interface NoShowBucket {
+  count: number;
+  noShowRate: number;
+}
+
+export interface NoShowModel {
+  version: string;
+  trainedAt: string;
+  datasetRecords: number;
+  globalNoShowRate: number;
+  byAgeBucket: Record<string, NoShowBucket>;
+  byGender: Record<string, NoShowBucket>;
+  bySmsReceived: Record<string, NoShowBucket>;
+  byDaysDiffBucket: Record<string, NoShowBucket>;
+  byComposite: Record<string, NoShowBucket>;
+}
+
+// ── Price model ──
+
+export interface PriceBucket {
+  procedure: string;
+  count: number;
+  min: number;
+  max: number;
+  avg: number;
+  median: number;
+}
+
+export interface PriceModel {
+  version: string;
+  trainedAt: string;
+  datasetRecords: number;
+  byProcedure: Record<string, PriceBucket>;
+  procedures: string[];
+}
+
+// ── Bed model ──
+
+export interface BedDepartmentStats {
+  department: string;
+  totalBeds: number;
+  freeBeds: number;
+  totalIcuBeds: number;
+  freeIcuBeds: number;
+  occupancyRate: number;
+  icuOccupancyRate: number;
+  staffOnDuty: number;
+}
+
+export interface BedModel {
+  version: string;
+  trainedAt: string;
+  datasetRecords: number;
+  byDepartment: Record<string, BedDepartmentStats>;
+  departments: string[];
+  globalOccupancyRate: number;
+}
+
+// ── Surgery planner result ──
+
+export interface SurgeryPlanResult {
+  surgeryType: string;
+  estimatedCostRange: { min: number; max: number; avg: number };
+  bedAvailability: { available: number; occupancyRate: number; level: "low" | "medium" | "high" };
+  waitingDays: number;
+  surgeryDuration: string;
+  recoveryDays: number;
+  confidence: number;
+}
+
+// ── Slot analysis ──
+
+export interface SlotAnalysis {
+  startTime: string;
+  endTime: string;
+  estimatedWaitMinutes: number;
+  level: "low" | "medium" | "high";
+  noShowAdjustedQueue: number;
+}
+
+export interface SlotAnalysisResult {
+  doctorId: string;
+  date: string;
+  slots: SlotAnalysis[];
+  recommendedSlot: SlotAnalysis | null;
+  avoidSlot: SlotAnalysis | null;
+}
+
+// ── Queue status ──
+
+export interface QueueStatusResult {
+  doctorId: string;
+  currentQueue: number;
+  expectedPatients: number;
+  avgWaitTime: number;
+  delayLevel: "low" | "medium" | "high";
+}
+
+// ── Recommendations ──
+
+export interface RecommendationsResult {
+  bestTime: string;
+  worstTime: string;
+  message: string;
 }

@@ -10,6 +10,7 @@ import { Table } from "@/components/ui/Table";
 import { StatCard } from "@/components/shared/StatCard";
 import { TableColumn } from "@/types";
 import {
+  useGetAdminAppointmentInsightsQuery,
   useGetDoctorsQuery,
   usePredictResourceAllocationMutation,
   usePredictWaitingTimeMutation,
@@ -74,6 +75,7 @@ function TypeBadge({ type }: { type: PendingRow["type"] }) {
 export function AdminDashboardPage() {
   const [datasetPath, setDatasetPath] = useState("");
   const { data: doctorsData } = useGetDoctorsQuery();
+  const { data: appointmentInsights } = useGetAdminAppointmentInsightsQuery();
   const doctorCount = doctorsData?.doctors?.length ?? 0;
 
   const [train, { isLoading: training }] = useTrainPredictionModelMutation();
@@ -111,8 +113,8 @@ export function AdminDashboardPage() {
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard
           title="Total appointments"
-          value="1,428"
-          trend="+5.4% this month"
+          value={appointmentInsights?.totalAppointments ?? "--"}
+          trend="Live total from appointments"
           icon={CalendarDays}
           iconClassName="bg-violet-100 text-violet-600"
         />
@@ -125,16 +127,16 @@ export function AdminDashboardPage() {
           iconClassName="bg-blue-100 text-blue-600"
         />
         <StatCard
-          title="Registered users"
-          value="3,250"
-          trend="+12.5% this month"
+          title="Expected patients"
+          value={appointmentInsights?.expectedPatients ?? "--"}
+          trend="Upcoming shows after no-show prediction"
           icon={Users}
           iconClassName="bg-teal-100 text-teal-600"
         />
         <StatCard
-          title="Pending approvals"
-          value={pendingRows.length}
-          trend="+2 since yesterday"
+          title="Predicted no-shows"
+          value={appointmentInsights?.predictedNoShows ?? "--"}
+          trend="Forecast for upcoming bookings"
           trendPositive={false}
           icon={ClipboardSignature}
           iconClassName="bg-amber-100 text-amber-600"
