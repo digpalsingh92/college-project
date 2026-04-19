@@ -56,8 +56,38 @@ export interface DoctorsListResponse {
   doctors: DoctorListItem[];
 }
 
+export interface DoctorAnalyticsRow {
+  id: string;
+  name: string;
+  specialization: string;
+  totalAppointments: number;
+  upcomingAppointments: number;
+}
+
+export interface DoctorAnalyticsListResponse {
+  doctors: DoctorAnalyticsRow[];
+  total: number;
+  page: number;
+  totalPages: number;
+}
+
 export interface DoctorResponse {
   doctor: DoctorListItem;
+}
+
+export interface PatientAnalyticsRow {
+  id: string;
+  name: string;
+  totalBookings: number;
+  lastAppointment: string | null;
+  status: "Active" | "Inactive";
+}
+
+export interface PatientAnalyticsListResponse {
+  patients: PatientAnalyticsRow[];
+  total: number;
+  page: number;
+  totalPages: number;
 }
 
 export interface CreateAppointmentRequest {
@@ -123,6 +153,14 @@ export interface AppointmentsListResponse {
   total: number;
   page: number;
   totalPages: number;
+}
+
+export interface AdminAppointmentsQuery {
+  page?: number;
+  limit?: number;
+  search?: string;
+  status?: "booked" | "completed" | "cancelled";
+  date?: string;
 }
 
 export interface AppointmentMutationResponse {

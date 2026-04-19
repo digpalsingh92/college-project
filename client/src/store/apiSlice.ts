@@ -6,6 +6,7 @@ import { clearAuthCookie } from "@/lib/auth";
 import { logout, mapAuthUserDto, setCredentials } from "@/store/authSlice";
 import type {
   AddUnavailabilityRequest,
+  AdminAppointmentsQuery,
   AdminAppointmentInsightsResponse,
   AppointmentSlotsResponse,
   AppointmentCreateResponse,
@@ -17,6 +18,7 @@ import type {
   CreateAppointmentRequest,
   CreateScheduleRequest,
   DeleteResponse,
+  DoctorAnalyticsListResponse,
   DoctorAvailabilityResponse,
   DoctorResponse,
   DoctorsListResponse,
@@ -25,6 +27,7 @@ import type {
   NoShowPredictionResponse,
   PriceEstimationRequest,
   PriceEstimationResponse,
+  PatientAnalyticsListResponse,
   QueueStatusResponse,
   RecommendationsResponse,
   RegisterDoctorRequest,
@@ -146,6 +149,30 @@ export const api = createApi({
         }
       },
     }),
+    loginAdmin: builder.mutation<AuthResponse, LoginRequest>({
+      async queryFn(body, api: BaseQueryApi): Promise<ApiResult<AuthResponse>> {
+        return runRequest(
+          apiHandler.post<AuthResponse>("auth/admin/login", body, {
+            token: (api.getState() as any).auth.token,
+          }),
+          api,
+          true
+        );
+      },
+      async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          dispatch(
+            setCredentials({
+              token: data.token,
+              user: mapAuthUserDto(data.user),
+            })
+          );
+        } catch {
+          // Expected auth failures are handled by the shared API handler.
+        }
+      },
+    }),
     registerPatient: builder.mutation<AuthResponse, RegisterPatientRequest>({
       async queryFn(body, api: BaseQueryApi): Promise<ApiResult<AuthResponse>> {
         return runRequest(
@@ -203,6 +230,42 @@ export const api = createApi({
         );
       },
       providesTags: ["Doctor"],
+    }),
+    getAdminDoctorAnalytics: builder.query<
+      DoctorAnalyticsListResponse,
+      { page?: number; limit?: number; search?: string }
+    >({
+      async queryFn(
+        { page = 1, limit = 10, search = "" }: { page?: number; limit?: number; search?: string } = {},
+        api: BaseQueryApi
+      ): Promise<ApiResult<DoctorAnalyticsListResponse>> {
+        return runRequest(
+          apiHandler.get<DoctorAnalyticsListResponse>("doctors/analytics", {
+            token: (api.getState() as ApiAuthState).auth.token,
+            params: { page, limit, search: search.trim() || undefined },
+          }),
+          api
+        );
+      },
+      providesTags: ["Doctor"],
+    }),
+    getAdminPatients: builder.query<
+      PatientAnalyticsListResponse,
+      { page?: number; limit?: number; search?: string }
+    >({
+      async queryFn(
+        { page = 1, limit = 10, search = "" }: { page?: number; limit?: number; search?: string } = {},
+        api: BaseQueryApi
+      ): Promise<ApiResult<PatientAnalyticsListResponse>> {
+        return runRequest(
+          apiHandler.get<PatientAnalyticsListResponse>("patients", {
+            token: (api.getState() as ApiAuthState).auth.token,
+            params: { page, limit, search: search.trim() || undefined },
+          }),
+          api
+        );
+      },
+      providesTags: ["Appointment"],
     }),
     getDoctorById: builder.query<DoctorResponse, string>({
       async queryFn(id, api: BaseQueryApi): Promise<ApiResult<DoctorResponse>> {
@@ -353,15 +416,15 @@ export const api = createApi({
       },
       providesTags: ["Availability"],
     }),
-    getDoctorAppointments: builder.query<AppointmentsListResponse, { page?: number; limit?: number }>({
+    getDoctorAppointments: builder.query<AppointmentsListResponse, { page?: number; limit?: number; search?: string; date?: string }>({
       async queryFn(
-        { page = 1, limit = 10 }: { page?: number; limit?: number } = {},
+        { page = 1, limit = 10, search, date }: { page?: number; limit?: number; search?: string; date?: string } = {},
         api: BaseQueryApi
       ): Promise<ApiResult<AppointmentsListResponse>> {
         return runRequest(
           apiHandler.get<AppointmentsListResponse>("appointments/doctor/my", {
             token: (api.getState() as any).auth.token,
-            params: { page, limit },
+            params: { page, limit, search: search?.trim() || undefined, date },
           }),
           api
         );
@@ -373,6 +436,33 @@ export const api = createApi({
         return runRequest(
           apiHandler.get<AdminAppointmentInsightsResponse>("appointments/admin/insights", {
             token: (api.getState() as any).auth.token,
+          }),
+          api
+        );
+      },
+      providesTags: ["Appointment"],
+    }),
+    getAdminAppointments: builder.query<AppointmentsListResponse, AdminAppointmentsQuery>({
+      async queryFn(
+        {
+          page = 1,
+          limit = 10,
+          search = "",
+          status,
+          date,
+        }: AdminAppointmentsQuery = {},
+        api: BaseQueryApi
+      ): Promise<ApiResult<AppointmentsListResponse>> {
+        return runRequest(
+          apiHandler.get<AppointmentsListResponse>("appointments/admin/all", {
+            token: (api.getState() as ApiAuthState).auth.token,
+            params: {
+              page,
+              limit,
+              search: search.trim() || undefined,
+              status,
+              date: date || undefined,
+            },
           }),
           api
         );
@@ -608,9 +698,12 @@ export const api = createApi({
 export const {
   useLoginPatientMutation,
   useLoginDoctorMutation,
+  useLoginAdminMutation,
   useRegisterPatientMutation,
   useRegisterDoctorMutation,
   useGetDoctorsQuery,
+  useGetAdminDoctorAnalyticsQuery,
+  useGetAdminPatientsQuery,
   useGetDoctorByIdQuery,
   useGetDoctorProfileQuery,
   useCreateDoctorScheduleMutation,
@@ -626,6 +719,7 @@ export const {
   useGetPatientAppointmentsQuery,
   useGetDoctorAppointmentsQuery,
   useGetAdminAppointmentInsightsQuery,
+  useGetAdminAppointmentsQuery,
   useCreateAppointmentMutation,
   useCancelAppointmentMutation,
   useCompleteAppointmentMutation,

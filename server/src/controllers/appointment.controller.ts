@@ -7,6 +7,7 @@ import {
   createAppointment,
   getAppointmentsForDoctor,
   getAppointmentsForPatient,
+  getAppointmentsForAdmin,
   cancelAppointmentById,
   completeAppointmentById,
   updateAppointmentByDoctor,
@@ -44,7 +45,29 @@ export const getDoctorAppointmentsController = async (req: Request, res: Respons
   }
   const page = Math.max(1, Number(req.query.page) || 1);
   const limit = Math.min(100, Math.max(1, Number(req.query.limit) || 10));
-  const result = await getAppointmentsForDoctor(req.user.id, page, limit);
+  const search = req.query.search ? String(req.query.search) : undefined;
+  const dateStr = req.query.date ? String(req.query.date) : undefined;
+
+  const result = await getAppointmentsForDoctor(req.user.id, page, limit, search, dateStr);
+  res.status(200).json(result);
+};
+
+export const getAdminAppointmentsController = async (req: Request, res: Response): Promise<void> => {
+  if (!req.user) {
+    throw new AppError("Unauthorized", 401);
+  }
+  const page = Math.max(1, Number(req.query.page) || 1);
+  const limit = Math.min(100, Math.max(1, Number(req.query.limit) || 10));
+  const search = typeof req.query.search === "string" ? req.query.search : undefined;
+  const statusValue = typeof req.query.status === "string" ? req.query.status : undefined;
+  const status =
+    statusValue === "booked" || statusValue === "completed" || statusValue === "cancelled"
+      ? statusValue
+      : undefined;
+  const date = typeof req.query.date === "string" ? req.query.date : undefined;
+
+  const result = await getAppointmentsForAdmin(page, limit, search, date, status);
+
   res.status(200).json(result);
 };
 

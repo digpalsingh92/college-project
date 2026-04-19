@@ -355,10 +355,23 @@ export const getAppointmentsForPatient = async (
 export const getAppointmentsForDoctor = async (
   doctorId: string,
   page = 1,
-  limit = 10
+  limit = 10,
+  search?: string,
+  dateStr?: string
 ) => {
   const skip = (page - 1) * limit;
-  const where = { doctorId };
+  const where: any = { doctorId };
+
+  if (dateStr) {
+    where.date = normalizeDateOnly(dateStr);
+  }
+
+  if (search) {
+    where.OR = [
+      { id: { contains: search, mode: "insensitive" } },
+      { patient: { name: { contains: search, mode: "insensitive" } } },
+    ];
+  }
 
   const [total, appointments] = await Promise.all([
     prisma.appointment.count({ where }),
@@ -377,6 +390,58 @@ export const getAppointmentsForDoctor = async (
 
   return {
     appointments: appointments.map((a) => ({ ...formatAppointment(a), patient: a.patient })),
+    total,
+    page,
+    totalPages: Math.max(1, Math.ceil(total / limit)),
+  };
+};
+
+export const getAppointmentsForAdmin = async (
+  page = 1,
+  limit = 10,
+  search?: string,
+  dateStr?: string,
+  status?: "booked" | "completed" | "cancelled"
+) => {
+  const skip = (page - 1) * limit;
+  const where: any = {};
+
+  if (status) {
+    where.status = status;
+  }
+
+  if (dateStr) {
+    where.date = normalizeDateOnly(dateStr);
+  }
+
+  if (search) {
+    where.OR = [
+      { id: { contains: search, mode: "insensitive" } },
+      { patient: { name: { contains: search, mode: "insensitive" } } },
+      { doctor: { name: { contains: search, mode: "insensitive" } } },
+    ];
+  }
+
+  const [total, appointments] = await Promise.all([
+    prisma.appointment.count({ where }),
+    prisma.appointment.findMany({
+      where,
+      orderBy: { date: "desc" },
+      skip,
+      take: limit,
+      include: {
+        patient: { select: { id: true, name: true, email: true } },
+        doctor: { select: { id: true, name: true, email: true } },
+      },
+    }),
+  ]);
+
+  return {
+    appointments: appointments.map((a) => ({
+      ...formatAppointment(a),
+      patient: a.patient,
+      doctor: a.doctor,
+    })),
     total,
     page,
     totalPages: Math.max(1, Math.ceil(total / limit)),

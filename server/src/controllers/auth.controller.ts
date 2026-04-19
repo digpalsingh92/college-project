@@ -37,3 +37,12 @@ export const patientLogin = async (req: Request, res: Response): Promise<void> =
 		data: result,
 	});
 };
+
+export const adminLogin = async (req: Request, res: Response): Promise<void> => {
+	const result = await loginByRole(req.body, "admin");
+	sendSuccess(res, {
+		statusCode: 200,
+		message: "Admin login successful.",
+		data: result,
+	});
+};

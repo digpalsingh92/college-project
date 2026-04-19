@@ -1,6 +1,27 @@
 import prisma from "../lib/prisma.js";
 import { AppError } from "../utils/app-error.js";
 
+type DoctorAnalyticsListParams = {
+  page: number;
+  limit: number;
+  search?: string;
+};
+
+type DoctorAnalyticsRow = {
+  id: string;
+  name: string;
+  specialization: string;
+  totalAppointments: number;
+  upcomingAppointments: number;
+};
+
+type DoctorAnalyticsResponse = {
+  doctors: DoctorAnalyticsRow[];
+  total: number;
+  page: number;
+  totalPages: number;
+};
+
 const doctorSelect = {
   id: true,
   name: true,
@@ -47,4 +68,91 @@ export const getDoctorById = async (id: string) => {
   }
 
   return doctor;
+};
+
+export const getDoctorAnalytics = async ({
+  page,
+  limit,
+  search,
+}: DoctorAnalyticsListParams): Promise<DoctorAnalyticsResponse> => {
+  const skip = (page - 1) * limit;
+  const trimmedSearch = search?.trim();
+
+  const where = {
+    role: "doctor" as const,
+    ...(trimmedSearch
+      ? {
+          OR: [
+            { name: { contains: trimmedSearch, mode: "insensitive" as const } },
+            {
+              doctorProfile: {
+                specialization: { contains: trimmedSearch, mode: "insensitive" as const },
+              },
+            },
+          ],
+        }
+      : {}),
+  };
+
+  const [total, doctors] = await Promise.all([
+    prisma.user.count({ where }),
+    prisma.user.findMany({
+      where,
+      select: {
+        id: true,
+        name: true,
+        doctorProfile: {
+          select: {
+            specialization: true,
+          },
+        },
+      },
+      orderBy: { name: "asc" },
+      skip,
+      take: limit,
+    }),
+  ]);
+
+  const doctorIds = doctors.map((doctor) => doctor.id);
+
+  const [totalsByDoctor, upcomingByDoctor] = await Promise.all([
+    prisma.appointment.groupBy({
+      by: ["doctorId"],
+      where: {
+        doctorId: { in: doctorIds },
+      },
+      _count: {
+        _all: true,
+      },
+    }),
+    prisma.appointment.groupBy({
+      by: ["doctorId"],
+      where: {
+        doctorId: { in: doctorIds },
+        status: "booked",
+        date: {
+          gte: new Date(),
+        },
+      },
+      _count: {
+        _all: true,
+      },
+    }),
+  ]);
+
+  const totalCountMap = new Map(totalsByDoctor.map((entry) => [entry.doctorId, entry._count._all]));
+  const upcomingCountMap = new Map(upcomingByDoctor.map((entry) => [entry.doctorId, entry._count._all]));
+
+  return {
+    doctors: doctors.map((doctor) => ({
+      id: doctor.id,
+      name: doctor.name,
+      specialization: doctor.doctorProfile?.specialization ?? "General",
+      totalAppointments: totalCountMap.get(doctor.id) ?? 0,
+      upcomingAppointments: upcomingCountMap.get(doctor.id) ?? 0,
+    })),
+    total,
+    page,
+    totalPages: Math.max(1, Math.ceil(total / limit)),
+  };
 };

@@ -8,7 +8,7 @@ import type {
   RegisterPatientInput,
 } from "../schemas/auth.schemas.js";
 
-type UserRole = "doctor" | "patient";
+type UserRole = "doctor" | "patient" | "admin";
 
 type AuthResponse = {
   token: string;

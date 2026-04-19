@@ -88,6 +88,10 @@ export default function Page() {
           <Link href={ROUTES.register} className="font-medium text-emerald-700 hover:underline">
             Create an account
           </Link>
+          {" "}|{" "}
+          <Link href={ROUTES.adminLogin} className="font-medium text-blue-700 hover:underline">
+            Admin login
+          </Link>
         </p>
       </div>
 
