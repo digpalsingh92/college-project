@@ -4,6 +4,7 @@ import { saveNamedArtifact } from "./model-store.js";
 import type { PriceBucket, PriceModel } from "./types.js";
 
 const MODEL_VERSION = "1.0.0";
+const USD_TO_INR = 83;
 
 const DATASETS_DIR = path.resolve(process.cwd(), "src", "Datasets");
 
@@ -64,6 +65,8 @@ const parseInpatientCharges = async (): Promise<{ procedure: string; cost: numbe
 
 const normalize = (s: string): string => s.toLowerCase().replace(/[^a-z0-9]/g, " ").replace(/\s+/g, " ").trim();
 
+const usdToInr = (usd: number): number => Math.round(usd * USD_TO_INR);
+
 export const trainPriceModel = async (): Promise<PriceModel> => {
   const [pricing, inpatient] = await Promise.all([
     parseHospitalPricing(),
@@ -82,7 +85,8 @@ export const trainPriceModel = async (): Promise<PriceModel> => {
     if (!groups[key]) {
       groups[key] = { originalName: row.procedure, costs: [] };
     }
-    groups[key].costs.push(row.cost);
+    // Source pricing datasets are USD-based; convert once during training.
+    groups[key].costs.push(usdToInr(row.cost));
   }
 
   const byProcedure: Record<string, PriceBucket> = {};
@@ -105,6 +109,7 @@ export const trainPriceModel = async (): Promise<PriceModel> => {
   const model: PriceModel = {
     version: MODEL_VERSION,
     trainedAt: new Date().toISOString(),
+    currency: "INR",
     datasetRecords: all.length,
     byProcedure,
     procedures: procedures.sort(),

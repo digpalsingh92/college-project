@@ -13,6 +13,7 @@ import {
 } from "../controllers/schedule.controller.js";
 import {
   getAllDoctorsController,
+  getDoctorAnalyticsController,
   getDoctorByIdController,
   getDoctorProfileController,
 } from "../controllers/doctor.controller.js";
@@ -21,6 +22,7 @@ const router = express.Router();
 
 // Public: list all doctors & get one by ID
 router.get("/", asyncHandler(getAllDoctorsController));
+router.get("/analytics", requireAuth, requireRole("admin"), asyncHandler(getDoctorAnalyticsController));
 router.get("/me", requireAuth, requireRole("doctor"), asyncHandler(getDoctorProfileController));
 router.get("/:id", asyncHandler(getDoctorByIdController));
 

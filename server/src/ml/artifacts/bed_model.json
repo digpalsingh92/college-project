@@ -1,0 +1,285 @@
+{
+  "version": "1.0.0",
+  "trainedAt": "2026-04-19T20:35:23.248Z",
+  "datasetRecords": 50,
+  "byDepartment": {
+    "emergency department (ed)": {
+      "department": "Emergency Department (ED)",
+      "totalBeds": 158,
+      "freeBeds": 61,
+      "totalIcuBeds": 33,
+      "freeIcuBeds": 10,
+      "occupancyRate": 0.6139,
+      "icuOccupancyRate": 0.697,
+      "staffOnDuty": 105
+    },
+    "trauma center": {
+      "department": "Trauma Center",
+      "totalBeds": 120,
+      "freeBeds": 23,
+      "totalIcuBeds": 43,
+      "freeIcuBeds": 15,
+      "occupancyRate": 0.8083,
+      "icuOccupancyRate": 0.6512,
+      "staffOnDuty": 88
+    },
+    "general surgery": {
+      "department": "General Surgery",
+      "totalBeds": 178,
+      "freeBeds": 57,
+      "totalIcuBeds": 33,
+      "freeIcuBeds": 12,
+      "occupancyRate": 0.6798,
+      "icuOccupancyRate": 0.6364,
+      "staffOnDuty": 115
+    },
+    "cardiac surgery": {
+      "department": "Cardiac Surgery",
+      "totalBeds": 135,
+      "freeBeds": 43,
+      "totalIcuBeds": 43,
+      "freeIcuBeds": 14,
+      "occupancyRate": 0.6815,
+      "icuOccupancyRate": 0.6744,
+      "staffOnDuty": 98
+    },
+    "neurosurgery": {
+      "department": "Neurosurgery",
+      "totalBeds": 134,
+      "freeBeds": 45,
+      "totalIcuBeds": 35,
+      "freeIcuBeds": 13,
+      "occupancyRate": 0.6642,
+      "icuOccupancyRate": 0.6286,
+      "staffOnDuty": 94
+    },
+    "orthopedic surgery": {
+      "department": "Orthopedic Surgery",
+      "totalBeds": 170,
+      "freeBeds": 47,
+      "totalIcuBeds": 20,
+      "freeIcuBeds": 6,
+      "occupancyRate": 0.7235,
+      "icuOccupancyRate": 0.7,
+      "staffOnDuty": 108
+    },
+    "internal medicine": {
+      "department": "Internal Medicine",
+      "totalBeds": 248,
+      "freeBeds": 54,
+      "totalIcuBeds": 30,
+      "freeIcuBeds": 11,
+      "occupancyRate": 0.7823,
+      "icuOccupancyRate": 0.6333,
+      "staffOnDuty": 143
+    },
+    "cardiology": {
+      "department": "Cardiology",
+      "totalBeds": 165,
+      "freeBeds": 72,
+      "totalIcuBeds": 41,
+      "freeIcuBeds": 16,
+      "occupancyRate": 0.5636,
+      "icuOccupancyRate": 0.6098,
+      "staffOnDuty": 110
+    },
+    "neurology": {
+      "department": "Neurology",
+      "totalBeds": 153,
+      "freeBeds": 47,
+      "totalIcuBeds": 33,
+      "freeIcuBeds": 11,
+      "occupancyRate": 0.6928,
+      "icuOccupancyRate": 0.6667,
+      "staffOnDuty": 101
+    },
+    "gastroenterology": {
+      "department": "Gastroenterology",
+      "totalBeds": 147,
+      "freeBeds": 51,
+      "totalIcuBeds": 16,
+      "freeIcuBeds": 6,
+      "occupancyRate": 0.6531,
+      "icuOccupancyRate": 0.625,
+      "staffOnDuty": 89
+    },
+    "pulmonology": {
+      "department": "Pulmonology",
+      "totalBeds": 156,
+      "freeBeds": 46,
+      "totalIcuBeds": 27,
+      "freeIcuBeds": 8,
+      "occupancyRate": 0.7051,
+      "icuOccupancyRate": 0.7037,
+      "staffOnDuty": 96
+    },
+    "infectious diseases": {
+      "department": "Infectious Diseases",
+      "totalBeds": 133,
+      "freeBeds": 43,
+      "totalIcuBeds": 29,
+      "freeIcuBeds": 11,
+      "occupancyRate": 0.6767,
+      "icuOccupancyRate": 0.6207,
+      "staffOnDuty": 88
+    },
+    "oncology": {
+      "department": "Oncology",
+      "totalBeds": 181,
+      "freeBeds": 78,
+      "totalIcuBeds": 28,
+      "freeIcuBeds": 10,
+      "occupancyRate": 0.5691,
+      "icuOccupancyRate": 0.6429,
+      "staffOnDuty": 118
+    },
+    "nephrology": {
+      "department": "Nephrology",
+      "totalBeds": 132,
+      "freeBeds": 41,
+      "totalIcuBeds": 16,
+      "freeIcuBeds": 5,
+      "occupancyRate": 0.6894,
+      "icuOccupancyRate": 0.6875,
+      "staffOnDuty": 81
+    },
+    "endocrinology": {
+      "department": "Endocrinology",
+      "totalBeds": 118,
+      "freeBeds": 41,
+      "totalIcuBeds": 11,
+      "freeIcuBeds": 4,
+      "occupancyRate": 0.6525,
+      "icuOccupancyRate": 0.6364,
+      "staffOnDuty": 69
+    },
+    "pediatrics general": {
+      "department": "Pediatrics General",
+      "totalBeds": 180,
+      "freeBeds": 71,
+      "totalIcuBeds": 20,
+      "freeIcuBeds": 6,
+      "occupancyRate": 0.6056,
+      "icuOccupancyRate": 0.7,
+      "staffOnDuty": 118
+    },
+    "pediatric icu (picu)": {
+      "department": "Pediatric ICU (PICU)",
+      "totalBeds": 58,
+      "freeBeds": 18,
+      "totalIcuBeds": 68,
+      "freeIcuBeds": 22,
+      "occupancyRate": 0.6897,
+      "icuOccupancyRate": 0.6765,
+      "staffOnDuty": 65
+    },
+    "neonatal icu (nicu)": {
+      "department": "Neonatal ICU (NICU)",
+      "totalBeds": 68,
+      "freeBeds": 22,
+      "totalIcuBeds": 83,
+      "freeIcuBeds": 29,
+      "occupancyRate": 0.6765,
+      "icuOccupancyRate": 0.6506,
+      "staffOnDuty": 75
+    },
+    "obstetrics & gynecology (o&g)": {
+      "department": "Obstetrics & Gynecology (O&G)",
+      "totalBeds": 195,
+      "freeBeds": 59,
+      "totalIcuBeds": 18,
+      "freeIcuBeds": 6,
+      "occupancyRate": 0.6974,
+      "icuOccupancyRate": 0.6667,
+      "staffOnDuty": 120
+    },
+    "burn unit": {
+      "department": "Burn Unit",
+      "totalBeds": 63,
+      "freeBeds": 22,
+      "totalIcuBeds": 48,
+      "freeIcuBeds": 18,
+      "occupancyRate": 0.6508,
+      "icuOccupancyRate": 0.625,
+      "staffOnDuty": 60
+    },
+    "transplant unit": {
+      "department": "Transplant Unit",
+      "totalBeds": 68,
+      "freeBeds": 20,
+      "totalIcuBeds": 48,
+      "freeIcuBeds": 15,
+      "occupancyRate": 0.7059,
+      "icuOccupancyRate": 0.6875,
+      "staffOnDuty": 65
+    },
+    "rehabilitation unit": {
+      "department": "Rehabilitation Unit",
+      "totalBeds": 183,
+      "freeBeds": 66,
+      "totalIcuBeds": 8,
+      "freeIcuBeds": 3,
+      "occupancyRate": 0.6393,
+      "icuOccupancyRate": 0.625,
+      "staffOnDuty": 108
+    },
+    "psychiatry": {
+      "department": "Psychiatry",
+      "totalBeds": 226,
+      "freeBeds": 82,
+      "totalIcuBeds": 4,
+      "freeIcuBeds": 2,
+      "occupancyRate": 0.6372,
+      "icuOccupancyRate": 0.5,
+      "staffOnDuty": 130
+    },
+    "long-term care": {
+      "department": "Long-Term Care",
+      "totalBeds": 243,
+      "freeBeds": 60,
+      "totalIcuBeds": 8,
+      "freeIcuBeds": 3,
+      "occupancyRate": 0.7531,
+      "icuOccupancyRate": 0.625,
+      "staffOnDuty": 138
+    },
+    "palliative care": {
+      "department": "Palliative Care",
+      "totalBeds": 138,
+      "freeBeds": 54,
+      "totalIcuBeds": 8,
+      "freeIcuBeds": 3,
+      "occupancyRate": 0.6087,
+      "icuOccupancyRate": 0.625,
+      "staffOnDuty": 78
+    }
+  },
+  "departments": [
+    "Burn Unit",
+    "Cardiac Surgery",
+    "Cardiology",
+    "Emergency Department (ED)",
+    "Endocrinology",
+    "Gastroenterology",
+    "General Surgery",
+    "Infectious Diseases",
+    "Internal Medicine",
+    "Long-Term Care",
+    "Neonatal ICU (NICU)",
+    "Nephrology",
+    "Neurology",
+    "Neurosurgery",
+    "Obstetrics & Gynecology (O&G)",
+    "Oncology",
+    "Orthopedic Surgery",
+    "Palliative Care",
+    "Pediatric ICU (PICU)",
+    "Pediatrics General",
+    "Psychiatry",
+    "Pulmonology",
+    "Rehabilitation Unit",
+    "Transplant Unit",
+    "Trauma Center"
+  ],
+  "globalOccupancyRate": 0.6739
+}

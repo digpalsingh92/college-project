@@ -3,6 +3,7 @@ import { loadNamedArtifact } from "./model-store.js";
 import type { PriceBucket, PriceModel } from "./types.js";
 
 let cached: PriceModel | null = null;
+const USD_TO_INR = 83;
 
 const getModel = async (): Promise<PriceModel> => {
   if (cached) return cached;
@@ -20,6 +21,14 @@ export const reloadPriceModel = (): void => {
 
 const normalize = (s: string): string =>
   s.toLowerCase().replace(/[^a-z0-9]/g, " ").replace(/\s+/g, " ").trim();
+
+const toInrBucket = (bucket: PriceBucket): PriceBucket => ({
+  ...bucket,
+  min: Math.round(bucket.min * USD_TO_INR),
+  max: Math.round(bucket.max * USD_TO_INR),
+  avg: Math.round(bucket.avg * USD_TO_INR),
+  median: Math.round(bucket.median * USD_TO_INR),
+});
 
 /**
  * Fuzzy-match: find best matching procedure from model.
@@ -59,6 +68,7 @@ export const estimatePrice = async (input: {
   condition?: string;
 }): Promise<PriceBucket> => {
   const model = await getModel();
+  const modelCurrency = model.currency ?? "USD";
 
   // Try procedure first
   let match = findProcedure(model, input.procedure);
@@ -76,7 +86,7 @@ export const estimatePrice = async (input: {
       ? Math.round(allCosts.reduce((s, c) => s + c, 0) / allCosts.length)
       : 5000;
 
-    return {
+    const fallbackBucket: PriceBucket = {
       procedure: input.procedure,
       count: 0,
       min: Math.round(avg * 0.5),
@@ -84,7 +94,9 @@ export const estimatePrice = async (input: {
       avg,
       median: avg,
     };
+
+    return modelCurrency === "INR" ? fallbackBucket : toInrBucket(fallbackBucket);
   }
 
-  return match;
+  return modelCurrency === "INR" ? match : toInrBucket(match);
 };

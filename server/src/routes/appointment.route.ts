@@ -8,6 +8,7 @@ import {
   cancelAppointmentController,
   completeAppointmentController,
   updateAppointmentByDoctorController,
+  getAdminAppointmentsController,
 } from "../controllers/appointment.controller.js";
 import { asyncHandler } from "../utils/async-handler.js";
 import { requireAuth, requireRole } from "../middleware/auth.middleware.js";
@@ -26,6 +27,12 @@ router.get(
   requireAuth,
   requireRole("admin"),
   asyncHandler(getAdminAppointmentInsightsController)
+);
+router.get(
+  "/admin/all",
+  requireAuth,
+  requireRole("admin"),
+  asyncHandler(getAdminAppointmentsController)
 );
 
 // Doctor endpoints

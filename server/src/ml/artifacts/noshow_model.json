@@ -1,0 +1,356 @@
+{
+  "version": "1.0.0",
+  "trainedAt": "2026-04-19T20:35:29.094Z",
+  "datasetRecords": 110527,
+  "globalNoShowRate": 0.2019,
+  "byAgeBucket": {
+    "56+": {
+      "count": 27504,
+      "noShowRate": 0.1564
+    },
+    "0-18": {
+      "count": 28867,
+      "noShowRate": 0.2199
+    },
+    "19-35": {
+      "count": 24137,
+      "noShowRate": 0.2383
+    },
+    "36-55": {
+      "count": 30019,
+      "noShowRate": 0.1971
+    }
+  },
+  "byGender": {
+    "F": {
+      "count": 71840,
+      "noShowRate": 0.2031
+    },
+    "M": {
+      "count": 38687,
+      "noShowRate": 0.1997
+    }
+  },
+  "bySmsReceived": {
+    "no": {
+      "count": 75045,
+      "noShowRate": 0.167
+    },
+    "yes": {
+      "count": 35482,
+      "noShowRate": 0.2757
+    }
+  },
+  "byDaysDiffBucket": {
+    "same_day": {
+      "count": 40972,
+      "noShowRate": 0.056
+    },
+    "1-3_days": {
+      "count": 14365,
+      "noShowRate": 0.2332
+    },
+    "8-14_days": {
+      "count": 11633,
+      "noShowRate": 0.3074
+    },
+    "15+_days": {
+      "count": 27147,
+      "noShowRate": 0.3264
+    },
+    "4-7_days": {
+      "count": 16410,
+      "noShowRate": 0.2581
+    }
+  },
+  "byComposite": {
+    "56+|F|no|same_day": {
+      "count": 5880,
+      "noShowRate": 0.0415
+    },
+    "56+|M|no|same_day": {
+      "count": 3129,
+      "noShowRate": 0.0399
+    },
+    "0-18|F|no|same_day": {
+      "count": 6306,
+      "noShowRate": 0.0576
+    },
+    "56+|F|no|1-3_days": {
+      "count": 2904,
+      "noShowRate": 0.1928
+    },
+    "19-35|F|no|1-3_days": {
+      "count": 1582,
+      "noShowRate": 0.2649
+    },
+    "36-55|F|no|1-3_days": {
+      "count": 2515,
+      "noShowRate": 0.2457
+    },
+    "19-35|F|no|same_day": {
+      "count": 6174,
+      "noShowRate": 0.0518
+    },
+    "19-35|M|yes|1-3_days": {
+      "count": 109,
+      "noShowRate": 0.2477
+    },
+    "19-35|M|no|same_day": {
+      "count": 2779,
+      "noShowRate": 0.0655
+    },
+    "0-18|F|yes|1-3_days": {
+      "count": 209,
+      "noShowRate": 0.244
+    },
+    "36-55|M|no|1-3_days": {
+      "count": 1076,
+      "noShowRate": 0.2481
+    },
+    "19-35|F|yes|1-3_days": {
+      "count": 315,
+      "noShowRate": 0.2698
+    },
+    "36-55|F|no|same_day": {
+      "count": 6966,
+      "noShowRate": 0.0461
+    },
+    "0-18|F|no|1-3_days": {
+      "count": 1175,
+      "noShowRate": 0.2817
+    },
+    "0-18|M|yes|1-3_days": {
+      "count": 153,
+      "noShowRate": 0.3072
+    },
+    "36-55|M|yes|1-3_days": {
+      "count": 196,
+      "noShowRate": 0.2398
+    },
+    "36-55|M|no|same_day": {
+      "count": 3677,
+      "noShowRate": 0.0481
+    },
+    "0-18|M|no|1-3_days": {
+      "count": 1037,
+      "noShowRate": 0.2758
+    },
+    "36-55|F|yes|1-3_days": {
+      "count": 416,
+      "noShowRate": 0.2019
+    },
+    "0-18|M|no|same_day": {
+      "count": 6061,
+      "noShowRate": 0.0931
+    },
+    "56+|M|yes|8-14_days": {
+      "count": 435,
+      "noShowRate": 0.2138
+    },
+    "56+|M|yes|1-3_days": {
+      "count": 228,
+      "noShowRate": 0.136
+    },
+    "56+|F|yes|1-3_days": {
+      "count": 439,
+      "noShowRate": 0.1617
+    },
+    "19-35|F|yes|15+_days": {
+      "count": 2977,
+      "noShowRate": 0.3564
+    },
+    "0-18|M|yes|8-14_days": {
+      "count": 843,
+      "noShowRate": 0.2728
+    },
+    "0-18|F|yes|4-7_days": {
+      "count": 1131,
+      "noShowRate": 0.2891
+    },
+    "56+|F|yes|15+_days": {
+      "count": 2748,
+      "noShowRate": 0.2143
+    },
+    "56+|M|no|15+_days": {
+      "count": 877,
+      "noShowRate": 0.2759
+    },
+    "56+|F|yes|8-14_days": {
+      "count": 974,
+      "noShowRate": 0.2074
+    },
+    "56+|F|no|8-14_days": {
+      "count": 734,
+      "noShowRate": 0.267
+    },
+    "19-35|M|no|8-14_days": {
+      "count": 274,
+      "noShowRate": 0.3796
+    },
+    "19-35|M|yes|8-14_days": {
+      "count": 347,
+      "noShowRate": 0.3084
+    },
+    "36-55|F|yes|8-14_days": {
+      "count": 1364,
+      "noShowRate": 0.2735
+    },
+    "0-18|M|no|8-14_days": {
+      "count": 689,
+      "noShowRate": 0.3875
+    },
+    "0-18|F|yes|8-14_days": {
+      "count": 919,
+      "noShowRate": 0.3243
+    },
+    "36-55|F|yes|15+_days": {
+      "count": 3323,
+      "noShowRate": 0.2829
+    },
+    "19-35|F|yes|8-14_days": {
+      "count": 1405,
+      "noShowRate": 0.3381
+    },
+    "0-18|F|yes|15+_days": {
+      "count": 2243,
+      "noShowRate": 0.3455
+    },
+    "36-55|M|yes|15+_days": {
+      "count": 1228,
+      "noShowRate": 0.3151
+    },
+    "0-18|M|yes|15+_days": {
+      "count": 1916,
+      "noShowRate": 0.3184
+    },
+    "36-55|M|yes|8-14_days": {
+      "count": 487,
+      "noShowRate": 0.2772
+    },
+    "19-35|M|yes|15+_days": {
+      "count": 878,
+      "noShowRate": 0.3929
+    },
+    "0-18|M|no|15+_days": {
+      "count": 1412,
+      "noShowRate": 0.4093
+    },
+    "56+|F|no|15+_days": {
+      "count": 1792,
+      "noShowRate": 0.2662
+    },
+    "56+|M|yes|15+_days": {
+      "count": 1242,
+      "noShowRate": 0.1989
+    },
+    "56+|M|no|8-14_days": {
+      "count": 364,
+      "noShowRate": 0.2637
+    },
+    "19-35|F|yes|4-7_days": {
+      "count": 1740,
+      "noShowRate": 0.3115
+    },
+    "0-18|F|no|15+_days": {
+      "count": 1466,
+      "noShowRate": 0.4222
+    },
+    "36-55|F|no|15+_days": {
+      "count": 1988,
+      "noShowRate": 0.3511
+    },
+    "36-55|F|yes|4-7_days": {
+      "count": 2127,
+      "noShowRate": 0.2323
+    },
+    "19-35|F|no|15+_days": {
+      "count": 1605,
+      "noShowRate": 0.4181
+    },
+    "36-55|M|no|15+_days": {
+      "count": 846,
+      "noShowRate": 0.4031
+    },
+    "19-35|M|no|15+_days": {
+      "count": 606,
+      "noShowRate": 0.4637
+    },
+    "0-18|F|no|8-14_days": {
+      "count": 714,
+      "noShowRate": 0.3992
+    },
+    "19-35|F|no|4-7_days": {
+      "count": 987,
+      "noShowRate": 0.3232
+    },
+    "36-55|F|no|4-7_days": {
+      "count": 1113,
+      "noShowRate": 0.2588
+    },
+    "19-35|F|no|8-14_days": {
+      "count": 835,
+      "noShowRate": 0.3904
+    },
+    "19-35|M|no|1-3_days": {
+      "count": 635,
+      "noShowRate": 0.2724
+    },
+    "56+|F|yes|4-7_days": {
+      "count": 1872,
+      "noShowRate": 0.1886
+    },
+    "56+|M|no|1-3_days": {
+      "count": 1376,
+      "noShowRate": 0.1839
+    },
+    "36-55|M|yes|4-7_days": {
+      "count": 874,
+      "noShowRate": 0.2243
+    },
+    "36-55|F|no|8-14_days": {
+      "count": 894,
+      "noShowRate": 0.3031
+    },
+    "56+|F|no|4-7_days": {
+      "count": 1216,
+      "noShowRate": 0.236
+    },
+    "36-55|M|no|4-7_days": {
+      "count": 574,
+      "noShowRate": 0.2805
+    },
+    "36-55|M|no|8-14_days": {
+      "count": 355,
+      "noShowRate": 0.3324
+    },
+    "0-18|M|yes|4-7_days": {
+      "count": 1035,
+      "noShowRate": 0.2367
+    },
+    "19-35|M|yes|4-7_days": {
+      "count": 530,
+      "noShowRate": 0.3396
+    },
+    "56+|M|yes|4-7_days": {
+      "count": 779,
+      "noShowRate": 0.1759
+    },
+    "0-18|M|no|4-7_days": {
+      "count": 766,
+      "noShowRate": 0.2742
+    },
+    "0-18|F|no|4-7_days": {
+      "count": 792,
+      "noShowRate": 0.3295
+    },
+    "19-35|M|no|4-7_days": {
+      "count": 359,
+      "noShowRate": 0.3788
+    },
+    "56+|M|no|4-7_days": {
+      "count": 515,
+      "noShowRate": 0.1942
+    }
+  }
+}

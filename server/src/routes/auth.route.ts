@@ -1,5 +1,6 @@
 import express from 'express';
 import {
+	adminLogin,
 	doctorLogin,
 	doctorRegister,
 	patientLogin,
@@ -17,6 +18,7 @@ const router = express.Router();
 
 router.post('/doctor/register', validateRequest({ body: registerDoctorSchema }), asyncHandler(doctorRegister));
 router.post('/doctor/login', validateRequest({ body: loginSchema }), asyncHandler(doctorLogin));
+router.post('/admin/login', validateRequest({ body: loginSchema }), asyncHandler(adminLogin));
 router.post('/register', validateRequest({ body: registerPatientSchema }), asyncHandler(patientRegister));
 router.post('/login', validateRequest({ body: loginSchema }), asyncHandler(patientLogin));
 

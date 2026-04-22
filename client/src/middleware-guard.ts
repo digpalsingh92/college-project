@@ -26,6 +26,10 @@ export function withRoleGuard(request: NextRequest) {
   const role = getRoleFromToken(token);
   const path = request.nextUrl.pathname;
 
+  if (path === "/admin/login") {
+    return NextResponse.next();
+  }
+
   const requestedRole = (Object.keys(protectedPrefixes) as UserRole[]).find((key) =>
     path.startsWith(protectedPrefixes[key])
   );
@@ -35,7 +39,8 @@ export function withRoleGuard(request: NextRequest) {
   }
 
   if (!role) {
-    return NextResponse.redirect(new URL("/login", request.url));
+    const loginPath = requestedRole === "admin" ? "/admin/login" : "/login";
+    return NextResponse.redirect(new URL(loginPath, request.url));
   }
 
   if (role !== requestedRole) {

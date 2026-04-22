@@ -13,6 +13,9 @@ import {
   Shield,
   Stethoscope,
   Users,
+  Brain,
+  CalendarRange,
+  MessageSquareHeart,
 } from "lucide-react";
 import { cn } from "@/helpers/cn";
 import { useAppSelector } from "@/store/hooks";
@@ -26,8 +29,12 @@ interface NavItem {
 
 const navByRole: Record<UserRole, NavItem[]> = {
   admin: [
-    { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
-    { href: "/admin/users", label: "Users", icon: Users },
+    { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
+    { href: "/admin/doctors", label: "Doctors", icon: Stethoscope },
+    { href: "/admin/patients", label: "Patients", icon: Users },
+    { href: "/admin/appointments", label: "Appointments", icon: CalendarRange },
+    { href: "/admin/assistant", label: "Assistant", icon: MessageSquareHeart },
+    { href: "/admin/ai-models", label: "AI Models", icon: Brain },
   ],
   doctor: [
     { href: "/doctor", label: "Dashboard", icon: LayoutDashboard },
@@ -52,7 +59,7 @@ const navByRole: Record<UserRole, NavItem[]> = {
     },
     {
       href: "/patient/surgery-planner",
-      label: "Surgery Planner",
+      label: "Estimations",
       icon: Scissors,
     },
   ],
