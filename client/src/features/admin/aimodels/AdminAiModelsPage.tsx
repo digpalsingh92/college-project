@@ -5,9 +5,9 @@ import { Activity, ArrowRight, Clock3, Layers3, ShieldCheck } from "lucide-react
 import { toast } from "sonner";
 import { ModelCard, type ModelStatus } from "@/components/shared/ModelCard";
 import { cn } from "@/helpers/cn";
-import { modelApi } from "@/lib/api";
+import { aiModelApi as modelApi } from "@/lib/api/index";
 
-type ModelKey = "waitTime" | "noShow" | "price" | "bed";
+type ModelKey = "waitTime" | "noShow" | "price" | "bed" | "disease";
 
 type ModelState = {
   status: ModelStatus;
@@ -58,6 +58,12 @@ const modelMeta: Record<
     accent: "violet",
     hasReload: false,
   },
+  disease: {
+    name: "Disease Prediction Model",
+    description: "Trains on symptoms and clinical datasets to improve diagnostic assistants.",
+    accent: "emerald",
+    hasReload: false,
+  },
 };
 
 const initialModelState: Record<ModelKey, ModelState> = {
@@ -65,6 +71,7 @@ const initialModelState: Record<ModelKey, ModelState> = {
   noShow: { status: "idle", lastTrainedAt: "5 hours ago", loading: false },
   price: { status: "idle", lastTrainedAt: "1 day ago", loading: false },
   bed: { status: "idle", lastTrainedAt: "12 hours ago", loading: false },
+  disease: { status: "idle", lastTrainedAt: "New", loading: false },
 };
 
 const initialLogs: LogEntry[] = [
@@ -187,7 +194,7 @@ export function AdminAiModelsPage() {
 
   return (
     <div className="space-y-8">
-      <section className="relative overflow-hidden rounded-3xl border border-blue-100 bg-gradient-to-br from-slate-900 via-blue-900 to-cyan-800 p-8 text-white shadow-xl">
+      <section className="relative overflow-hidden rounded-3xl border border-blue-100 bg-linear-to-br from-slate-900 via-blue-900 to-cyan-800 p-8 text-white shadow-xl">
         <div className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-cyan-300/20 blur-3xl" />
         <div className="pointer-events-none absolute -bottom-24 left-8 h-48 w-48 rounded-full bg-blue-400/20 blur-3xl" />
 
@@ -206,7 +213,7 @@ export function AdminAiModelsPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 sm:min-w-[280px]">
+          <div className="grid grid-cols-2 gap-3 sm:min-w-70">
             <div className="rounded-2xl border border-white/10 bg-white/10 p-4 backdrop-blur">
               <p className="text-xs uppercase tracking-[0.16em] text-blue-100/80">Models</p>
               <p className="mt-2 text-2xl font-semibold">{modelCount}</p>
@@ -257,7 +264,9 @@ export function AdminAiModelsPage() {
                           ? modelApi.trainNoShowModel
                           : key === "price"
                             ? modelApi.trainPriceModel
-                            : modelApi.trainBedModel
+                            : key === "bed"
+                              ? modelApi.trainBedModel
+                              : modelApi.trainDiseaseModel
                     )
                   }
                   onReload={

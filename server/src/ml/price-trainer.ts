@@ -1,12 +1,10 @@
 import { readFile } from "node:fs/promises";
-import path from "node:path";
 import { saveNamedArtifact } from "./model-store.js";
 import type { PriceBucket, PriceModel } from "./types.js";
+import { datasetPath, findDatasetFiles } from "./dataset-discovery.js";
 
 const MODEL_VERSION = "1.0.0";
 const USD_TO_INR = 83;
-
-const DATASETS_DIR = path.resolve(process.cwd(), "src", "Datasets");
 
 const toNum = (v: string): number => {
   const cleaned = v.replace(/[$,"\s]/g, "");
@@ -22,11 +20,11 @@ const median = (values: number[]): number => {
 };
 
 /**
- * hospital_pricing_data.csv
+ * price_hospital_dataset_*.csv
  * Columns: Patient_ID,Age,Gender,Condition,Procedure,Cost,Length_of_Stay,Readmission,Outcome,Satisfaction
  */
-const parseHospitalPricing = async (): Promise<{ procedure: string; cost: number }[]> => {
-  const raw = await readFile(path.join(DATASETS_DIR, "hospital_pricing_data.csv"), "utf-8");
+const parseHospitalPricing = async (filename: string): Promise<{ procedure: string; cost: number }[]> => {
+  const raw = await readFile(datasetPath(filename), "utf-8");
   const lines = raw.split(/\r?\n/).filter(Boolean);
   if (lines.length <= 1) return [];
 
@@ -40,11 +38,11 @@ const parseHospitalPricing = async (): Promise<{ procedure: string; cost: number
 };
 
 /**
- * inpatientCharges.csv
+ * price_inpatient_dataset_*.csv
  * Columns: DRG Definition,Provider Id,Provider Name,...,Average Covered Charges,Average Total Payments,Average Medicare Payments
  */
-const parseInpatientCharges = async (): Promise<{ procedure: string; cost: number }[]> => {
-  const raw = await readFile(path.join(DATASETS_DIR, "inpatientCharges.csv"), "utf-8");
+const parseInpatientCharges = async (filename: string): Promise<{ procedure: string; cost: number }[]> => {
+  const raw = await readFile(datasetPath(filename), "utf-8");
   const lines = raw.split(/\r?\n/).filter(Boolean);
   if (lines.length <= 1) return [];
 
@@ -68,12 +66,15 @@ const normalize = (s: string): string => s.toLowerCase().replace(/[^a-z0-9]/g, "
 const usdToInr = (usd: number): number => Math.round(usd * USD_TO_INR);
 
 export const trainPriceModel = async (): Promise<PriceModel> => {
-  const [pricing, inpatient] = await Promise.all([
-    parseHospitalPricing(),
-    parseInpatientCharges(),
+  const hospitalPricingFiles = await findDatasetFiles([/^price_hospital_dataset_.*\.csv$/i]);
+  const inpatientChargeFiles = await findDatasetFiles([/^price_inpatient_dataset_.*\.csv$/i]);
+
+  const [pricingSets, inpatientSets] = await Promise.all([
+    Promise.all(hospitalPricingFiles.map((filename) => parseHospitalPricing(filename))),
+    Promise.all(inpatientChargeFiles.map((filename) => parseInpatientCharges(filename))),
   ]);
 
-  const all = [...pricing, ...inpatient];
+  const all = [...pricingSets.flat(), ...inpatientSets.flat()];
   if (all.length === 0) {
     throw new Error("Price datasets are empty. Cannot train price model.");
   }

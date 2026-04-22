@@ -705,6 +705,63 @@ export const api = createApi({
         );
       },
     }),
+
+    getHospitalResources: builder.query<
+      { status: boolean; data: any[] },
+      { category?: string; search?: string }
+    >({
+      async queryFn({ category, search } = {}, api: BaseQueryApi) {
+        return runRequest(
+          apiHandler.get<{ status: boolean; data: any[] }>("resources", {
+            token: (api.getState() as ApiAuthState).auth.token,
+            params: { category, search },
+          }),
+          api
+        );
+      },
+    }),
+
+    createHospitalResource: builder.mutation<
+      { status: boolean; data: any },
+      { name: string; category: string; basePrice: number; description?: string }
+    >({
+      async queryFn(body, api: BaseQueryApi) {
+        return runRequest(
+          apiHandler.post<{ status: boolean; data: any }>("resources", body, {
+            token: (api.getState() as ApiAuthState).auth.token,
+          }),
+          api
+        );
+      },
+      invalidatesTags: ["Resource" as any],
+    }),
+
+    updateHospitalResource: builder.mutation<
+      { status: boolean; data: any },
+      { id: string; status?: string; name?: string; basePrice?: number; description?: string }
+    >({
+      async queryFn({ id, ...body }, api: BaseQueryApi) {
+        return runRequest(
+          apiHandler.patch<{ status: boolean; data: any }>(`resources/${id}`, body, {
+            token: (api.getState() as ApiAuthState).auth.token,
+          }),
+          api
+        );
+      },
+      invalidatesTags: ["Resource" as any],
+    }),
+
+    trainDisease: builder.mutation<unknown, void>({
+      async queryFn(_arg, api: BaseQueryApi): Promise<ApiResult<unknown>> {
+        return runRequest(
+          apiHandler.post<unknown>("predictions/train/disease", {}, {
+            token: (api.getState() as ApiAuthState).auth.token,
+          }),
+          api
+        );
+      },
+    }),
+
   }),
 });
 
@@ -753,4 +810,8 @@ export const {
   useTrainPriceMutation,
   useTrainBedMutation,
   useAskAssistantMutation,
+  useGetHospitalResourcesQuery,
+  useCreateHospitalResourceMutation,
+  useUpdateHospitalResourceMutation,
+  useTrainDiseaseMutation,
 } = api;

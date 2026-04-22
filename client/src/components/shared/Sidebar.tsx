@@ -16,6 +16,9 @@ import {
   Brain,
   CalendarRange,
   MessageSquareHeart,
+  Bed,
+  TestTube,
+  Cpu,
 } from "lucide-react";
 import { cn } from "@/helpers/cn";
 import { useAppSelector } from "@/store/hooks";
@@ -35,6 +38,10 @@ const navByRole: Record<UserRole, NavItem[]> = {
     { href: "/admin/appointments", label: "Appointments", icon: CalendarRange },
     { href: "/admin/assistant", label: "Assistant", icon: MessageSquareHeart },
     { href: "/admin/ai-models", label: "AI Models", icon: Brain },
+    { href: "/admin/beds", label: "Beds", icon: Bed },
+    { href: "/admin/ots", label: "Operation Theaters", icon: Activity },
+    { href: "/admin/labs", label: "Labs", icon: TestTube },
+    { href: "/admin/machines", label: "Machines", icon: Cpu },
   ],
   doctor: [
     { href: "/doctor", label: "Dashboard", icon: LayoutDashboard },

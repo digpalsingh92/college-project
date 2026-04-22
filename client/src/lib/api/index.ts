@@ -42,5 +42,7 @@ export const aiModelApi = {
   trainNoShowModel: () => postTrainingEndpoint("predictions/train/no-show"),
   trainPriceModel: () => postTrainingEndpoint("predictions/train/price"),
   trainBedModel: () => postTrainingEndpoint("predictions/train/bed"),
+  trainDiseaseModel: () => postTrainingEndpoint("predictions/train/disease"),
+  reloadWaitTimeModel: () => postTrainingEndpoint("predictions/reload"),
   reloadMainModel: () => postTrainingEndpoint("predictions/reload"),
 };

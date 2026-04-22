@@ -103,3 +103,30 @@ model Appointment {
 
   @@index([patientId, doctorId, date])
 }
+
+enum ResourceCategory {
+  BED
+  OT
+  LAB
+  MACHINE
+}
+
+enum ResourceStatus {
+  ACTIVE
+  INACTIVE
+  MAINTENANCE
+  OCCUPIED
+  VACANT
+}
+
+model HospitalResource {
+  id          String   @id @default(uuid())
+  name        String
+  category    ResourceCategory
+  basePrice   Float
+  status      ResourceStatus @default(ACTIVE)
+  description String?
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

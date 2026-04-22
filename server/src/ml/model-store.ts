@@ -20,7 +20,7 @@ export const loadModelArtifact = async (): Promise<TrainedPredictionModel> => {
 
 // ── generic named artifact store ──
 
-export type ModelName = "waiting_resource" | "noshow" | "price" | "bed";
+export type ModelName = "waiting_resource" | "noshow" | "price" | "bed" | "disease";
 
 const artifactPath = (name: ModelName): string =>
   path.join(ARTIFACTS_DIR, `${name}_model.json`);

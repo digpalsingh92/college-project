@@ -1,16 +1,9 @@
 import { readFile } from "node:fs/promises";
-import path from "node:path";
 import { saveNamedArtifact } from "./model-store.js";
 import type { NoShowBucket, NoShowModel } from "./types.js";
+import { datasetPath, findDatasetFiles } from "./dataset-discovery.js";
 
 const MODEL_VERSION = "1.0.0";
-
-const DATASET_PATH = path.resolve(
-  process.cwd(),
-  "src",
-  "Datasets",
-  "KaggleV2-May-2016.csv"
-);
 
 interface KaggleRow {
   gender: string;
@@ -21,8 +14,8 @@ interface KaggleRow {
   noShow: string; // "Yes" | "No"
 }
 
-const parseKaggleCsv = async (): Promise<KaggleRow[]> => {
-  const raw = await readFile(DATASET_PATH, "utf-8");
+const parseKaggleCsv = async (filename: string): Promise<KaggleRow[]> => {
+  const raw = await readFile(datasetPath(filename), "utf-8");
   const lines = raw.split(/\r?\n/).filter(Boolean);
   if (lines.length <= 1) return [];
 
@@ -37,6 +30,29 @@ const parseKaggleCsv = async (): Promise<KaggleRow[]> => {
       age: Number(cols[5]) || 0,
       smsReceived: Number(cols[12]) || 0,
       noShow: (cols[13] ?? "No").trim(),
+    };
+  });
+};
+
+const parseHealthcareNoShowCsv = async (filename: string): Promise<KaggleRow[]> => {
+  const raw = await readFile(datasetPath(filename), "utf-8");
+  const lines = raw.split(/\r?\n/).filter(Boolean);
+  if (lines.length <= 1) return [];
+
+  // Header schema handled here:
+  // appointmentId,appointmentDate,patientAge,gender,department,appointmentType,scheduledHour,waitingTimeMinutes,reminderSent,previousNoShows,appointmentStatus
+  return lines.slice(1).map((line) => {
+    const cols = line.split(",");
+    const reminderSent = (cols[8] ?? "Yes").trim();
+    const status = (cols[10] ?? "Completed").trim();
+
+    return {
+      gender: (cols[3] ?? "").trim(),
+      scheduledDay: "",
+      appointmentDay: "",
+      age: Number(cols[2]) || 0,
+      smsReceived: reminderSent === "No" ? 0 : 1,
+      noShow: status === "No-Show" ? "Yes" : "No",
     };
   });
 };
@@ -82,9 +98,17 @@ const groupBy = <T>(items: T[], key: (item: T) => string): Record<string, T[]> =
 };
 
 export const trainNoShowModel = async (): Promise<NoShowModel> => {
-  const rows = await parseKaggleCsv();
+  const occurrenceFiles = await findDatasetFiles([/^no_show_occurrence_dataset_.*\.csv$/i]);
+  const waitTimeFiles = await findDatasetFiles([/^wait_time_no_show_dataset_.*\.csv$/i]);
+
+  const [kaggleSets, healthcareSets] = await Promise.all([
+    Promise.all(occurrenceFiles.map((filename) => parseKaggleCsv(filename))),
+    Promise.all(waitTimeFiles.map((filename) => parseHealthcareNoShowCsv(filename))),
+  ]);
+
+  const rows = [...kaggleSets.flat(), ...healthcareSets.flat()];
   if (rows.length === 0) {
-    throw new Error("KaggleV2 dataset is empty. Cannot train no-show model.");
+    throw new Error("No no-show datasets found. Add no_show_occurrence_dataset_*.csv or wait_time_no_show_dataset_*.csv files.");
   }
 
   const enriched = rows.map((r) => ({
