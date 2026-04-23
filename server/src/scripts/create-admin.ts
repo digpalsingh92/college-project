@@ -28,7 +28,7 @@ async function main() {
       data: {
         name,
         passwordHash,
-        role: "admin",
+        role: "admin",  
       },
     });
 

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-type AssistantIntent = "price" | "wait-time" | "bed";
+type AssistantIntent = "price" | "wait-time" | "bed" | "disease";
 
 type AssistantResponse = {
   intent: AssistantIntent | "unknown";
@@ -17,11 +17,47 @@ function normalizeText(value: string): string {
 function detectIntent(message: string): AssistantIntent | "unknown" {
   const normalized = normalizeText(message);
 
+  if (/\b(fever|cough|fatigue|breath|breathing|symptom|symptoms|disease|diagnosis|ill|sick)\b/.test(normalized)) return "disease";
   if (/\b(price|cost|estimate|estimated|how much)\b/.test(normalized)) return "price";
   if (/\b(bed|beds|availability|available|occupancy|icu|ward)\b/.test(normalized)) return "bed";
   if (/\b(wait|wait time|queue|how long|soon|delay|slot)\b/.test(normalized)) return "wait-time";
 
   return "unknown";
+}
+
+function extractAge(message: string): number {
+  const match = message.match(/\b(\d{1,3})\s*(?:years?\s*old|yo|yrs?\.?|year\s*old)?\b/i);
+  if (!match) return 30;
+  const value = Number(match[1]);
+  return Number.isFinite(value) ? Math.max(0, Math.min(120, value)) : 30;
+}
+
+function extractGender(message: string): string {
+  const normalized = normalizeText(message);
+  if (/\b(male|man|boy|him|his)\b/.test(normalized)) return "Male";
+  if (/\b(female|woman|girl|her|hers)\b/.test(normalized)) return "Female";
+  return "Female";
+}
+
+function extractLevel(message: string, lowWords: RegExp, highWords: RegExp): "Low" | "Normal" | "High" {
+  const normalized = normalizeText(message);
+  if (highWords.test(normalized)) return "High";
+  if (lowWords.test(normalized)) return "Low";
+  return "Normal";
+}
+
+function extractDiseaseFeatures(message: string) {
+  const normalized = normalizeText(message);
+  return {
+    fever: /\b(fever|temperature|hot|burning)\b/.test(normalized),
+    cough: /\b(cough|coughing|cold|phlegm|sneeze|sneezing)\b/.test(normalized),
+    fatigue: /\b(fatigue|tired|weak|exhausted|lethargic|sleepy)\b/.test(normalized),
+    difficultyBreathing: /\b(breathing|breath|shortness of breath|short of breath|wheezing|chest tightness)\b/.test(normalized),
+    age: extractAge(message),
+    gender: extractGender(message),
+    bloodPressure: extractLevel(message, /\b(low bp|low blood pressure|hypotension)\b/, /\b(high bp|high blood pressure|hypertension)\b/),
+    cholesterolLevel: extractLevel(message, /\b(low cholesterol)\b/, /\b(high cholesterol)\b/),
+  };
 }
 
 function extractSubject(message: string): string {
@@ -63,7 +99,7 @@ export async function POST(request: NextRequest) {
     body = (await request.json()) as { message?: string };
   } catch {
     return NextResponse.json<AssistantResponse>(
-      { intent: "unknown", message: "Send a question about price, wait time, or bed availability." },
+      { intent: "unknown", message: "Send a question about price, wait time, bed availability, or symptoms." },
       { status: 400 }
     );
   }
@@ -71,7 +107,7 @@ export async function POST(request: NextRequest) {
   const message = body.message?.trim();
   if (!message) {
     return NextResponse.json<AssistantResponse>(
-      { intent: "unknown", message: "Send a question about price, wait time, or bed availability." },
+      { intent: "unknown", message: "Send a question about price, wait time, bed availability, or symptoms." },
       { status: 400 }
     );
   }
@@ -80,6 +116,30 @@ export async function POST(request: NextRequest) {
   const authorization = request.headers.get("authorization") ?? undefined;
 
   try {
+    if (intent === "disease") {
+      const diseaseFeatures = extractDiseaseFeatures(message);
+      const { response, data } = await proxyJson("/api/predictions/disease", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...(authorization ? { Authorization: authorization } : {}),
+        },
+        body: JSON.stringify(diseaseFeatures),
+      });
+
+      if (!response.ok) {
+        const errorMessage = (data as { message?: string } | null)?.message ?? `Request failed with status ${response.status}`;
+        return NextResponse.json<AssistantResponse>({ intent, message: errorMessage }, { status: response.status });
+      }
+
+      const payload = data as { message?: string; data?: unknown };
+      return NextResponse.json<AssistantResponse>({
+        intent,
+        message: payload.message ?? "Here is the most likely disease based on the symptoms.",
+        data: payload.data ?? null,
+      });
+    }
+
     if (intent === "price") {
       const procedure = extractSubject(message);
       const { response, data } = await proxyJson("/api/predictions/price-estimation", {
@@ -178,7 +238,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json<AssistantResponse>(
       {
         intent: "unknown",
-        message: "Ask about price, wait time, or bed availability. For example: 'price for cataract surgery' or 'bed availability in cardiology'.",
+        message: "Ask about symptoms, price, wait time, or bed availability. Example: 'I have fever and cough' or 'price for cataract surgery'.",
       },
       { status: 200 }
     );

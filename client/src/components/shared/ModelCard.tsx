@@ -117,7 +117,7 @@ export function ModelCard({
             disabled={loading}
             className="min-w-32"
           >
-            <span className="inline-flex items-center gap-2">
+            <span className="inline-flex cursor-pointer items-center gap-2">
               {loading && status === "training" ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
               Train Model
             </span>
@@ -132,7 +132,7 @@ export function ModelCard({
               disabled={loading}
               className="min-w-32"
             >
-              <span className="inline-flex items-center gap-2">
+              <span className="inline-flex cursor-pointer items-center gap-2">
                 {loading && status === "training" ? <Loader2 className="h-4 w-4 animate-spin" /> : <RotateCcw className="h-4 w-4" />}
                 Reload Model
               </span>
