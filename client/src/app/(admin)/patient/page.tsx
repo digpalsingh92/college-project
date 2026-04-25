@@ -1,5 +1,5 @@
-import { PatientDashboardPage } from "@/modules/patient/dashboard/PatientDashboardPage";
+import { PatientOverviewPage } from "@/modules/patient/dashboard/PatientOverviewPage";
 
 export default function Page() {
-  return <PatientDashboardPage />;
+  return <PatientOverviewPage />;
 }

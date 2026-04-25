@@ -4,11 +4,48 @@ import { cn } from "@/helpers/cn";
 
 interface ResponseCardProps {
   type: NonNullable<AssistantResponse["type"]>;
-  data: AssistantResponse["data"];
+  data: Record<string, unknown>;
+}
+
+function toRecord(value: unknown): Record<string, unknown> | null {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return null;
+  return value as Record<string, unknown>;
+}
+
+function pickString(...values: unknown[]): string | null {
+  for (const value of values) {
+    if (typeof value === "string" && value.trim().length > 0) return value;
+  }
+  return null;
+}
+
+function pickNumber(...values: unknown[]): number | null {
+  for (const value of values) {
+    if (typeof value === "number" && Number.isFinite(value)) return value;
+  }
+  return null;
 }
 
 export function ResponseCard({ type, data }: ResponseCardProps) {
-  if (!data) return null;
+  const record = toRecord(data);
+  if (!record) return null;
+
+  const estimatedCostRange = toRecord(record.estimatedCostRange);
+  const bedData = toRecord(record.bedAvailability);
+  const waitLabel = pickString(record.waitingLabel, record.delayLevel);
+  const waitDays = pickNumber(record.waitingDays, record.waitTimeDays, record.avgWaitTime, record.days, record.waitTime);
+  const priceRange = pickString(
+    record.priceRange,
+    estimatedCostRange?.formatted,
+    typeof estimatedCostRange?.min === "number" && typeof estimatedCostRange?.max === "number"
+      ? `INR ${estimatedCostRange.min} - INR ${estimatedCostRange.max}`
+      : null
+  );
+  const bedSummary = pickString(
+    record.bedsAvailable,
+    typeof bedData?.freeBeds === "number" ? `${bedData.freeBeds} beds free` : null,
+    typeof record.freeBeds === "number" ? `${record.freeBeds} beds free` : null
+  );
 
   if (type === "price") {
     return (
@@ -23,7 +60,7 @@ export function ResponseCard({ type, data }: ResponseCardProps) {
           <div className="flex flex-col">
             <span className="text-sm font-medium text-slate-500">Estimated Range</span>
             <span className="mt-1 text-lg font-semibold tracking-tight text-slate-900">
-              {data.priceRange ?? "Not available"}
+              {priceRange ?? "Not available"}
             </span>
           </div>
         </div>
@@ -41,11 +78,16 @@ export function ResponseCard({ type, data }: ResponseCardProps) {
           <h4 className="font-medium text-amber-900">Wait Time Analysis</h4>
         </div>
         <div className="px-4 py-4">
-          <div className="flex flex-col">
+          <div className="flex flex-col gap-2">
             <span className="text-sm font-medium text-slate-500">Estimated Wait</span>
             <span className="mt-1 text-lg font-semibold tracking-tight text-slate-900">
-              {data.waitTime ?? "Not available"}
+              {waitDays !== null ? `${waitDays} days` : "Not available"}
             </span>
+            {waitLabel ? (
+              <span className="inline-flex w-fit rounded-full border border-amber-200 bg-amber-100 px-2.5 py-1 text-xs font-medium text-amber-800">
+                {waitLabel}
+              </span>
+            ) : null}
           </div>
         </div>
       </div>
@@ -66,9 +108,9 @@ export function ResponseCard({ type, data }: ResponseCardProps) {
             <span className="text-sm font-medium text-slate-500">Status</span>
             <span className={cn(
               "mt-1 text-lg font-semibold tracking-tight",
-              data.bedsAvailable?.toLowerCase().includes("available") ? "text-emerald-700" : "text-rose-700"
+              bedSummary?.toLowerCase().includes("free") || bedSummary?.toLowerCase().includes("available") ? "text-emerald-700" : "text-rose-700"
             )}>
-              {data.bedsAvailable ?? "Not available"}
+              {bedSummary ?? "Not available"}
             </span>
           </div>
         </div>

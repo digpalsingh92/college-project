@@ -723,7 +723,7 @@ export const api = createApi({
 
     createHospitalResource: builder.mutation<
       { status: boolean; data: any },
-      { name: string; category: string; basePrice: number; description?: string }
+      { name: string; category: string; basePrice: number; description?: string, status?: string }
     >({
       async queryFn(body, api: BaseQueryApi) {
         return runRequest(

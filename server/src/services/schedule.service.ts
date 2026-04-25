@@ -1,4 +1,4 @@
-import { DayOfWeek } from "@prisma/client";
+import type { DayOfWeek } from "../../generated/prisma/enums.js";
 import prisma from "../lib/prisma.js";
 import { AppError } from "../utils/app-error.js";
 import {

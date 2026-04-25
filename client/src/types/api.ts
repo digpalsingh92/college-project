@@ -380,13 +380,10 @@ export interface AssistantRequest {
 }
 
 export interface AssistantResponse {
-  success: boolean;
+  intent: "surgery-plan" | "price" | "wait-time" | "bed" | "disease" | "recommendations" | "unknown";
+  message: string;
+  data: Record<string, unknown>;
+  suggestions: string[];
   type?: "price" | "wait-time" | "bed" | "general";
-  message?: string;
-  data?: {
-    priceRange?: string;
-    waitTime?: string;
-    bedsAvailable?: string;
-  };
 }
 

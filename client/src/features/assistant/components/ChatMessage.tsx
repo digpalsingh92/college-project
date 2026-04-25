@@ -25,8 +25,8 @@ export function ChatMessage({ message }: ChatMessageProps) {
         <div
           className={cn(
             "flex h-8 w-8 shrink-0 items-center justify-center rounded-full shadow-sm ring-1",
-            isUser 
-              ? "bg-blue-600 ring-blue-700 text-white" 
+            isUser
+              ? "bg-blue-600 ring-blue-700 text-white"
               : "bg-white ring-slate-200 text-slate-600"
           )}
         >
@@ -47,9 +47,15 @@ export function ChatMessage({ message }: ChatMessageProps) {
           </div>
 
           {/* Structured Data Cards */}
-          {!isUser && message.type && message.data && (
-            <ResponseCard type={message.type as any} data={message.data} />
-          )}
+          {!isUser &&
+            message.type &&
+            typeof message.data === "object" &&
+            message.data !== null && (
+              <ResponseCard
+                type={message.type}
+                data={message.data as Record<string, unknown>}
+              />
+            )}
         </div>
       </div>
     </div>

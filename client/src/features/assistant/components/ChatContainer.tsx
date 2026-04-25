@@ -12,6 +12,13 @@ const SUGGESTED_PROMPTS = [
   "Do you have beds available?",
 ];
 
+function toUiType(intent: string): "price" | "wait-time" | "bed" | "general" {
+  if (intent === "price") return "price";
+  if (intent === "wait-time" || intent === "recommendations" || intent === "surgery-plan") return "wait-time";
+  if (intent === "bed") return "bed";
+  return "general";
+}
+
 export function ChatContainer() {
   const [messages, setMessages] = useState<ChatMessageData[]>([]);
   const [askAssistant, { isLoading }] = useAskAssistantMutation();
@@ -36,12 +43,12 @@ export function ChatContainer() {
 
     try {
       const response = await askAssistant({ message: content }).unwrap();
-      
+
       const aiMessage: ChatMessageData = {
         id: window.crypto.randomUUID(),
         role: "assistant",
         content: response.message || "Here is what I found:",
-        type: response.type,
+        type: response.type ?? toUiType(response.intent),
         data: response.data,
       };
 

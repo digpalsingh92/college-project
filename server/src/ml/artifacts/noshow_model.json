@@ -1,24 +1,24 @@
 {
   "version": "1.0.0",
-  "trainedAt": "2026-04-22T17:51:22.733Z",
-  "datasetRecords": 110527,
-  "globalNoShowRate": 0.2019,
+  "trainedAt": "2026-04-25T22:57:45.097Z",
+  "datasetRecords": 120527,
+  "globalNoShowRate": 0.2127,
   "byAgeBucket": {
     "56+": {
-      "count": 27504,
-      "noShowRate": 0.1564
+      "count": 31764,
+      "noShowRate": 0.1804
     },
     "0-18": {
-      "count": 28867,
-      "noShowRate": 0.2199
+      "count": 29978,
+      "noShowRate": 0.2235
     },
     "19-35": {
-      "count": 24137,
-      "noShowRate": 0.2383
+      "count": 26314,
+      "noShowRate": 0.2461
     },
     "36-55": {
-      "count": 30019,
-      "noShowRate": 0.1971
+      "count": 32471,
+      "noShowRate": 0.2073
     }
   },
   "byGender": {
@@ -29,22 +29,30 @@
     "M": {
       "count": 38687,
       "noShowRate": 0.1997
+    },
+    "Female": {
+      "count": 4942,
+      "noShowRate": 0.3308
+    },
+    "Male": {
+      "count": 5058,
+      "noShowRate": 0.3323
     }
   },
   "bySmsReceived": {
     "no": {
-      "count": 75045,
-      "noShowRate": 0.167
+      "count": 80002,
+      "noShowRate": 0.1775
     },
     "yes": {
-      "count": 35482,
-      "noShowRate": 0.2757
+      "count": 40525,
+      "noShowRate": 0.2821
     }
   },
   "byDaysDiffBucket": {
     "same_day": {
-      "count": 40972,
-      "noShowRate": 0.056
+      "count": 50972,
+      "noShowRate": 0.1101
     },
     "1-3_days": {
       "count": 14365,
@@ -351,6 +359,70 @@
     "56+|M|no|4-7_days": {
       "count": 515,
       "noShowRate": 0.1942
+    },
+    "0-18|Female|no|same_day": {
+      "count": 275,
+      "noShowRate": 0.32
+    },
+    "56+|Male|no|same_day": {
+      "count": 1088,
+      "noShowRate": 0.3162
+    },
+    "56+|Female|no|same_day": {
+      "count": 1079,
+      "noShowRate": 0.3438
+    },
+    "19-35|Male|yes|same_day": {
+      "count": 573,
+      "noShowRate": 0.3176
+    },
+    "56+|Female|yes|same_day": {
+      "count": 1021,
+      "noShowRate": 0.3389
+    },
+    "36-55|Female|no|same_day": {
+      "count": 586,
+      "noShowRate": 0.3328
+    },
+    "36-55|Female|yes|same_day": {
+      "count": 629,
+      "noShowRate": 0.3068
+    },
+    "36-55|Male|no|same_day": {
+      "count": 598,
+      "noShowRate": 0.3579
+    },
+    "19-35|Male|no|same_day": {
+      "count": 532,
+      "noShowRate": 0.3553
+    },
+    "36-55|Male|yes|same_day": {
+      "count": 639,
+      "noShowRate": 0.3318
+    },
+    "19-35|Female|yes|same_day": {
+      "count": 538,
+      "noShowRate": 0.3141
+    },
+    "19-35|Female|no|same_day": {
+      "count": 534,
+      "noShowRate": 0.3408
+    },
+    "56+|Male|yes|same_day": {
+      "count": 1072,
+      "noShowRate": 0.3405
+    },
+    "0-18|Female|yes|same_day": {
+      "count": 280,
+      "noShowRate": 0.325
+    },
+    "0-18|Male|no|same_day": {
+      "count": 265,
+      "noShowRate": 0.3132
+    },
+    "0-18|Male|yes|same_day": {
+      "count": 291,
+      "noShowRate": 0.3162
     }
   }
 }

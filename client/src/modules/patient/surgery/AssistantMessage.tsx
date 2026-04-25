@@ -15,6 +15,7 @@ interface StructuredCard {
   title: string;
   value: string;
   subtitle?: string;
+  badge?: string;
   accentClassName: string;
   icon: typeof DollarSign;
 }
@@ -138,8 +139,32 @@ function buildStructuredCards(payload: unknown): StructuredCard[] {
       title: "Wait time",
       value: `${formatNumber(waitDays)} days`,
       subtitle: waitLabel ? `${waitLabel} urgency` : undefined,
+      badge: waitLabel ? `${waitLabel} urgency` : undefined,
       accentClassName: "border-amber-100 bg-amber-50 text-amber-700",
       icon: Clock3,
+    });
+  }
+
+  const surgeryType = typeof root.surgeryType === "string" ? root.surgeryType : null;
+  const surgeryDuration = typeof root.surgeryDuration === "string" ? root.surgeryDuration : null;
+  const recoveryDays = pickNumber(root.recoveryDays);
+  const confidence = pickNumber(root.confidence);
+
+  if (surgeryType || surgeryDuration || recoveryDays !== null) {
+    cards.push({
+      title: surgeryType ? `${surgeryType} plan` : "Surgery plan",
+      value: surgeryDuration ? `Duration: ${surgeryDuration}` : "Plan generated",
+      subtitle:
+        recoveryDays !== null || confidence !== null
+          ? [
+              recoveryDays !== null ? `Recovery ${formatNumber(recoveryDays)} days` : null,
+              confidence !== null ? `Confidence ${Math.round(confidence * 100)}%` : null,
+            ]
+              .filter(Boolean)
+              .join(" • ")
+          : undefined,
+      accentClassName: "border-violet-100 bg-violet-50 text-violet-700",
+      icon: Activity,
     });
   }
 
@@ -223,6 +248,11 @@ export function AssistantMessage({ message }: { message: AssistantChatMessage })
                       <div>
                         <p className="text-xs font-medium uppercase tracking-wide opacity-70">{card.title}</p>
                         <p className="mt-1 text-sm font-semibold text-foreground">{card.value}</p>
+                        {card.badge ? (
+                          <span className="mt-2 inline-flex rounded-full border border-current/20 bg-white/80 px-2 py-0.5 text-[11px] font-medium">
+                            {card.badge}
+                          </span>
+                        ) : null}
                       </div>
                       <Icon className="h-4 w-4 shrink-0" />
                     </div>

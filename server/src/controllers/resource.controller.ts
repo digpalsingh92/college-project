@@ -1,7 +1,11 @@
 import { Request, Response } from 'express';
 import prisma from '../lib/prisma.js';
 import { AppError } from '../utils/app-error.js';
-import { ResourceCategory, ResourceStatus } from '@prisma/client';
+
+type ResourceCategory = string;
+type ResourceStatus = string;
+
+const hospitalResource = (prisma as any).hospitalResource;
 
 export const getResources = async (req: Request, res: Response) => {
 	try {
@@ -18,7 +22,7 @@ export const getResources = async (req: Request, res: Response) => {
             };
         }
 
-		const resources = await prisma.hospitalResource.findMany({
+		const resources = await hospitalResource.findMany({
             where: whereClause,
             orderBy: { createdAt: 'desc' }
         });
@@ -41,10 +45,10 @@ export const createResource = async (req: Request, res: Response) => {
 		const { name, category, basePrice, description } = req.body;
 
         if (!name || !category || basePrice === undefined) {
-			throw new AppError(400, 'Name, category, and basePrice are required');
+			throw new AppError('Name, category, and basePrice are required', 400);
 		}
 
-		const resource = await prisma.hospitalResource.create({
+		const resource = await hospitalResource.create({
 			data: {
                 name,
                 category: category as ResourceCategory,
@@ -72,7 +76,7 @@ export const updateResource = async (req: Request, res: Response) => {
         const { id } = req.params;
 		const { status, name, basePrice, description } = req.body;
 
-		const resource = await prisma.hospitalResource.update({
+		const resource = await hospitalResource.update({
 			where: { id },
 			data: {
                 status: status as ResourceStatus,
