@@ -1,11 +1,9 @@
 import { readFile } from "node:fs/promises";
-import path from "node:path";
 import { saveNamedArtifact } from "./model-store.js";
 import type { BedDepartmentStats, BedModel } from "./types.js";
+import { datasetPath, findDatasetFiles } from "./dataset-discovery.js";
 
 const MODEL_VERSION = "1.0.0";
-
-const DATASETS_DIR = path.resolve(process.cwd(), "src", "Datasets");
 
 const toNum = (v: string): number => {
   const n = Number((v ?? "").trim());
@@ -23,11 +21,11 @@ interface RawBedRow {
 }
 
 /**
- * Hospital_Bed_Capacity.csv
+ * bed_capacity_dataset_*.csv
  * Department,Total_Beds,Free_Beds,Total_ICU_Beds,Free_ICU_Beds,Total_Amount_of_Beds,Staff_On_Duty
  */
 const parseBedCsv = async (filename: string): Promise<RawBedRow[]> => {
-  const raw = await readFile(path.join(DATASETS_DIR, filename), "utf-8");
+  const raw = await readFile(datasetPath(filename), "utf-8");
   const lines = raw.split(/\r?\n/).filter(Boolean);
   if (lines.length <= 1) return [];
 
@@ -46,12 +44,16 @@ const parseBedCsv = async (filename: string): Promise<RawBedRow[]> => {
 };
 
 export const trainBedModel = async (): Promise<BedModel> => {
-  const [beds1, beds2] = await Promise.all([
-    parseBedCsv("Hospital_Bed_Capacity.csv"),
-    parseBedCsv("Hospital_Bed_Capacity_New.csv"),
+  const datasetFiles = await findDatasetFiles([
+    /^bed_capacity_dataset_.*\.csv$/i,
   ]);
 
-  const all = [...beds1, ...beds2];
+  if (datasetFiles.length === 0) {
+    throw new Error("No bed capacity datasets found. Add files named like bed_capacity_dataset_*.csv.");
+  }
+
+  const rowsByFile = await Promise.all(datasetFiles.map((filename) => parseBedCsv(filename)));
+  const all = rowsByFile.flat();
   if (all.length === 0) {
     throw new Error("Bed datasets are empty. Cannot train bed model.");
   }

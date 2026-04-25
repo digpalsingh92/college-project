@@ -172,3 +172,32 @@ export interface RecommendationsResult {
   worstTime: string;
   message: string;
 }
+
+// ── Disease model ──
+
+export interface DiseaseLikelihoods {
+  fever: Record<string, number>;
+  cough: Record<string, number>;
+  fatigue: Record<string, number>;
+  difficultyBreathing: Record<string, number>;
+  ageBucket: Record<string, number>;
+  gender: Record<string, number>;
+  bloodPressure: Record<string, number>;
+  cholesterolLevel: Record<string, number>;
+}
+
+export interface DiseaseModel {
+  version: string;
+  trainedAt: string;
+  datasetRecords: number;
+  confirmedRecords: number;
+  diseases: string[];
+  priors: Record<string, number>;
+  likelihoods: Record<string, DiseaseLikelihoods>;
+}
+
+export interface DiseasePredictionResult {
+  disease: string;
+  confidence: number;
+  topCandidates: Array<{ disease: string; confidence: number }>;
+}

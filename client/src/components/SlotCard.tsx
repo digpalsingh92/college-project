@@ -50,7 +50,7 @@ export function SlotCard({
       disabled={disabled}
       onClick={onSelect}
       className={cn(
-        "w-full rounded-xl border p-3 text-left transition",
+        "flex h-full min-h-29 w-full flex-col rounded-xl border p-3 text-left transition",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500",
         disabled ? "cursor-not-allowed border-slate-200 bg-slate-100 opacity-70" : "hover:border-slate-300",
         selected ? "border-emerald-500 bg-emerald-50/50 ring-1 ring-emerald-200" : "border-slate-200 bg-white"
@@ -68,8 +68,9 @@ export function SlotCard({
         </span>
       </div>
 
-      {(isRecommended || isAvoid) && !disabled ? (
-        <div className="mt-2 flex flex-wrap items-center gap-2">
+      <div className="mt-2 min-h-5">
+        {(isRecommended || isAvoid) && !disabled ? (
+          <div className="flex flex-wrap items-center gap-2">
           {isRecommended ? (
             <span className="inline-flex rounded-full bg-emerald-600 px-2 py-0.5 text-[11px] font-medium text-white">
               Recommended Slot
@@ -80,8 +81,9 @@ export function SlotCard({
               Avoid Slot
             </span>
           ) : null}
-        </div>
-      ) : null}
+          </div>
+        ) : null}
+      </div>
     </button>
   );
 }

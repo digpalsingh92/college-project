@@ -1,6 +1,7 @@
 import path from "node:path";
 import { config } from "../config/config.js";
 import { parseDatasetCsv } from "./csv.js";
+import { findDatasetFiles } from "./dataset-discovery.js";
 import { saveModelArtifact } from "./model-store.js";
 import {
   BucketStats,
@@ -203,11 +204,18 @@ const buildBaseModel = (rows: DatasetRow[], datasetPath: string): TrainedPredict
 };
 
 export const trainPredictionModel = async (datasetPath?: string): Promise<TrainedPredictionModel> => {
-  const resolvedDatasetPath = datasetPath
-    ? path.resolve(datasetPath)
-    : path.resolve(process.cwd(), "src", "Datasets", "healthcare_appointment_no_show_wait_time.csv");
+  const resolvedDatasetPath = datasetPath ? path.resolve(datasetPath) : "auto-discovery";
 
-  const rows = await parseDatasetCsv(resolvedDatasetPath);
+  const rows = datasetPath
+    ? await parseDatasetCsv(path.resolve(datasetPath))
+    : (
+        await Promise.all(
+          (
+            await findDatasetFiles([/^wait_time_no_show_dataset_.*\.csv$/i])
+          ).map((filename) => parseDatasetCsv(path.resolve(process.cwd(), "src", "Datasets", filename)))
+        )
+      ).flat();
+
   if (rows.length === 0) {
     throw new Error("Dataset is empty. Unable to train prediction model.");
   }

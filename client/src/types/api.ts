@@ -95,6 +95,7 @@ export interface CreateAppointmentRequest {
   date: string;
   startTime: string;
   endTime: string;
+  remarks?: string;
 }
 
 export interface AppointmentDto {

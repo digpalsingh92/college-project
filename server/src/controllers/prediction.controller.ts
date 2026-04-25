@@ -7,6 +7,7 @@ import {
   surgeryPlanSchema,
   priceEstimationSchema,
   bedAvailabilitySchema,
+  diseasePredictionSchema,
 } from "../schemas/prediction.schemas.js";
 import {
   predictResourceAllocation,
@@ -24,6 +25,8 @@ import { getRecommendations as getRecommendationsML } from "../ml/recommendation
 import { trainNoShowModel } from "../ml/noshow-trainer.js";
 import { trainPriceModel } from "../ml/price-trainer.js";
 import { trainBedModel } from "../ml/bed-trainer.js";
+import { trainDiseaseModel } from "../ml/disease-trainer.js";
+import { predictDisease } from "../ml/disease-inference.js";
 import { AppError } from "../utils/app-error.js";
 
 // ── Existing controllers ──
@@ -142,6 +145,15 @@ export const bedAvailabilityController = async (
   res.status(200).json({ message: "Bed availability estimated", data: result });
 };
 
+export const diseasePredictionController = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const input = diseasePredictionSchema.parse(req.body);
+  const result = await predictDisease(input);
+  res.status(200).json({ message: "Disease prediction generated", data: result });
+};
+
 export const queueStatusController = async (
   req: Request,
   res: Response
@@ -209,6 +221,23 @@ export const trainBedController = async (
       datasetRecords: result.datasetRecords,
       departmentCount: result.departments.length,
       globalOccupancyRate: result.globalOccupancyRate,
+    },
+  });
+};
+
+export const trainDiseaseController = async (
+  _req: Request,
+  res: Response
+): Promise<void> => {
+  const result = await trainDiseaseModel();
+  res.status(200).json({
+    message: "Disease model trained successfully",
+    data: {
+      version: result.version,
+      trainedAt: result.trainedAt,
+      datasetRecords: result.datasetRecords,
+      confirmedRecords: result.confirmedRecords,
+      diseaseCount: result.diseases.length,
     },
   });
 };

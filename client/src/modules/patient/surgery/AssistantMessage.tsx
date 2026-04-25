@@ -1,6 +1,6 @@
 "use client";
 
-import { Bot, BedDouble, Clock3, DollarSign, Loader2, UserRound } from "lucide-react";
+import { Activity, Bot, BedDouble, Clock3, DollarSign, Loader2, UserRound } from "lucide-react";
 import { cn } from "@/helpers/cn";
 
 export interface AssistantChatMessage {
@@ -55,6 +55,41 @@ function buildStructuredCards(payload: unknown): StructuredCard[] {
   if (!root) return [];
 
   const cards: StructuredCard[] = [];
+  const predictedDisease = typeof root.disease === "string" ? root.disease : null;
+  const diseaseConfidence = toNumber(root.confidence);
+  const topCandidates = Array.isArray(root.topCandidates) ? root.topCandidates : [];
+
+  if (predictedDisease) {
+    cards.push({
+      title: "Likely disease",
+      value: predictedDisease,
+      subtitle: diseaseConfidence !== null ? `Confidence ${Math.round(diseaseConfidence * 100)}%` : undefined,
+      accentClassName: "border-rose-100 bg-rose-50 text-rose-700",
+      icon: Bot,
+    });
+
+    if (topCandidates.length > 0) {
+      const breakdown = topCandidates
+        .filter((candidate): candidate is { disease?: string; confidence?: number } => Boolean(candidate && typeof candidate === "object"))
+        .slice(0, 3)
+        .map((candidate) => {
+          const disease = typeof candidate.disease === "string" ? candidate.disease : "Unknown";
+          const confidence = typeof candidate.confidence === "number" ? Math.round(candidate.confidence * 100) : 0;
+          return `${disease} ${confidence}%`;
+        })
+        .join(" • ");
+
+      if (breakdown) {
+        cards.push({
+          title: "Other candidates",
+          value: breakdown,
+          accentClassName: "border-slate-200 bg-slate-50 text-slate-700",
+          icon: Activity,
+        });
+      }
+    }
+  }
+
   const bestTime = typeof root.bestTime === "string" ? root.bestTime : null;
   const worstTime = typeof root.worstTime === "string" ? root.worstTime : null;
   const recommendationMessage = typeof root.message === "string" ? root.message : null;

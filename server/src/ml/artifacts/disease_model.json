@@ -1,0 +1,3169 @@
+{
+  "version": "1.0.0",
+  "trainedAt": "2026-04-22T18:41:10.844Z",
+  "datasetRecords": 349,
+  "confirmedRecords": 186,
+  "diseases": [
+    "Allergic Rhinitis",
+    "Alzheimer's Disease",
+    "Anxiety Disorders",
+    "Asthma",
+    "Bipolar Disorder",
+    "Bronchitis",
+    "Cataracts",
+    "Cerebral Palsy",
+    "Chickenpox",
+    "Chronic Kidney Disease",
+    "Chronic Obstructive Pulmonary Disease (COPD)",
+    "Cirrhosis",
+    "Colorectal Cancer",
+    "Common Cold",
+    "Conjunctivitis (Pink Eye)",
+    "Coronary Artery Disease",
+    "Crohn's Disease",
+    "Dementia",
+    "Depression",
+    "Diabetes",
+    "Diverticulitis",
+    "Down Syndrome",
+    "Eating Disorders (Anorexia,...",
+    "Ebola Virus",
+    "Eczema",
+    "Fibromyalgia",
+    "Gastroenteritis",
+    "Gout",
+    "Hemophilia",
+    "Hemorrhoids",
+    "Hepatitis B",
+    "Hypertension",
+    "Hypertensive Heart Disease",
+    "Hyperthyroidism",
+    "Hypoglycemia",
+    "Hypothyroidism",
+    "Influenza",
+    "Kidney Cancer",
+    "Kidney Disease",
+    "Klinefelter Syndrome",
+    "Liver Cancer",
+    "Liver Disease",
+    "Lung Cancer",
+    "Lyme Disease",
+    "Lymphoma",
+    "Malaria",
+    "Migraine",
+    "Multiple Sclerosis",
+    "Mumps",
+    "Myocardial Infarction (Heart...",
+    "Osteoarthritis",
+    "Osteoporosis",
+    "Pancreatic Cancer",
+    "Pancreatitis",
+    "Parkinson's Disease",
+    "Pneumocystis Pneumonia (PCP)",
+    "Pneumonia",
+    "Pneumothorax",
+    "Polycystic Ovary Syndrome (PCOS)",
+    "Prader-Willi Syndrome",
+    "Psoriasis",
+    "Rheumatoid Arthritis",
+    "Scoliosis",
+    "Sickle Cell Anemia",
+    "Spina Bifida",
+    "Stroke",
+    "Systemic Lupus Erythematosus...",
+    "Testicular Cancer",
+    "Tetanus",
+    "Thyroid Cancer",
+    "Tonsillitis",
+    "Tuberculosis",
+    "Typhoid Fever",
+    "Ulcerative Colitis",
+    "Urinary Tract Infection",
+    "Urinary Tract Infection (UTI)",
+    "Williams Syndrome"
+  ],
+  "priors": {
+    "Allergic Rhinitis": 0.007605,
+    "Alzheimer's Disease": 0.015209,
+    "Anxiety Disorders": 0.015209,
+    "Asthma": 0.072243,
+    "Bipolar Disorder": 0.007605,
+    "Bronchitis": 0.022814,
+    "Cataracts": 0.007605,
+    "Cerebral Palsy": 0.007605,
+    "Chickenpox": 0.011407,
+    "Chronic Kidney Disease": 0.007605,
+    "Chronic Obstructive Pulmonary Disease (COPD)": 0.011407,
+    "Cirrhosis": 0.007605,
+    "Colorectal Cancer": 0.007605,
+    "Common Cold": 0.007605,
+    "Conjunctivitis (Pink Eye)": 0.007605,
+    "Coronary Artery Disease": 0.015209,
+    "Crohn's Disease": 0.011407,
+    "Dementia": 0.007605,
+    "Depression": 0.015209,
+    "Diabetes": 0.022814,
+    "Diverticulitis": 0.007605,
+    "Down Syndrome": 0.007605,
+    "Eating Disorders (Anorexia,...": 0.007605,
+    "Ebola Virus": 0.011407,
+    "Eczema": 0.015209,
+    "Fibromyalgia": 0.007605,
+    "Gastroenteritis": 0.015209,
+    "Gout": 0.007605,
+    "Hemophilia": 0.011407,
+    "Hemorrhoids": 0.007605,
+    "Hepatitis B": 0.011407,
+    "Hypertension": 0.022814,
+    "Hypertensive Heart Disease": 0.007605,
+    "Hyperthyroidism": 0.015209,
+    "Hypoglycemia": 0.007605,
+    "Hypothyroidism": 0.019011,
+    "Influenza": 0.026616,
+    "Kidney Cancer": 0.011407,
+    "Kidney Disease": 0.011407,
+    "Klinefelter Syndrome": 0.011407,
+    "Liver Cancer": 0.019011,
+    "Liver Disease": 0.011407,
+    "Lung Cancer": 0.011407,
+    "Lyme Disease": 0.011407,
+    "Lymphoma": 0.007605,
+    "Malaria": 0.011407,
+    "Migraine": 0.022814,
+    "Multiple Sclerosis": 0.015209,
+    "Mumps": 0.011407,
+    "Myocardial Infarction (Heart...": 0.007605,
+    "Osteoarthritis": 0.015209,
+    "Osteoporosis": 0.030418,
+    "Pancreatic Cancer": 0.007605,
+    "Pancreatitis": 0.011407,
+    "Parkinson's Disease": 0.011407,
+    "Pneumocystis Pneumonia (PCP)": 0.007605,
+    "Pneumonia": 0.022814,
+    "Pneumothorax": 0.007605,
+    "Polycystic Ovary Syndrome (PCOS)": 0.007605,
+    "Prader-Willi Syndrome": 0.007605,
+    "Psoriasis": 0.015209,
+    "Rheumatoid Arthritis": 0.015209,
+    "Scoliosis": 0.007605,
+    "Sickle Cell Anemia": 0.007605,
+    "Spina Bifida": 0.007605,
+    "Stroke": 0.045627,
+    "Systemic Lupus Erythematosus...": 0.007605,
+    "Testicular Cancer": 0.007605,
+    "Tetanus": 0.011407,
+    "Thyroid Cancer": 0.007605,
+    "Tonsillitis": 0.007605,
+    "Tuberculosis": 0.015209,
+    "Typhoid Fever": 0.011407,
+    "Ulcerative Colitis": 0.015209,
+    "Urinary Tract Infection": 0.011407,
+    "Urinary Tract Infection (UTI)": 0.007605,
+    "Williams Syndrome": 0.007605
+  },
+  "likelihoods": {
+    "Allergic Rhinitis": {
+      "fever": {
+        "yes": 0.666667,
+        "no": 0.333333
+      },
+      "cough": {
+        "yes": 0.666667,
+        "no": 0.333333
+      },
+      "fatigue": {
+        "yes": 0.666667,
+        "no": 0.333333
+      },
+      "difficultyBreathing": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "ageBucket": {
+        "0-18": 0.166667,
+        "19-35": 0.166667,
+        "36-55": 0.333333,
+        "56-70": 0.166667,
+        "71+": 0.166667
+      },
+      "gender": {
+        "male": 0.666667,
+        "female": 0.333333
+      },
+      "bloodPressure": {
+        "low": 0.25,
+        "normal": 0.25,
+        "high": 0.5
+      },
+      "cholesterolLevel": {
+        "low": 0.25,
+        "normal": 0.5,
+        "high": 0.25
+      }
+    },
+    "Alzheimer's Disease": {
+      "fever": {
+        "yes": 0.2,
+        "no": 0.8
+      },
+      "cough": {
+        "yes": 0.6,
+        "no": 0.4
+      },
+      "fatigue": {
+        "yes": 0.4,
+        "no": 0.6
+      },
+      "difficultyBreathing": {
+        "yes": 0.2,
+        "no": 0.8
+      },
+      "ageBucket": {
+        "0-18": 0.125,
+        "19-35": 0.125,
+        "36-55": 0.125,
+        "56-70": 0.5,
+        "71+": 0.125
+      },
+      "gender": {
+        "male": 0.6,
+        "female": 0.4
+      },
+      "bloodPressure": {
+        "low": 0.166667,
+        "normal": 0.5,
+        "high": 0.333333
+      },
+      "cholesterolLevel": {
+        "low": 0.166667,
+        "normal": 0.166667,
+        "high": 0.666667
+      }
+    },
+    "Anxiety Disorders": {
+      "fever": {
+        "yes": 0.8,
+        "no": 0.2
+      },
+      "cough": {
+        "yes": 0.6,
+        "no": 0.4
+      },
+      "fatigue": {
+        "yes": 0.6,
+        "no": 0.4
+      },
+      "difficultyBreathing": {
+        "yes": 0.4,
+        "no": 0.6
+      },
+      "ageBucket": {
+        "0-18": 0.125,
+        "19-35": 0.125,
+        "36-55": 0.5,
+        "56-70": 0.125,
+        "71+": 0.125
+      },
+      "gender": {
+        "male": 0.6,
+        "female": 0.4
+      },
+      "bloodPressure": {
+        "low": 0.166667,
+        "normal": 0.333333,
+        "high": 0.5
+      },
+      "cholesterolLevel": {
+        "low": 0.333333,
+        "normal": 0.333333,
+        "high": 0.333333
+      }
+    },
+    "Asthma": {
+      "fever": {
+        "yes": 0.9,
+        "no": 0.1
+      },
+      "cough": {
+        "yes": 0.7,
+        "no": 0.3
+      },
+      "fatigue": {
+        "yes": 0.4,
+        "no": 0.6
+      },
+      "difficultyBreathing": {
+        "yes": 0.9,
+        "no": 0.1
+      },
+      "ageBucket": {
+        "0-18": 0.043478,
+        "19-35": 0.391304,
+        "36-55": 0.434783,
+        "56-70": 0.086957,
+        "71+": 0.043478
+      },
+      "gender": {
+        "male": 0.6,
+        "female": 0.4
+      },
+      "bloodPressure": {
+        "low": 0.095238,
+        "normal": 0.714286,
+        "high": 0.190476
+      },
+      "cholesterolLevel": {
+        "low": 0.047619,
+        "normal": 0.666667,
+        "high": 0.285714
+      }
+    },
+    "Bipolar Disorder": {
+      "fever": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "cough": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "fatigue": {
+        "yes": 0.666667,
+        "no": 0.333333
+      },
+      "difficultyBreathing": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "ageBucket": {
+        "0-18": 0.166667,
+        "19-35": 0.333333,
+        "36-55": 0.166667,
+        "56-70": 0.166667,
+        "71+": 0.166667
+      },
+      "gender": {
+        "male": 0.333333,
+        "female": 0.666667
+      },
+      "bloodPressure": {
+        "low": 0.25,
+        "normal": 0.25,
+        "high": 0.5
+      },
+      "cholesterolLevel": {
+        "low": 0.25,
+        "normal": 0.25,
+        "high": 0.5
+      }
+    },
+    "Bronchitis": {
+      "fever": {
+        "yes": 0.857143,
+        "no": 0.142857
+      },
+      "cough": {
+        "yes": 0.714286,
+        "no": 0.285714
+      },
+      "fatigue": {
+        "yes": 0.714286,
+        "no": 0.285714
+      },
+      "difficultyBreathing": {
+        "yes": 0.857143,
+        "no": 0.142857
+      },
+      "ageBucket": {
+        "0-18": 0.1,
+        "19-35": 0.4,
+        "36-55": 0.2,
+        "56-70": 0.2,
+        "71+": 0.1
+      },
+      "gender": {
+        "male": 0.714286,
+        "female": 0.285714
+      },
+      "bloodPressure": {
+        "low": 0.25,
+        "normal": 0.125,
+        "high": 0.625
+      },
+      "cholesterolLevel": {
+        "low": 0.125,
+        "normal": 0.25,
+        "high": 0.625
+      }
+    },
+    "Cataracts": {
+      "fever": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "cough": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "fatigue": {
+        "yes": 0.666667,
+        "no": 0.333333
+      },
+      "difficultyBreathing": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "ageBucket": {
+        "0-18": 0.166667,
+        "19-35": 0.166667,
+        "36-55": 0.333333,
+        "56-70": 0.166667,
+        "71+": 0.166667
+      },
+      "gender": {
+        "male": 0.333333,
+        "female": 0.666667
+      },
+      "bloodPressure": {
+        "low": 0.25,
+        "normal": 0.5,
+        "high": 0.25
+      },
+      "cholesterolLevel": {
+        "low": 0.25,
+        "normal": 0.25,
+        "high": 0.5
+      }
+    },
+    "Cerebral Palsy": {
+      "fever": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "cough": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "fatigue": {
+        "yes": 0.666667,
+        "no": 0.333333
+      },
+      "difficultyBreathing": {
+        "yes": 0.666667,
+        "no": 0.333333
+      },
+      "ageBucket": {
+        "0-18": 0.166667,
+        "19-35": 0.333333,
+        "36-55": 0.166667,
+        "56-70": 0.166667,
+        "71+": 0.166667
+      },
+      "gender": {
+        "male": 0.333333,
+        "female": 0.666667
+      },
+      "bloodPressure": {
+        "low": 0.25,
+        "normal": 0.5,
+        "high": 0.25
+      },
+      "cholesterolLevel": {
+        "low": 0.25,
+        "normal": 0.5,
+        "high": 0.25
+      }
+    },
+    "Chickenpox": {
+      "fever": {
+        "yes": 0.25,
+        "no": 0.75
+      },
+      "cough": {
+        "yes": 0.75,
+        "no": 0.25
+      },
+      "fatigue": {
+        "yes": 0.25,
+        "no": 0.75
+      },
+      "difficultyBreathing": {
+        "yes": 0.25,
+        "no": 0.75
+      },
+      "ageBucket": {
+        "0-18": 0.142857,
+        "19-35": 0.142857,
+        "36-55": 0.428571,
+        "56-70": 0.142857,
+        "71+": 0.142857
+      },
+      "gender": {
+        "male": 0.75,
+        "female": 0.25
+      },
+      "bloodPressure": {
+        "low": 0.2,
+        "normal": 0.6,
+        "high": 0.2
+      },
+      "cholesterolLevel": {
+        "low": 0.2,
+        "normal": 0.2,
+        "high": 0.6
+      }
+    },
+    "Chronic Kidney Disease": {
+      "fever": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "cough": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "fatigue": {
+        "yes": 0.666667,
+        "no": 0.333333
+      },
+      "difficultyBreathing": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "ageBucket": {
+        "0-18": 0.166667,
+        "19-35": 0.166667,
+        "36-55": 0.166667,
+        "56-70": 0.333333,
+        "71+": 0.166667
+      },
+      "gender": {
+        "male": 0.333333,
+        "female": 0.666667
+      },
+      "bloodPressure": {
+        "low": 0.25,
+        "normal": 0.5,
+        "high": 0.25
+      },
+      "cholesterolLevel": {
+        "low": 0.25,
+        "normal": 0.25,
+        "high": 0.5
+      }
+    },
+    "Chronic Obstructive Pulmonary Disease (COPD)": {
+      "fever": {
+        "yes": 0.75,
+        "no": 0.25
+      },
+      "cough": {
+        "yes": 0.25,
+        "no": 0.75
+      },
+      "fatigue": {
+        "yes": 0.75,
+        "no": 0.25
+      },
+      "difficultyBreathing": {
+        "yes": 0.75,
+        "no": 0.25
+      },
+      "ageBucket": {
+        "0-18": 0.142857,
+        "19-35": 0.142857,
+        "36-55": 0.142857,
+        "56-70": 0.428571,
+        "71+": 0.142857
+      },
+      "gender": {
+        "male": 0.25,
+        "female": 0.75
+      },
+      "bloodPressure": {
+        "low": 0.2,
+        "normal": 0.2,
+        "high": 0.6
+      },
+      "cholesterolLevel": {
+        "low": 0.2,
+        "normal": 0.2,
+        "high": 0.6
+      }
+    },
+    "Cirrhosis": {
+      "fever": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "cough": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "fatigue": {
+        "yes": 0.666667,
+        "no": 0.333333
+      },
+      "difficultyBreathing": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "ageBucket": {
+        "0-18": 0.166667,
+        "19-35": 0.333333,
+        "36-55": 0.166667,
+        "56-70": 0.166667,
+        "71+": 0.166667
+      },
+      "gender": {
+        "male": 0.333333,
+        "female": 0.666667
+      },
+      "bloodPressure": {
+        "low": 0.25,
+        "normal": 0.5,
+        "high": 0.25
+      },
+      "cholesterolLevel": {
+        "low": 0.25,
+        "normal": 0.25,
+        "high": 0.5
+      }
+    },
+    "Colorectal Cancer": {
+      "fever": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "cough": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "fatigue": {
+        "yes": 0.666667,
+        "no": 0.333333
+      },
+      "difficultyBreathing": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "ageBucket": {
+        "0-18": 0.166667,
+        "19-35": 0.333333,
+        "36-55": 0.166667,
+        "56-70": 0.166667,
+        "71+": 0.166667
+      },
+      "gender": {
+        "male": 0.333333,
+        "female": 0.666667
+      },
+      "bloodPressure": {
+        "low": 0.25,
+        "normal": 0.5,
+        "high": 0.25
+      },
+      "cholesterolLevel": {
+        "low": 0.25,
+        "normal": 0.25,
+        "high": 0.5
+      }
+    },
+    "Common Cold": {
+      "fever": {
+        "yes": 0.666667,
+        "no": 0.333333
+      },
+      "cough": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "fatigue": {
+        "yes": 0.666667,
+        "no": 0.333333
+      },
+      "difficultyBreathing": {
+        "yes": 0.666667,
+        "no": 0.333333
+      },
+      "ageBucket": {
+        "0-18": 0.166667,
+        "19-35": 0.333333,
+        "36-55": 0.166667,
+        "56-70": 0.166667,
+        "71+": 0.166667
+      },
+      "gender": {
+        "male": 0.666667,
+        "female": 0.333333
+      },
+      "bloodPressure": {
+        "low": 0.25,
+        "normal": 0.25,
+        "high": 0.5
+      },
+      "cholesterolLevel": {
+        "low": 0.25,
+        "normal": 0.25,
+        "high": 0.5
+      }
+    },
+    "Conjunctivitis (Pink Eye)": {
+      "fever": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "cough": {
+        "yes": 0.666667,
+        "no": 0.333333
+      },
+      "fatigue": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "difficultyBreathing": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "ageBucket": {
+        "0-18": 0.166667,
+        "19-35": 0.333333,
+        "36-55": 0.166667,
+        "56-70": 0.166667,
+        "71+": 0.166667
+      },
+      "gender": {
+        "male": 0.333333,
+        "female": 0.666667
+      },
+      "bloodPressure": {
+        "low": 0.25,
+        "normal": 0.25,
+        "high": 0.5
+      },
+      "cholesterolLevel": {
+        "low": 0.25,
+        "normal": 0.25,
+        "high": 0.5
+      }
+    },
+    "Coronary Artery Disease": {
+      "fever": {
+        "yes": 0.2,
+        "no": 0.8
+      },
+      "cough": {
+        "yes": 0.2,
+        "no": 0.8
+      },
+      "fatigue": {
+        "yes": 0.8,
+        "no": 0.2
+      },
+      "difficultyBreathing": {
+        "yes": 0.2,
+        "no": 0.8
+      },
+      "ageBucket": {
+        "0-18": 0.125,
+        "19-35": 0.125,
+        "36-55": 0.5,
+        "56-70": 0.125,
+        "71+": 0.125
+      },
+      "gender": {
+        "male": 0.2,
+        "female": 0.8
+      },
+      "bloodPressure": {
+        "low": 0.166667,
+        "normal": 0.5,
+        "high": 0.333333
+      },
+      "cholesterolLevel": {
+        "low": 0.166667,
+        "normal": 0.5,
+        "high": 0.333333
+      }
+    },
+    "Crohn's Disease": {
+      "fever": {
+        "yes": 0.5,
+        "no": 0.5
+      },
+      "cough": {
+        "yes": 0.5,
+        "no": 0.5
+      },
+      "fatigue": {
+        "yes": 0.75,
+        "no": 0.25
+      },
+      "difficultyBreathing": {
+        "yes": 0.25,
+        "no": 0.75
+      },
+      "ageBucket": {
+        "0-18": 0.142857,
+        "19-35": 0.142857,
+        "36-55": 0.428571,
+        "56-70": 0.142857,
+        "71+": 0.142857
+      },
+      "gender": {
+        "male": 0.25,
+        "female": 0.75
+      },
+      "bloodPressure": {
+        "low": 0.2,
+        "normal": 0.2,
+        "high": 0.6
+      },
+      "cholesterolLevel": {
+        "low": 0.2,
+        "normal": 0.2,
+        "high": 0.6
+      }
+    },
+    "Dementia": {
+      "fever": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "cough": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "fatigue": {
+        "yes": 0.666667,
+        "no": 0.333333
+      },
+      "difficultyBreathing": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "ageBucket": {
+        "0-18": 0.166667,
+        "19-35": 0.166667,
+        "36-55": 0.166667,
+        "56-70": 0.333333,
+        "71+": 0.166667
+      },
+      "gender": {
+        "male": 0.333333,
+        "female": 0.666667
+      },
+      "bloodPressure": {
+        "low": 0.25,
+        "normal": 0.25,
+        "high": 0.5
+      },
+      "cholesterolLevel": {
+        "low": 0.25,
+        "normal": 0.25,
+        "high": 0.5
+      }
+    },
+    "Depression": {
+      "fever": {
+        "yes": 0.4,
+        "no": 0.6
+      },
+      "cough": {
+        "yes": 0.4,
+        "no": 0.6
+      },
+      "fatigue": {
+        "yes": 0.8,
+        "no": 0.2
+      },
+      "difficultyBreathing": {
+        "yes": 0.4,
+        "no": 0.6
+      },
+      "ageBucket": {
+        "0-18": 0.125,
+        "19-35": 0.375,
+        "36-55": 0.25,
+        "56-70": 0.125,
+        "71+": 0.125
+      },
+      "gender": {
+        "male": 0.4,
+        "female": 0.6
+      },
+      "bloodPressure": {
+        "low": 0.166667,
+        "normal": 0.333333,
+        "high": 0.5
+      },
+      "cholesterolLevel": {
+        "low": 0.166667,
+        "normal": 0.333333,
+        "high": 0.5
+      }
+    },
+    "Diabetes": {
+      "fever": {
+        "yes": 0.714286,
+        "no": 0.285714
+      },
+      "cough": {
+        "yes": 0.571429,
+        "no": 0.428571
+      },
+      "fatigue": {
+        "yes": 0.857143,
+        "no": 0.142857
+      },
+      "difficultyBreathing": {
+        "yes": 0.285714,
+        "no": 0.714286
+      },
+      "ageBucket": {
+        "0-18": 0.1,
+        "19-35": 0.1,
+        "36-55": 0.5,
+        "56-70": 0.2,
+        "71+": 0.1
+      },
+      "gender": {
+        "male": 0.571429,
+        "female": 0.428571
+      },
+      "bloodPressure": {
+        "low": 0.125,
+        "normal": 0.375,
+        "high": 0.5
+      },
+      "cholesterolLevel": {
+        "low": 0.25,
+        "normal": 0.25,
+        "high": 0.5
+      }
+    },
+    "Diverticulitis": {
+      "fever": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "cough": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "fatigue": {
+        "yes": 0.666667,
+        "no": 0.333333
+      },
+      "difficultyBreathing": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "ageBucket": {
+        "0-18": 0.166667,
+        "19-35": 0.166667,
+        "36-55": 0.166667,
+        "56-70": 0.333333,
+        "71+": 0.166667
+      },
+      "gender": {
+        "male": 0.333333,
+        "female": 0.666667
+      },
+      "bloodPressure": {
+        "low": 0.25,
+        "normal": 0.25,
+        "high": 0.5
+      },
+      "cholesterolLevel": {
+        "low": 0.25,
+        "normal": 0.25,
+        "high": 0.5
+      }
+    },
+    "Down Syndrome": {
+      "fever": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "cough": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "fatigue": {
+        "yes": 0.666667,
+        "no": 0.333333
+      },
+      "difficultyBreathing": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "ageBucket": {
+        "0-18": 0.166667,
+        "19-35": 0.166667,
+        "36-55": 0.333333,
+        "56-70": 0.166667,
+        "71+": 0.166667
+      },
+      "gender": {
+        "male": 0.333333,
+        "female": 0.666667
+      },
+      "bloodPressure": {
+        "low": 0.25,
+        "normal": 0.25,
+        "high": 0.5
+      },
+      "cholesterolLevel": {
+        "low": 0.25,
+        "normal": 0.25,
+        "high": 0.5
+      }
+    },
+    "Eating Disorders (Anorexia,...": {
+      "fever": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "cough": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "fatigue": {
+        "yes": 0.666667,
+        "no": 0.333333
+      },
+      "difficultyBreathing": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "ageBucket": {
+        "0-18": 0.166667,
+        "19-35": 0.166667,
+        "36-55": 0.333333,
+        "56-70": 0.166667,
+        "71+": 0.166667
+      },
+      "gender": {
+        "male": 0.333333,
+        "female": 0.666667
+      },
+      "bloodPressure": {
+        "low": 0.25,
+        "normal": 0.25,
+        "high": 0.5
+      },
+      "cholesterolLevel": {
+        "low": 0.25,
+        "normal": 0.25,
+        "high": 0.5
+      }
+    },
+    "Ebola Virus": {
+      "fever": {
+        "yes": 0.75,
+        "no": 0.25
+      },
+      "cough": {
+        "yes": 0.75,
+        "no": 0.25
+      },
+      "fatigue": {
+        "yes": 0.75,
+        "no": 0.25
+      },
+      "difficultyBreathing": {
+        "yes": 0.75,
+        "no": 0.25
+      },
+      "ageBucket": {
+        "0-18": 0.142857,
+        "19-35": 0.142857,
+        "36-55": 0.428571,
+        "56-70": 0.142857,
+        "71+": 0.142857
+      },
+      "gender": {
+        "male": 0.75,
+        "female": 0.25
+      },
+      "bloodPressure": {
+        "low": 0.2,
+        "normal": 0.6,
+        "high": 0.2
+      },
+      "cholesterolLevel": {
+        "low": 0.2,
+        "normal": 0.6,
+        "high": 0.2
+      }
+    },
+    "Eczema": {
+      "fever": {
+        "yes": 0.6,
+        "no": 0.4
+      },
+      "cough": {
+        "yes": 0.4,
+        "no": 0.6
+      },
+      "fatigue": {
+        "yes": 0.2,
+        "no": 0.8
+      },
+      "difficultyBreathing": {
+        "yes": 0.2,
+        "no": 0.8
+      },
+      "ageBucket": {
+        "0-18": 0.125,
+        "19-35": 0.375,
+        "36-55": 0.25,
+        "56-70": 0.125,
+        "71+": 0.125
+      },
+      "gender": {
+        "male": 0.4,
+        "female": 0.6
+      },
+      "bloodPressure": {
+        "low": 0.166667,
+        "normal": 0.333333,
+        "high": 0.5
+      },
+      "cholesterolLevel": {
+        "low": 0.166667,
+        "normal": 0.333333,
+        "high": 0.5
+      }
+    },
+    "Fibromyalgia": {
+      "fever": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "cough": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "fatigue": {
+        "yes": 0.666667,
+        "no": 0.333333
+      },
+      "difficultyBreathing": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "ageBucket": {
+        "0-18": 0.166667,
+        "19-35": 0.166667,
+        "36-55": 0.333333,
+        "56-70": 0.166667,
+        "71+": 0.166667
+      },
+      "gender": {
+        "male": 0.333333,
+        "female": 0.666667
+      },
+      "bloodPressure": {
+        "low": 0.25,
+        "normal": 0.25,
+        "high": 0.5
+      },
+      "cholesterolLevel": {
+        "low": 0.25,
+        "normal": 0.25,
+        "high": 0.5
+      }
+    },
+    "Gastroenteritis": {
+      "fever": {
+        "yes": 0.8,
+        "no": 0.2
+      },
+      "cough": {
+        "yes": 0.6,
+        "no": 0.4
+      },
+      "fatigue": {
+        "yes": 0.8,
+        "no": 0.2
+      },
+      "difficultyBreathing": {
+        "yes": 0.6,
+        "no": 0.4
+      },
+      "ageBucket": {
+        "0-18": 0.125,
+        "19-35": 0.25,
+        "36-55": 0.375,
+        "56-70": 0.125,
+        "71+": 0.125
+      },
+      "gender": {
+        "male": 0.6,
+        "female": 0.4
+      },
+      "bloodPressure": {
+        "low": 0.333333,
+        "normal": 0.166667,
+        "high": 0.5
+      },
+      "cholesterolLevel": {
+        "low": 0.166667,
+        "normal": 0.333333,
+        "high": 0.5
+      }
+    },
+    "Gout": {
+      "fever": {
+        "yes": 0.666667,
+        "no": 0.333333
+      },
+      "cough": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "fatigue": {
+        "yes": 0.666667,
+        "no": 0.333333
+      },
+      "difficultyBreathing": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "ageBucket": {
+        "0-18": 0.166667,
+        "19-35": 0.166667,
+        "36-55": 0.166667,
+        "56-70": 0.333333,
+        "71+": 0.166667
+      },
+      "gender": {
+        "male": 0.333333,
+        "female": 0.666667
+      },
+      "bloodPressure": {
+        "low": 0.25,
+        "normal": 0.5,
+        "high": 0.25
+      },
+      "cholesterolLevel": {
+        "low": 0.25,
+        "normal": 0.25,
+        "high": 0.5
+      }
+    },
+    "Hemophilia": {
+      "fever": {
+        "yes": 0.25,
+        "no": 0.75
+      },
+      "cough": {
+        "yes": 0.25,
+        "no": 0.75
+      },
+      "fatigue": {
+        "yes": 0.75,
+        "no": 0.25
+      },
+      "difficultyBreathing": {
+        "yes": 0.25,
+        "no": 0.75
+      },
+      "ageBucket": {
+        "0-18": 0.142857,
+        "19-35": 0.142857,
+        "36-55": 0.285714,
+        "56-70": 0.285714,
+        "71+": 0.142857
+      },
+      "gender": {
+        "male": 0.25,
+        "female": 0.75
+      },
+      "bloodPressure": {
+        "low": 0.2,
+        "normal": 0.6,
+        "high": 0.2
+      },
+      "cholesterolLevel": {
+        "low": 0.2,
+        "normal": 0.6,
+        "high": 0.2
+      }
+    },
+    "Hemorrhoids": {
+      "fever": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "cough": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "fatigue": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "difficultyBreathing": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "ageBucket": {
+        "0-18": 0.166667,
+        "19-35": 0.166667,
+        "36-55": 0.333333,
+        "56-70": 0.166667,
+        "71+": 0.166667
+      },
+      "gender": {
+        "male": 0.333333,
+        "female": 0.666667
+      },
+      "bloodPressure": {
+        "low": 0.25,
+        "normal": 0.25,
+        "high": 0.5
+      },
+      "cholesterolLevel": {
+        "low": 0.25,
+        "normal": 0.25,
+        "high": 0.5
+      }
+    },
+    "Hepatitis B": {
+      "fever": {
+        "yes": 0.25,
+        "no": 0.75
+      },
+      "cough": {
+        "yes": 0.75,
+        "no": 0.25
+      },
+      "fatigue": {
+        "yes": 0.75,
+        "no": 0.25
+      },
+      "difficultyBreathing": {
+        "yes": 0.25,
+        "no": 0.75
+      },
+      "ageBucket": {
+        "0-18": 0.142857,
+        "19-35": 0.142857,
+        "36-55": 0.142857,
+        "56-70": 0.428571,
+        "71+": 0.142857
+      },
+      "gender": {
+        "male": 0.75,
+        "female": 0.25
+      },
+      "bloodPressure": {
+        "low": 0.2,
+        "normal": 0.6,
+        "high": 0.2
+      },
+      "cholesterolLevel": {
+        "low": 0.6,
+        "normal": 0.2,
+        "high": 0.2
+      }
+    },
+    "Hypertension": {
+      "fever": {
+        "yes": 0.571429,
+        "no": 0.428571
+      },
+      "cough": {
+        "yes": 0.142857,
+        "no": 0.857143
+      },
+      "fatigue": {
+        "yes": 0.714286,
+        "no": 0.285714
+      },
+      "difficultyBreathing": {
+        "yes": 0.142857,
+        "no": 0.857143
+      },
+      "ageBucket": {
+        "0-18": 0.1,
+        "19-35": 0.1,
+        "36-55": 0.3,
+        "56-70": 0.4,
+        "71+": 0.1
+      },
+      "gender": {
+        "male": 0.571429,
+        "female": 0.428571
+      },
+      "bloodPressure": {
+        "low": 0.125,
+        "normal": 0.25,
+        "high": 0.625
+      },
+      "cholesterolLevel": {
+        "low": 0.125,
+        "normal": 0.5,
+        "high": 0.375
+      }
+    },
+    "Hypertensive Heart Disease": {
+      "fever": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "cough": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "fatigue": {
+        "yes": 0.666667,
+        "no": 0.333333
+      },
+      "difficultyBreathing": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "ageBucket": {
+        "0-18": 0.166667,
+        "19-35": 0.333333,
+        "36-55": 0.166667,
+        "56-70": 0.166667,
+        "71+": 0.166667
+      },
+      "gender": {
+        "male": 0.333333,
+        "female": 0.666667
+      },
+      "bloodPressure": {
+        "low": 0.25,
+        "normal": 0.25,
+        "high": 0.5
+      },
+      "cholesterolLevel": {
+        "low": 0.25,
+        "normal": 0.25,
+        "high": 0.5
+      }
+    },
+    "Hyperthyroidism": {
+      "fever": {
+        "yes": 0.6,
+        "no": 0.4
+      },
+      "cough": {
+        "yes": 0.6,
+        "no": 0.4
+      },
+      "fatigue": {
+        "yes": 0.8,
+        "no": 0.2
+      },
+      "difficultyBreathing": {
+        "yes": 0.2,
+        "no": 0.8
+      },
+      "ageBucket": {
+        "0-18": 0.125,
+        "19-35": 0.375,
+        "36-55": 0.25,
+        "56-70": 0.125,
+        "71+": 0.125
+      },
+      "gender": {
+        "male": 0.8,
+        "female": 0.2
+      },
+      "bloodPressure": {
+        "low": 0.166667,
+        "normal": 0.166667,
+        "high": 0.666667
+      },
+      "cholesterolLevel": {
+        "low": 0.166667,
+        "normal": 0.166667,
+        "high": 0.666667
+      }
+    },
+    "Hypoglycemia": {
+      "fever": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "cough": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "fatigue": {
+        "yes": 0.666667,
+        "no": 0.333333
+      },
+      "difficultyBreathing": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "ageBucket": {
+        "0-18": 0.166667,
+        "19-35": 0.166667,
+        "36-55": 0.333333,
+        "56-70": 0.166667,
+        "71+": 0.166667
+      },
+      "gender": {
+        "male": 0.333333,
+        "female": 0.666667
+      },
+      "bloodPressure": {
+        "low": 0.25,
+        "normal": 0.25,
+        "high": 0.5
+      },
+      "cholesterolLevel": {
+        "low": 0.25,
+        "normal": 0.25,
+        "high": 0.5
+      }
+    },
+    "Hypothyroidism": {
+      "fever": {
+        "yes": 0.5,
+        "no": 0.5
+      },
+      "cough": {
+        "yes": 0.5,
+        "no": 0.5
+      },
+      "fatigue": {
+        "yes": 0.833333,
+        "no": 0.166667
+      },
+      "difficultyBreathing": {
+        "yes": 0.166667,
+        "no": 0.833333
+      },
+      "ageBucket": {
+        "0-18": 0.111111,
+        "19-35": 0.111111,
+        "36-55": 0.555556,
+        "56-70": 0.111111,
+        "71+": 0.111111
+      },
+      "gender": {
+        "male": 0.166667,
+        "female": 0.833333
+      },
+      "bloodPressure": {
+        "low": 0.142857,
+        "normal": 0.142857,
+        "high": 0.714286
+      },
+      "cholesterolLevel": {
+        "low": 0.142857,
+        "normal": 0.142857,
+        "high": 0.714286
+      }
+    },
+    "Influenza": {
+      "fever": {
+        "yes": 0.875,
+        "no": 0.125
+      },
+      "cough": {
+        "yes": 0.75,
+        "no": 0.25
+      },
+      "fatigue": {
+        "yes": 0.875,
+        "no": 0.125
+      },
+      "difficultyBreathing": {
+        "yes": 0.75,
+        "no": 0.25
+      },
+      "ageBucket": {
+        "0-18": 0.090909,
+        "19-35": 0.545455,
+        "36-55": 0.090909,
+        "56-70": 0.181818,
+        "71+": 0.090909
+      },
+      "gender": {
+        "male": 0.375,
+        "female": 0.625
+      },
+      "bloodPressure": {
+        "low": 0.222222,
+        "normal": 0.444444,
+        "high": 0.333333
+      },
+      "cholesterolLevel": {
+        "low": 0.111111,
+        "normal": 0.666667,
+        "high": 0.222222
+      }
+    },
+    "Kidney Cancer": {
+      "fever": {
+        "yes": 0.5,
+        "no": 0.5
+      },
+      "cough": {
+        "yes": 0.5,
+        "no": 0.5
+      },
+      "fatigue": {
+        "yes": 0.75,
+        "no": 0.25
+      },
+      "difficultyBreathing": {
+        "yes": 0.25,
+        "no": 0.75
+      },
+      "ageBucket": {
+        "0-18": 0.142857,
+        "19-35": 0.285714,
+        "36-55": 0.142857,
+        "56-70": 0.285714,
+        "71+": 0.142857
+      },
+      "gender": {
+        "male": 0.5,
+        "female": 0.5
+      },
+      "bloodPressure": {
+        "low": 0.2,
+        "normal": 0.2,
+        "high": 0.6
+      },
+      "cholesterolLevel": {
+        "low": 0.2,
+        "normal": 0.4,
+        "high": 0.4
+      }
+    },
+    "Kidney Disease": {
+      "fever": {
+        "yes": 0.75,
+        "no": 0.25
+      },
+      "cough": {
+        "yes": 0.5,
+        "no": 0.5
+      },
+      "fatigue": {
+        "yes": 0.75,
+        "no": 0.25
+      },
+      "difficultyBreathing": {
+        "yes": 0.5,
+        "no": 0.5
+      },
+      "ageBucket": {
+        "0-18": 0.142857,
+        "19-35": 0.142857,
+        "36-55": 0.285714,
+        "56-70": 0.285714,
+        "71+": 0.142857
+      },
+      "gender": {
+        "male": 0.25,
+        "female": 0.75
+      },
+      "bloodPressure": {
+        "low": 0.2,
+        "normal": 0.2,
+        "high": 0.6
+      },
+      "cholesterolLevel": {
+        "low": 0.4,
+        "normal": 0.2,
+        "high": 0.4
+      }
+    },
+    "Klinefelter Syndrome": {
+      "fever": {
+        "yes": 0.25,
+        "no": 0.75
+      },
+      "cough": {
+        "yes": 0.25,
+        "no": 0.75
+      },
+      "fatigue": {
+        "yes": 0.75,
+        "no": 0.25
+      },
+      "difficultyBreathing": {
+        "yes": 0.25,
+        "no": 0.75
+      },
+      "ageBucket": {
+        "0-18": 0.142857,
+        "19-35": 0.142857,
+        "36-55": 0.428571,
+        "56-70": 0.142857,
+        "71+": 0.142857
+      },
+      "gender": {
+        "male": 0.25,
+        "female": 0.75
+      },
+      "bloodPressure": {
+        "low": 0.2,
+        "normal": 0.6,
+        "high": 0.2
+      },
+      "cholesterolLevel": {
+        "low": 0.2,
+        "normal": 0.6,
+        "high": 0.2
+      }
+    },
+    "Liver Cancer": {
+      "fever": {
+        "yes": 0.5,
+        "no": 0.5
+      },
+      "cough": {
+        "yes": 0.666667,
+        "no": 0.333333
+      },
+      "fatigue": {
+        "yes": 0.833333,
+        "no": 0.166667
+      },
+      "difficultyBreathing": {
+        "yes": 0.5,
+        "no": 0.5
+      },
+      "ageBucket": {
+        "0-18": 0.111111,
+        "19-35": 0.333333,
+        "36-55": 0.222222,
+        "56-70": 0.222222,
+        "71+": 0.111111
+      },
+      "gender": {
+        "male": 0.333333,
+        "female": 0.666667
+      },
+      "bloodPressure": {
+        "low": 0.142857,
+        "normal": 0.285714,
+        "high": 0.571429
+      },
+      "cholesterolLevel": {
+        "low": 0.142857,
+        "normal": 0.285714,
+        "high": 0.571429
+      }
+    },
+    "Liver Disease": {
+      "fever": {
+        "yes": 0.5,
+        "no": 0.5
+      },
+      "cough": {
+        "yes": 0.5,
+        "no": 0.5
+      },
+      "fatigue": {
+        "yes": 0.75,
+        "no": 0.25
+      },
+      "difficultyBreathing": {
+        "yes": 0.25,
+        "no": 0.75
+      },
+      "ageBucket": {
+        "0-18": 0.142857,
+        "19-35": 0.285714,
+        "36-55": 0.285714,
+        "56-70": 0.142857,
+        "71+": 0.142857
+      },
+      "gender": {
+        "male": 0.5,
+        "female": 0.5
+      },
+      "bloodPressure": {
+        "low": 0.2,
+        "normal": 0.4,
+        "high": 0.4
+      },
+      "cholesterolLevel": {
+        "low": 0.2,
+        "normal": 0.2,
+        "high": 0.6
+      }
+    },
+    "Lung Cancer": {
+      "fever": {
+        "yes": 0.75,
+        "no": 0.25
+      },
+      "cough": {
+        "yes": 0.5,
+        "no": 0.5
+      },
+      "fatigue": {
+        "yes": 0.75,
+        "no": 0.25
+      },
+      "difficultyBreathing": {
+        "yes": 0.25,
+        "no": 0.75
+      },
+      "ageBucket": {
+        "0-18": 0.142857,
+        "19-35": 0.142857,
+        "36-55": 0.142857,
+        "56-70": 0.428571,
+        "71+": 0.142857
+      },
+      "gender": {
+        "male": 0.25,
+        "female": 0.75
+      },
+      "bloodPressure": {
+        "low": 0.2,
+        "normal": 0.4,
+        "high": 0.4
+      },
+      "cholesterolLevel": {
+        "low": 0.2,
+        "normal": 0.2,
+        "high": 0.6
+      }
+    },
+    "Lyme Disease": {
+      "fever": {
+        "yes": 0.75,
+        "no": 0.25
+      },
+      "cough": {
+        "yes": 0.25,
+        "no": 0.75
+      },
+      "fatigue": {
+        "yes": 0.25,
+        "no": 0.75
+      },
+      "difficultyBreathing": {
+        "yes": 0.25,
+        "no": 0.75
+      },
+      "ageBucket": {
+        "0-18": 0.142857,
+        "19-35": 0.142857,
+        "36-55": 0.428571,
+        "56-70": 0.142857,
+        "71+": 0.142857
+      },
+      "gender": {
+        "male": 0.75,
+        "female": 0.25
+      },
+      "bloodPressure": {
+        "low": 0.2,
+        "normal": 0.6,
+        "high": 0.2
+      },
+      "cholesterolLevel": {
+        "low": 0.2,
+        "normal": 0.2,
+        "high": 0.6
+      }
+    },
+    "Lymphoma": {
+      "fever": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "cough": {
+        "yes": 0.666667,
+        "no": 0.333333
+      },
+      "fatigue": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "difficultyBreathing": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "ageBucket": {
+        "0-18": 0.166667,
+        "19-35": 0.166667,
+        "36-55": 0.333333,
+        "56-70": 0.166667,
+        "71+": 0.166667
+      },
+      "gender": {
+        "male": 0.333333,
+        "female": 0.666667
+      },
+      "bloodPressure": {
+        "low": 0.25,
+        "normal": 0.5,
+        "high": 0.25
+      },
+      "cholesterolLevel": {
+        "low": 0.25,
+        "normal": 0.25,
+        "high": 0.5
+      }
+    },
+    "Malaria": {
+      "fever": {
+        "yes": 0.75,
+        "no": 0.25
+      },
+      "cough": {
+        "yes": 0.25,
+        "no": 0.75
+      },
+      "fatigue": {
+        "yes": 0.25,
+        "no": 0.75
+      },
+      "difficultyBreathing": {
+        "yes": 0.25,
+        "no": 0.75
+      },
+      "ageBucket": {
+        "0-18": 0.142857,
+        "19-35": 0.428571,
+        "36-55": 0.142857,
+        "56-70": 0.142857,
+        "71+": 0.142857
+      },
+      "gender": {
+        "male": 0.75,
+        "female": 0.25
+      },
+      "bloodPressure": {
+        "low": 0.2,
+        "normal": 0.2,
+        "high": 0.6
+      },
+      "cholesterolLevel": {
+        "low": 0.2,
+        "normal": 0.2,
+        "high": 0.6
+      }
+    },
+    "Migraine": {
+      "fever": {
+        "yes": 0.571429,
+        "no": 0.428571
+      },
+      "cough": {
+        "yes": 0.428571,
+        "no": 0.571429
+      },
+      "fatigue": {
+        "yes": 0.428571,
+        "no": 0.571429
+      },
+      "difficultyBreathing": {
+        "yes": 0.142857,
+        "no": 0.857143
+      },
+      "ageBucket": {
+        "0-18": 0.1,
+        "19-35": 0.4,
+        "36-55": 0.2,
+        "56-70": 0.2,
+        "71+": 0.1
+      },
+      "gender": {
+        "male": 0.571429,
+        "female": 0.428571
+      },
+      "bloodPressure": {
+        "low": 0.125,
+        "normal": 0.375,
+        "high": 0.5
+      },
+      "cholesterolLevel": {
+        "low": 0.125,
+        "normal": 0.375,
+        "high": 0.5
+      }
+    },
+    "Multiple Sclerosis": {
+      "fever": {
+        "yes": 0.6,
+        "no": 0.4
+      },
+      "cough": {
+        "yes": 0.2,
+        "no": 0.8
+      },
+      "fatigue": {
+        "yes": 0.4,
+        "no": 0.6
+      },
+      "difficultyBreathing": {
+        "yes": 0.2,
+        "no": 0.8
+      },
+      "ageBucket": {
+        "0-18": 0.125,
+        "19-35": 0.25,
+        "36-55": 0.375,
+        "56-70": 0.125,
+        "71+": 0.125
+      },
+      "gender": {
+        "male": 0.2,
+        "female": 0.8
+      },
+      "bloodPressure": {
+        "low": 0.166667,
+        "normal": 0.166667,
+        "high": 0.666667
+      },
+      "cholesterolLevel": {
+        "low": 0.166667,
+        "normal": 0.166667,
+        "high": 0.666667
+      }
+    },
+    "Mumps": {
+      "fever": {
+        "yes": 0.25,
+        "no": 0.75
+      },
+      "cough": {
+        "yes": 0.25,
+        "no": 0.75
+      },
+      "fatigue": {
+        "yes": 0.75,
+        "no": 0.25
+      },
+      "difficultyBreathing": {
+        "yes": 0.25,
+        "no": 0.75
+      },
+      "ageBucket": {
+        "0-18": 0.142857,
+        "19-35": 0.142857,
+        "36-55": 0.142857,
+        "56-70": 0.428571,
+        "71+": 0.142857
+      },
+      "gender": {
+        "male": 0.75,
+        "female": 0.25
+      },
+      "bloodPressure": {
+        "low": 0.2,
+        "normal": 0.6,
+        "high": 0.2
+      },
+      "cholesterolLevel": {
+        "low": 0.2,
+        "normal": 0.2,
+        "high": 0.6
+      }
+    },
+    "Myocardial Infarction (Heart...": {
+      "fever": {
+        "yes": 0.666667,
+        "no": 0.333333
+      },
+      "cough": {
+        "yes": 0.666667,
+        "no": 0.333333
+      },
+      "fatigue": {
+        "yes": 0.666667,
+        "no": 0.333333
+      },
+      "difficultyBreathing": {
+        "yes": 0.666667,
+        "no": 0.333333
+      },
+      "ageBucket": {
+        "0-18": 0.166667,
+        "19-35": 0.333333,
+        "36-55": 0.166667,
+        "56-70": 0.166667,
+        "71+": 0.166667
+      },
+      "gender": {
+        "male": 0.333333,
+        "female": 0.666667
+      },
+      "bloodPressure": {
+        "low": 0.25,
+        "normal": 0.25,
+        "high": 0.5
+      },
+      "cholesterolLevel": {
+        "low": 0.25,
+        "normal": 0.25,
+        "high": 0.5
+      }
+    },
+    "Osteoarthritis": {
+      "fever": {
+        "yes": 0.8,
+        "no": 0.2
+      },
+      "cough": {
+        "yes": 0.6,
+        "no": 0.4
+      },
+      "fatigue": {
+        "yes": 0.6,
+        "no": 0.4
+      },
+      "difficultyBreathing": {
+        "yes": 0.4,
+        "no": 0.6
+      },
+      "ageBucket": {
+        "0-18": 0.125,
+        "19-35": 0.125,
+        "36-55": 0.5,
+        "56-70": 0.125,
+        "71+": 0.125
+      },
+      "gender": {
+        "male": 0.6,
+        "female": 0.4
+      },
+      "bloodPressure": {
+        "low": 0.166667,
+        "normal": 0.166667,
+        "high": 0.666667
+      },
+      "cholesterolLevel": {
+        "low": 0.166667,
+        "normal": 0.333333,
+        "high": 0.5
+      }
+    },
+    "Osteoporosis": {
+      "fever": {
+        "yes": 0.666667,
+        "no": 0.333333
+      },
+      "cough": {
+        "yes": 0.444444,
+        "no": 0.555556
+      },
+      "fatigue": {
+        "yes": 0.888889,
+        "no": 0.111111
+      },
+      "difficultyBreathing": {
+        "yes": 0.222222,
+        "no": 0.777778
+      },
+      "ageBucket": {
+        "0-18": 0.083333,
+        "19-35": 0.083333,
+        "36-55": 0.5,
+        "56-70": 0.25,
+        "71+": 0.083333
+      },
+      "gender": {
+        "male": 0.333333,
+        "female": 0.666667
+      },
+      "bloodPressure": {
+        "low": 0.1,
+        "normal": 0.5,
+        "high": 0.4
+      },
+      "cholesterolLevel": {
+        "low": 0.2,
+        "normal": 0.5,
+        "high": 0.3
+      }
+    },
+    "Pancreatic Cancer": {
+      "fever": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "cough": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "fatigue": {
+        "yes": 0.666667,
+        "no": 0.333333
+      },
+      "difficultyBreathing": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "ageBucket": {
+        "0-18": 0.166667,
+        "19-35": 0.166667,
+        "36-55": 0.333333,
+        "56-70": 0.166667,
+        "71+": 0.166667
+      },
+      "gender": {
+        "male": 0.333333,
+        "female": 0.666667
+      },
+      "bloodPressure": {
+        "low": 0.25,
+        "normal": 0.25,
+        "high": 0.5
+      },
+      "cholesterolLevel": {
+        "low": 0.25,
+        "normal": 0.25,
+        "high": 0.5
+      }
+    },
+    "Pancreatitis": {
+      "fever": {
+        "yes": 0.5,
+        "no": 0.5
+      },
+      "cough": {
+        "yes": 0.5,
+        "no": 0.5
+      },
+      "fatigue": {
+        "yes": 0.75,
+        "no": 0.25
+      },
+      "difficultyBreathing": {
+        "yes": 0.25,
+        "no": 0.75
+      },
+      "ageBucket": {
+        "0-18": 0.142857,
+        "19-35": 0.285714,
+        "36-55": 0.142857,
+        "56-70": 0.285714,
+        "71+": 0.142857
+      },
+      "gender": {
+        "male": 0.5,
+        "female": 0.5
+      },
+      "bloodPressure": {
+        "low": 0.2,
+        "normal": 0.4,
+        "high": 0.4
+      },
+      "cholesterolLevel": {
+        "low": 0.2,
+        "normal": 0.4,
+        "high": 0.4
+      }
+    },
+    "Parkinson's Disease": {
+      "fever": {
+        "yes": 0.75,
+        "no": 0.25
+      },
+      "cough": {
+        "yes": 0.75,
+        "no": 0.25
+      },
+      "fatigue": {
+        "yes": 0.25,
+        "no": 0.75
+      },
+      "difficultyBreathing": {
+        "yes": 0.25,
+        "no": 0.75
+      },
+      "ageBucket": {
+        "0-18": 0.142857,
+        "19-35": 0.142857,
+        "36-55": 0.142857,
+        "56-70": 0.428571,
+        "71+": 0.142857
+      },
+      "gender": {
+        "male": 0.75,
+        "female": 0.25
+      },
+      "bloodPressure": {
+        "low": 0.2,
+        "normal": 0.2,
+        "high": 0.6
+      },
+      "cholesterolLevel": {
+        "low": 0.2,
+        "normal": 0.6,
+        "high": 0.2
+      }
+    },
+    "Pneumocystis Pneumonia (PCP)": {
+      "fever": {
+        "yes": 0.666667,
+        "no": 0.333333
+      },
+      "cough": {
+        "yes": 0.666667,
+        "no": 0.333333
+      },
+      "fatigue": {
+        "yes": 0.666667,
+        "no": 0.333333
+      },
+      "difficultyBreathing": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "ageBucket": {
+        "0-18": 0.166667,
+        "19-35": 0.166667,
+        "36-55": 0.333333,
+        "56-70": 0.166667,
+        "71+": 0.166667
+      },
+      "gender": {
+        "male": 0.333333,
+        "female": 0.666667
+      },
+      "bloodPressure": {
+        "low": 0.25,
+        "normal": 0.25,
+        "high": 0.5
+      },
+      "cholesterolLevel": {
+        "low": 0.25,
+        "normal": 0.25,
+        "high": 0.5
+      }
+    },
+    "Pneumonia": {
+      "fever": {
+        "yes": 0.714286,
+        "no": 0.285714
+      },
+      "cough": {
+        "yes": 0.714286,
+        "no": 0.285714
+      },
+      "fatigue": {
+        "yes": 0.857143,
+        "no": 0.142857
+      },
+      "difficultyBreathing": {
+        "yes": 0.857143,
+        "no": 0.142857
+      },
+      "ageBucket": {
+        "0-18": 0.1,
+        "19-35": 0.2,
+        "36-55": 0.5,
+        "56-70": 0.1,
+        "71+": 0.1
+      },
+      "gender": {
+        "male": 0.428571,
+        "female": 0.571429
+      },
+      "bloodPressure": {
+        "low": 0.125,
+        "normal": 0.375,
+        "high": 0.5
+      },
+      "cholesterolLevel": {
+        "low": 0.125,
+        "normal": 0.5,
+        "high": 0.375
+      }
+    },
+    "Pneumothorax": {
+      "fever": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "cough": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "fatigue": {
+        "yes": 0.666667,
+        "no": 0.333333
+      },
+      "difficultyBreathing": {
+        "yes": 0.666667,
+        "no": 0.333333
+      },
+      "ageBucket": {
+        "0-18": 0.166667,
+        "19-35": 0.166667,
+        "36-55": 0.333333,
+        "56-70": 0.166667,
+        "71+": 0.166667
+      },
+      "gender": {
+        "male": 0.333333,
+        "female": 0.666667
+      },
+      "bloodPressure": {
+        "low": 0.25,
+        "normal": 0.25,
+        "high": 0.5
+      },
+      "cholesterolLevel": {
+        "low": 0.25,
+        "normal": 0.25,
+        "high": 0.5
+      }
+    },
+    "Polycystic Ovary Syndrome (PCOS)": {
+      "fever": {
+        "yes": 0.666667,
+        "no": 0.333333
+      },
+      "cough": {
+        "yes": 0.666667,
+        "no": 0.333333
+      },
+      "fatigue": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "difficultyBreathing": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "ageBucket": {
+        "0-18": 0.166667,
+        "19-35": 0.166667,
+        "36-55": 0.333333,
+        "56-70": 0.166667,
+        "71+": 0.166667
+      },
+      "gender": {
+        "male": 0.333333,
+        "female": 0.666667
+      },
+      "bloodPressure": {
+        "low": 0.25,
+        "normal": 0.5,
+        "high": 0.25
+      },
+      "cholesterolLevel": {
+        "low": 0.25,
+        "normal": 0.5,
+        "high": 0.25
+      }
+    },
+    "Prader-Willi Syndrome": {
+      "fever": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "cough": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "fatigue": {
+        "yes": 0.666667,
+        "no": 0.333333
+      },
+      "difficultyBreathing": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "ageBucket": {
+        "0-18": 0.166667,
+        "19-35": 0.166667,
+        "36-55": 0.166667,
+        "56-70": 0.333333,
+        "71+": 0.166667
+      },
+      "gender": {
+        "male": 0.333333,
+        "female": 0.666667
+      },
+      "bloodPressure": {
+        "low": 0.25,
+        "normal": 0.5,
+        "high": 0.25
+      },
+      "cholesterolLevel": {
+        "low": 0.25,
+        "normal": 0.5,
+        "high": 0.25
+      }
+    },
+    "Psoriasis": {
+      "fever": {
+        "yes": 0.4,
+        "no": 0.6
+      },
+      "cough": {
+        "yes": 0.6,
+        "no": 0.4
+      },
+      "fatigue": {
+        "yes": 0.4,
+        "no": 0.6
+      },
+      "difficultyBreathing": {
+        "yes": 0.2,
+        "no": 0.8
+      },
+      "ageBucket": {
+        "0-18": 0.125,
+        "19-35": 0.125,
+        "36-55": 0.5,
+        "56-70": 0.125,
+        "71+": 0.125
+      },
+      "gender": {
+        "male": 0.6,
+        "female": 0.4
+      },
+      "bloodPressure": {
+        "low": 0.166667,
+        "normal": 0.333333,
+        "high": 0.5
+      },
+      "cholesterolLevel": {
+        "low": 0.166667,
+        "normal": 0.5,
+        "high": 0.333333
+      }
+    },
+    "Rheumatoid Arthritis": {
+      "fever": {
+        "yes": 0.4,
+        "no": 0.6
+      },
+      "cough": {
+        "yes": 0.4,
+        "no": 0.6
+      },
+      "fatigue": {
+        "yes": 0.8,
+        "no": 0.2
+      },
+      "difficultyBreathing": {
+        "yes": 0.2,
+        "no": 0.8
+      },
+      "ageBucket": {
+        "0-18": 0.125,
+        "19-35": 0.375,
+        "36-55": 0.125,
+        "56-70": 0.25,
+        "71+": 0.125
+      },
+      "gender": {
+        "male": 0.4,
+        "female": 0.6
+      },
+      "bloodPressure": {
+        "low": 0.166667,
+        "normal": 0.5,
+        "high": 0.333333
+      },
+      "cholesterolLevel": {
+        "low": 0.5,
+        "normal": 0.166667,
+        "high": 0.333333
+      }
+    },
+    "Scoliosis": {
+      "fever": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "cough": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "fatigue": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "difficultyBreathing": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "ageBucket": {
+        "0-18": 0.166667,
+        "19-35": 0.166667,
+        "36-55": 0.333333,
+        "56-70": 0.166667,
+        "71+": 0.166667
+      },
+      "gender": {
+        "male": 0.333333,
+        "female": 0.666667
+      },
+      "bloodPressure": {
+        "low": 0.25,
+        "normal": 0.25,
+        "high": 0.5
+      },
+      "cholesterolLevel": {
+        "low": 0.25,
+        "normal": 0.25,
+        "high": 0.5
+      }
+    },
+    "Sickle Cell Anemia": {
+      "fever": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "cough": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "fatigue": {
+        "yes": 0.666667,
+        "no": 0.333333
+      },
+      "difficultyBreathing": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "ageBucket": {
+        "0-18": 0.166667,
+        "19-35": 0.166667,
+        "36-55": 0.333333,
+        "56-70": 0.166667,
+        "71+": 0.166667
+      },
+      "gender": {
+        "male": 0.333333,
+        "female": 0.666667
+      },
+      "bloodPressure": {
+        "low": 0.25,
+        "normal": 0.5,
+        "high": 0.25
+      },
+      "cholesterolLevel": {
+        "low": 0.25,
+        "normal": 0.5,
+        "high": 0.25
+      }
+    },
+    "Spina Bifida": {
+      "fever": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "cough": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "fatigue": {
+        "yes": 0.666667,
+        "no": 0.333333
+      },
+      "difficultyBreathing": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "ageBucket": {
+        "0-18": 0.166667,
+        "19-35": 0.333333,
+        "36-55": 0.166667,
+        "56-70": 0.166667,
+        "71+": 0.166667
+      },
+      "gender": {
+        "male": 0.333333,
+        "female": 0.666667
+      },
+      "bloodPressure": {
+        "low": 0.25,
+        "normal": 0.5,
+        "high": 0.25
+      },
+      "cholesterolLevel": {
+        "low": 0.25,
+        "normal": 0.5,
+        "high": 0.25
+      }
+    },
+    "Stroke": {
+      "fever": {
+        "yes": 0.692308,
+        "no": 0.307692
+      },
+      "cough": {
+        "yes": 0.461538,
+        "no": 0.538462
+      },
+      "fatigue": {
+        "yes": 0.769231,
+        "no": 0.230769
+      },
+      "difficultyBreathing": {
+        "yes": 0.230769,
+        "no": 0.769231
+      },
+      "ageBucket": {
+        "0-18": 0.0625,
+        "19-35": 0.125,
+        "36-55": 0.125,
+        "56-70": 0.25,
+        "71+": 0.4375
+      },
+      "gender": {
+        "male": 0.461538,
+        "female": 0.538462
+      },
+      "bloodPressure": {
+        "low": 0.071429,
+        "normal": 0.285714,
+        "high": 0.642857
+      },
+      "cholesterolLevel": {
+        "low": 0.071429,
+        "normal": 0.142857,
+        "high": 0.785714
+      }
+    },
+    "Systemic Lupus Erythematosus...": {
+      "fever": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "cough": {
+        "yes": 0.666667,
+        "no": 0.333333
+      },
+      "fatigue": {
+        "yes": 0.666667,
+        "no": 0.333333
+      },
+      "difficultyBreathing": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "ageBucket": {
+        "0-18": 0.166667,
+        "19-35": 0.166667,
+        "36-55": 0.333333,
+        "56-70": 0.166667,
+        "71+": 0.166667
+      },
+      "gender": {
+        "male": 0.333333,
+        "female": 0.666667
+      },
+      "bloodPressure": {
+        "low": 0.25,
+        "normal": 0.25,
+        "high": 0.5
+      },
+      "cholesterolLevel": {
+        "low": 0.25,
+        "normal": 0.25,
+        "high": 0.5
+      }
+    },
+    "Testicular Cancer": {
+      "fever": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "cough": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "fatigue": {
+        "yes": 0.666667,
+        "no": 0.333333
+      },
+      "difficultyBreathing": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "ageBucket": {
+        "0-18": 0.166667,
+        "19-35": 0.166667,
+        "36-55": 0.166667,
+        "56-70": 0.333333,
+        "71+": 0.166667
+      },
+      "gender": {
+        "male": 0.333333,
+        "female": 0.666667
+      },
+      "bloodPressure": {
+        "low": 0.25,
+        "normal": 0.25,
+        "high": 0.5
+      },
+      "cholesterolLevel": {
+        "low": 0.25,
+        "normal": 0.25,
+        "high": 0.5
+      }
+    },
+    "Tetanus": {
+      "fever": {
+        "yes": 0.25,
+        "no": 0.75
+      },
+      "cough": {
+        "yes": 0.25,
+        "no": 0.75
+      },
+      "fatigue": {
+        "yes": 0.75,
+        "no": 0.25
+      },
+      "difficultyBreathing": {
+        "yes": 0.25,
+        "no": 0.75
+      },
+      "ageBucket": {
+        "0-18": 0.142857,
+        "19-35": 0.142857,
+        "36-55": 0.428571,
+        "56-70": 0.142857,
+        "71+": 0.142857
+      },
+      "gender": {
+        "male": 0.75,
+        "female": 0.25
+      },
+      "bloodPressure": {
+        "low": 0.2,
+        "normal": 0.6,
+        "high": 0.2
+      },
+      "cholesterolLevel": {
+        "low": 0.2,
+        "normal": 0.2,
+        "high": 0.6
+      }
+    },
+    "Thyroid Cancer": {
+      "fever": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "cough": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "fatigue": {
+        "yes": 0.666667,
+        "no": 0.333333
+      },
+      "difficultyBreathing": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "ageBucket": {
+        "0-18": 0.166667,
+        "19-35": 0.166667,
+        "36-55": 0.166667,
+        "56-70": 0.333333,
+        "71+": 0.166667
+      },
+      "gender": {
+        "male": 0.333333,
+        "female": 0.666667
+      },
+      "bloodPressure": {
+        "low": 0.25,
+        "normal": 0.25,
+        "high": 0.5
+      },
+      "cholesterolLevel": {
+        "low": 0.25,
+        "normal": 0.25,
+        "high": 0.5
+      }
+    },
+    "Tonsillitis": {
+      "fever": {
+        "yes": 0.666667,
+        "no": 0.333333
+      },
+      "cough": {
+        "yes": 0.666667,
+        "no": 0.333333
+      },
+      "fatigue": {
+        "yes": 0.666667,
+        "no": 0.333333
+      },
+      "difficultyBreathing": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "ageBucket": {
+        "0-18": 0.166667,
+        "19-35": 0.166667,
+        "36-55": 0.166667,
+        "56-70": 0.333333,
+        "71+": 0.166667
+      },
+      "gender": {
+        "male": 0.333333,
+        "female": 0.666667
+      },
+      "bloodPressure": {
+        "low": 0.25,
+        "normal": 0.25,
+        "high": 0.5
+      },
+      "cholesterolLevel": {
+        "low": 0.25,
+        "normal": 0.25,
+        "high": 0.5
+      }
+    },
+    "Tuberculosis": {
+      "fever": {
+        "yes": 0.8,
+        "no": 0.2
+      },
+      "cough": {
+        "yes": 0.8,
+        "no": 0.2
+      },
+      "fatigue": {
+        "yes": 0.8,
+        "no": 0.2
+      },
+      "difficultyBreathing": {
+        "yes": 0.6,
+        "no": 0.4
+      },
+      "ageBucket": {
+        "0-18": 0.125,
+        "19-35": 0.125,
+        "36-55": 0.375,
+        "56-70": 0.25,
+        "71+": 0.125
+      },
+      "gender": {
+        "male": 0.6,
+        "female": 0.4
+      },
+      "bloodPressure": {
+        "low": 0.166667,
+        "normal": 0.166667,
+        "high": 0.666667
+      },
+      "cholesterolLevel": {
+        "low": 0.166667,
+        "normal": 0.166667,
+        "high": 0.666667
+      }
+    },
+    "Typhoid Fever": {
+      "fever": {
+        "yes": 0.25,
+        "no": 0.75
+      },
+      "cough": {
+        "yes": 0.75,
+        "no": 0.25
+      },
+      "fatigue": {
+        "yes": 0.25,
+        "no": 0.75
+      },
+      "difficultyBreathing": {
+        "yes": 0.25,
+        "no": 0.75
+      },
+      "ageBucket": {
+        "0-18": 0.142857,
+        "19-35": 0.142857,
+        "36-55": 0.428571,
+        "56-70": 0.142857,
+        "71+": 0.142857
+      },
+      "gender": {
+        "male": 0.75,
+        "female": 0.25
+      },
+      "bloodPressure": {
+        "low": 0.2,
+        "normal": 0.6,
+        "high": 0.2
+      },
+      "cholesterolLevel": {
+        "low": 0.6,
+        "normal": 0.2,
+        "high": 0.2
+      }
+    },
+    "Ulcerative Colitis": {
+      "fever": {
+        "yes": 0.4,
+        "no": 0.6
+      },
+      "cough": {
+        "yes": 0.4,
+        "no": 0.6
+      },
+      "fatigue": {
+        "yes": 0.6,
+        "no": 0.4
+      },
+      "difficultyBreathing": {
+        "yes": 0.2,
+        "no": 0.8
+      },
+      "ageBucket": {
+        "0-18": 0.125,
+        "19-35": 0.375,
+        "36-55": 0.25,
+        "56-70": 0.125,
+        "71+": 0.125
+      },
+      "gender": {
+        "male": 0.6,
+        "female": 0.4
+      },
+      "bloodPressure": {
+        "low": 0.166667,
+        "normal": 0.333333,
+        "high": 0.5
+      },
+      "cholesterolLevel": {
+        "low": 0.166667,
+        "normal": 0.166667,
+        "high": 0.666667
+      }
+    },
+    "Urinary Tract Infection": {
+      "fever": {
+        "yes": 0.75,
+        "no": 0.25
+      },
+      "cough": {
+        "yes": 0.5,
+        "no": 0.5
+      },
+      "fatigue": {
+        "yes": 0.75,
+        "no": 0.25
+      },
+      "difficultyBreathing": {
+        "yes": 0.25,
+        "no": 0.75
+      },
+      "ageBucket": {
+        "0-18": 0.142857,
+        "19-35": 0.428571,
+        "36-55": 0.142857,
+        "56-70": 0.142857,
+        "71+": 0.142857
+      },
+      "gender": {
+        "male": 0.5,
+        "female": 0.5
+      },
+      "bloodPressure": {
+        "low": 0.2,
+        "normal": 0.4,
+        "high": 0.4
+      },
+      "cholesterolLevel": {
+        "low": 0.2,
+        "normal": 0.2,
+        "high": 0.6
+      }
+    },
+    "Urinary Tract Infection (UTI)": {
+      "fever": {
+        "yes": 0.666667,
+        "no": 0.333333
+      },
+      "cough": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "fatigue": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "difficultyBreathing": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "ageBucket": {
+        "0-18": 0.166667,
+        "19-35": 0.333333,
+        "36-55": 0.166667,
+        "56-70": 0.166667,
+        "71+": 0.166667
+      },
+      "gender": {
+        "male": 0.333333,
+        "female": 0.666667
+      },
+      "bloodPressure": {
+        "low": 0.25,
+        "normal": 0.5,
+        "high": 0.25
+      },
+      "cholesterolLevel": {
+        "low": 0.25,
+        "normal": 0.5,
+        "high": 0.25
+      }
+    },
+    "Williams Syndrome": {
+      "fever": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "cough": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "fatigue": {
+        "yes": 0.666667,
+        "no": 0.333333
+      },
+      "difficultyBreathing": {
+        "yes": 0.333333,
+        "no": 0.666667
+      },
+      "ageBucket": {
+        "0-18": 0.166667,
+        "19-35": 0.166667,
+        "36-55": 0.166667,
+        "56-70": 0.333333,
+        "71+": 0.166667
+      },
+      "gender": {
+        "male": 0.333333,
+        "female": 0.666667
+      },
+      "bloodPressure": {
+        "low": 0.25,
+        "normal": 0.5,
+        "high": 0.25
+      },
+      "cholesterolLevel": {
+        "low": 0.25,
+        "normal": 0.5,
+        "high": 0.25
+      }
+    }
+  }
+}

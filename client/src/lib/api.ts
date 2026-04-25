@@ -62,4 +62,5 @@ export const modelApi = {
   trainNoShowModel: () => requestTraining("predictions/train/no-show"),
   trainPriceModel: () => requestTraining("predictions/train/price"),
   trainBedModel: () => requestTraining("predictions/train/bed"),
+  trainDiseaseModel: () => requestTraining("predictions/train/disease"),
 };

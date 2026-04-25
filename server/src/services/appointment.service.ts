@@ -256,7 +256,7 @@ export const createAppointment = async (input: CreateAppointmentPayload) => {
       startTime,
       endTime,
       status: "booked",
-      remarks: null,
+      remarks: input.remarks ?? null,
     },
   });
 

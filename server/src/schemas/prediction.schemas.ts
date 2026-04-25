@@ -45,6 +45,17 @@ export const bedAvailabilitySchema = z.object({
   department: z.string().trim().min(1).optional(),
 });
 
+export const diseasePredictionSchema = z.object({
+  fever: z.boolean(),
+  cough: z.boolean(),
+  fatigue: z.boolean(),
+  difficultyBreathing: z.boolean(),
+  age: z.number().int().min(0).max(120),
+  gender: z.string().trim().min(1),
+  bloodPressure: z.enum(["Low", "Normal", "High"]),
+  cholesterolLevel: z.enum(["Low", "Normal", "High"]),
+});
+
 // ── Inferred types ──
 
 export type WaitingTimePredictionInput = z.infer<typeof waitingTimePredictionSchema>;
@@ -54,3 +65,4 @@ export type NoShowPredictionInput = z.infer<typeof noShowPredictionSchema>;
 export type SurgeryPlanInput = z.infer<typeof surgeryPlanSchema>;
 export type PriceEstimationInput = z.infer<typeof priceEstimationSchema>;
 export type BedAvailabilityInput = z.infer<typeof bedAvailabilitySchema>;
+export type DiseasePredictionInput = z.infer<typeof diseasePredictionSchema>;
