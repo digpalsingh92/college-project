@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useMemo, useRef, useState } from "react";
 import { CalendarCheck, CheckCircle2, ChevronLeft, ChevronRight, Stethoscope } from "lucide-react";
 import { Button } from "@/components/ui/Button";
@@ -209,10 +210,22 @@ export function PatientDashboardPage() {
     <div className="space-y-8">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-semibold tracking-tight text-slate-900">Welcome back</h2>
-          <p className="mt-1 text-sm text-muted">Your visits, providers, and scheduling in one calm view.</p>
+          <h2 className="text-2xl font-semibold tracking-tight text-slate-900">Appointments</h2>
+          <p className="mt-1 text-sm text-muted">Book a visit, then jump to AI answers or estimations when needed.</p>
         </div>
         <div className="flex gap-3">
+          <Link
+            href="/patient/surgery-planner"
+            className="inline-flex h-10 items-center justify-center rounded-md border border-slate-200 bg-white px-4 text-sm font-medium text-slate-800 transition-colors hover:bg-slate-50"
+          >
+            AI answers
+          </Link>
+          <Link
+            href="/patient/surgery-planner"
+            className="inline-flex h-10 items-center justify-center rounded-md bg-slate-900 px-4 text-sm font-medium text-white transition-colors hover:bg-slate-800"
+          >
+            Estimations
+          </Link>
           <Card className="flex items-center gap-3 border-emerald-100 bg-emerald-50/50 px-4 py-3 shadow-none" padding="none">
             <CalendarCheck className="h-8 w-8 text-emerald-600" strokeWidth={1.75} />
             <div>
