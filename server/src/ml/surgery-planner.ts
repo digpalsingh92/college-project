@@ -10,23 +10,12 @@ const SURGERY_META: Record<
   string,
   { durationHours: string; recoveryDays: number; relatedDepartment: string; procedure: string }
 > = {
+  // ── Orthopedic ──
   knee_replacement: {
     durationHours: "2-3 hours",
     recoveryDays: 42,
     relatedDepartment: "orthopedics",
     procedure: "Knee Replacement",
-  },
-  cataract: {
-    durationHours: "30-45 min",
-    recoveryDays: 7,
-    relatedDepartment: "ophthalmology",
-    procedure: "Cataract Surgery",
-  },
-  appendectomy: {
-    durationHours: "1-2 hours",
-    recoveryDays: 14,
-    relatedDepartment: "general surgery",
-    procedure: "Appendectomy",
   },
   hip_replacement: {
     durationHours: "2-4 hours",
@@ -34,12 +23,20 @@ const SURGERY_META: Record<
     relatedDepartment: "orthopedics",
     procedure: "Hip Replacement",
   },
-  hernia_repair: {
+  acl_reconstruction: {
     durationHours: "1-2 hours",
-    recoveryDays: 21,
-    relatedDepartment: "general surgery",
-    procedure: "Hernia Repair",
+    recoveryDays: 180,
+    relatedDepartment: "orthopedics",
+    procedure: "ACL Reconstruction",
   },
+  spinal_fusion: {
+    durationHours: "3-6 hours",
+    recoveryDays: 90,
+    relatedDepartment: "orthopedics",
+    procedure: "Spinal Fusion",
+  },
+
+  // ── Cardiac ──
   cardiac_bypass: {
     durationHours: "4-6 hours",
     recoveryDays: 84,
@@ -52,11 +49,167 @@ const SURGERY_META: Record<
     relatedDepartment: "cardiac surgery",
     procedure: "Angioplasty",
   },
+  heart_valve_replacement: {
+    durationHours: "3-5 hours",
+    recoveryDays: 60,
+    relatedDepartment: "cardiac surgery",
+    procedure: "Heart Valve Replacement",
+  },
+  pacemaker_implant: {
+    durationHours: "1-2 hours",
+    recoveryDays: 14,
+    relatedDepartment: "cardiac surgery",
+    procedure: "Pacemaker Implantation",
+  },
+
+  // ── Abdominal / GI ──
+  appendectomy: {
+    durationHours: "1-2 hours",
+    recoveryDays: 14,
+    relatedDepartment: "general surgery",
+    procedure: "Appendectomy",
+  },
+  hernia_repair: {
+    durationHours: "1-2 hours",
+    recoveryDays: 21,
+    relatedDepartment: "general surgery",
+    procedure: "Hernia Repair",
+  },
+  gallbladder_removal: {
+    durationHours: "1-2 hours",
+    recoveryDays: 14,
+    relatedDepartment: "general surgery",
+    procedure: "Gallbladder Removal",
+  },
+  colectomy: {
+    durationHours: "2-4 hours",
+    recoveryDays: 42,
+    relatedDepartment: "general surgery",
+    procedure: "Colectomy",
+  },
+  gastrectomy: {
+    durationHours: "3-5 hours",
+    recoveryDays: 56,
+    relatedDepartment: "general surgery",
+    procedure: "Gastrectomy",
+  },
+  bariatric_surgery: {
+    durationHours: "2-4 hours",
+    recoveryDays: 28,
+    relatedDepartment: "general surgery",
+    procedure: "Bariatric Surgery",
+  },
+
+  // ── Urological ──
+  kidney_stone_removal: {
+    durationHours: "1-2 hours",
+    recoveryDays: 7,
+    relatedDepartment: "urology",
+    procedure: "Kidney Stone Removal",
+  },
+  kidney_transplant: {
+    durationHours: "3-5 hours",
+    recoveryDays: 90,
+    relatedDepartment: "urology",
+    procedure: "Kidney Transplant",
+  },
+  prostatectomy: {
+    durationHours: "2-4 hours",
+    recoveryDays: 42,
+    relatedDepartment: "urology",
+    procedure: "Prostatectomy",
+  },
+
+  // ── Hepatobiliary ──
+  liver_surgery: {
+    durationHours: "3-6 hours",
+    recoveryDays: 60,
+    relatedDepartment: "general surgery",
+    procedure: "Liver Surgery",
+  },
+
+  // ── Neurosurgery ──
+  craniotomy: {
+    durationHours: "3-8 hours",
+    recoveryDays: 60,
+    relatedDepartment: "neurology",
+    procedure: "Craniotomy",
+  },
+
+  // ── Oncology ──
+  mastectomy: {
+    durationHours: "2-4 hours",
+    recoveryDays: 42,
+    relatedDepartment: "oncology",
+    procedure: "Mastectomy",
+  },
+  tumor_removal: {
+    durationHours: "2-6 hours",
+    recoveryDays: 42,
+    relatedDepartment: "oncology",
+    procedure: "Tumor Removal",
+  },
+  lung_surgery: {
+    durationHours: "3-6 hours",
+    recoveryDays: 56,
+    relatedDepartment: "pulmonology",
+    procedure: "Lung Surgery",
+  },
+  thyroidectomy: {
+    durationHours: "2-3 hours",
+    recoveryDays: 21,
+    relatedDepartment: "general surgery",
+    procedure: "Thyroidectomy",
+  },
+  pancreatectomy: {
+    durationHours: "4-8 hours",
+    recoveryDays: 60,
+    relatedDepartment: "general surgery",
+    procedure: "Pancreatectomy",
+  },
+
+  // ── Eye ──
+  cataract: {
+    durationHours: "30-45 min",
+    recoveryDays: 7,
+    relatedDepartment: "ophthalmology",
+    procedure: "Cataract Surgery",
+  },
+
+  // ── OB/GYN ──
+  cesarean_section: {
+    durationHours: "1-2 hours",
+    recoveryDays: 42,
+    relatedDepartment: "obstetrics",
+    procedure: "Cesarean Section",
+  },
+  hysterectomy: {
+    durationHours: "2-4 hours",
+    recoveryDays: 42,
+    relatedDepartment: "gynecology",
+    procedure: "Hysterectomy",
+  },
+
+  // ── ENT ──
+  tonsillectomy: {
+    durationHours: "30-60 min",
+    recoveryDays: 14,
+    relatedDepartment: "ent",
+    procedure: "Tonsillectomy",
+  },
+
+  // ── Other ──
   ct_scan_and_medication: {
     durationHours: "1-2 hours",
     recoveryDays: 30,
     relatedDepartment: "neurology",
     procedure: "CT Scan and Medication",
+  },
+  laparoscopy: {
+    durationHours: "1-3 hours",
+    recoveryDays: 14,
+    relatedDepartment: "general surgery",
+    procedure: "Laparoscopic Surgery",
   },
 };
 

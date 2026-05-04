@@ -2,20 +2,20 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { FormEvent } from "react";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight, Sparkles, ShieldCheck } from "lucide-react";
 import { Card, CardHeader } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/helpers/cn";
 import { getToken } from "@/lib/auth";
 import { AssistantMessage, type AssistantChatMessage } from "@/modules/patient/surgery/AssistantMessage";
+import type { AssistantIntentType } from "@/types/api";
 
 type AssistantApiResponse = {
+  intent?: AssistantIntentType;
   message?: string;
   data?: unknown;
-  structuredData?: unknown;
-  result?: unknown;
-  intent?: string;
-  type?: string;
+  confidence?: number;
+  suggestions?: string[];
 };
 
 function createMessageId(): string {
@@ -37,6 +37,13 @@ async function parseAssistantResponse(response: Response): Promise<AssistantApiR
   }
 }
 
+const QUICK_PROMPTS = [
+  "What is the price for cataract surgery?",
+  "Tell me about dengue",
+  "Are beds available?",
+  "I want to book an appointment",
+];
+
 export function AssistantChat() {
   const [messages, setMessages] = useState<AssistantChatMessage[]>([]);
   const [input, setInput] = useState("");
@@ -47,8 +54,8 @@ export function AssistantChat() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
   }, [messages]);
 
-  const sendMessage = async () => {
-    const trimmedInput = input.trim();
+  const sendMessage = async (overrideMessage?: string) => {
+    const trimmedInput = (overrideMessage ?? input).trim();
     if (!trimmedInput || isSending) return;
 
     const loadingId = createMessageId();
@@ -57,9 +64,9 @@ export function AssistantChat() {
     setMessages((currentMessages) => [
       ...currentMessages,
       { id: createMessageId(), role: "user", content: trimmedInput },
-      { id: loadingId, role: "assistant", content: "Thinking...", status: "loading" },
+      { id: loadingId, role: "assistant", content: "Analyzing your query...", status: "loading" },
     ]);
-    setInput("");
+    if (!overrideMessage) setInput("");
     setIsSending(true);
 
     try {
@@ -79,7 +86,7 @@ export function AssistantChat() {
       }
 
       const payload = await parseAssistantResponse(response);
-      const structuredData = payload.data ?? payload.structuredData ?? payload.result ?? null;
+      const structuredData = payload.data ?? null;
       const reply = payload.message ?? "Here is what I found.";
 
       setMessages((currentMessages) =>
@@ -91,6 +98,9 @@ export function AssistantChat() {
                 content: reply,
                 structuredData,
                 status: "done",
+                intent: payload.intent,
+                confidence: payload.confidence,
+                suggestions: payload.suggestions,
               }
             : message
         )
@@ -118,16 +128,20 @@ export function AssistantChat() {
     await sendMessage();
   };
 
+  const handleSuggestionClick = (suggestion: string) => {
+    void sendMessage(suggestion);
+  };
+
   return (
     <Card className="overflow-hidden">
       <div className="flex min-h-[36rem] flex-col">
         <CardHeader
           title="AI Assistant"
-          description="Ask about price, wait time, or bed availability. The assistant uses backend logic only."
+          description="Ask about surgery planning, disease info, pricing, bed availability, or appointments."
           action={
             <div className="inline-flex items-center gap-2 rounded-full border border-emerald-100 bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700">
-              <Sparkles className="h-3.5 w-3.5" />
-              API powered
+              <ShieldCheck className="h-3.5 w-3.5" />
+              Validated
             </div>
           }
           className="mb-0 border-b border-border px-6 py-5"
@@ -139,13 +153,17 @@ export function AssistantChat() {
               <div className="max-w-md space-y-3">
                 <p className="text-base font-semibold text-slate-900">Start a conversation</p>
                 <p className="text-sm leading-6 text-muted">
-                  Ask a question about surgery cost, expected wait time, or current bed availability. Results will appear here in a clean, structured format.
+                  Ask about surgery planning, disease info, pricing, bed availability, or appointments. All responses are validated — no hallucination.
                 </p>
-                <div className="flex flex-wrap justify-center gap-2 pt-2 text-xs text-muted">
-                  {["What is the price for cataract surgery?", "How long is the wait time?", "Do you have free beds?"].map((chip) => (
-                    <span key={chip} className="rounded-full border border-slate-200 bg-white px-3 py-1.5 shadow-sm">
+                <div className="flex flex-wrap justify-center gap-2 pt-2">
+                  {QUICK_PROMPTS.map((chip) => (
+                    <button
+                      key={chip}
+                      onClick={() => handleSuggestionClick(chip)}
+                      className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs text-slate-600 shadow-sm transition-all hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-700 active:scale-95"
+                    >
                       {chip}
-                    </span>
+                    </button>
                   ))}
                 </div>
               </div>
@@ -153,7 +171,11 @@ export function AssistantChat() {
           ) : (
             <div className="space-y-4">
               {messages.map((message) => (
-                <AssistantMessage key={message.id} message={message} />
+                <AssistantMessage
+                  key={message.id}
+                  message={message}
+                  onSuggestionClick={handleSuggestionClick}
+                />
               ))}
             </div>
           )}
@@ -175,7 +197,7 @@ export function AssistantChat() {
                   void sendMessage();
                 }
               }}
-              placeholder="Ask about price, wait time, or bed availability..."
+              placeholder="Ask about surgery, diseases, pricing, beds, or appointments..."
               rows={2}
               className={cn(
                 "min-h-12 flex-1 resize-none rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100",

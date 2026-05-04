@@ -379,11 +379,21 @@ export interface AssistantRequest {
   message: string;
 }
 
+export type AssistantIntentType =
+  | "surgery_plan"
+  | "disease_info"
+  | "price_estimate"
+  | "bed_availability"
+  | "wait_time"
+  | "appointment_booking"
+  | "clarification"
+  | "unknown";
+
 export interface AssistantResponse {
-  intent: "surgery-plan" | "price" | "wait-time" | "bed" | "disease" | "recommendations" | "unknown";
+  intent: AssistantIntentType;
   message: string;
-  data: Record<string, unknown>;
+  data: Record<string, unknown> | null;
+  confidence: number;
   suggestions: string[];
-  type?: "price" | "wait-time" | "bed" | "general";
 }
 
