@@ -1,5 +1,5 @@
-import app from './src/app';
-import prisma from './src/lib/prisma';
+import app from './src/app.js';
+import prisma from './src/lib/prisma.js';
 
 const startServer = async () => {
     try {

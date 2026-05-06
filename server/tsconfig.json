@@ -4,7 +4,7 @@
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "outDir": "dist",
-    "rootDir": "src",
+    "rootDir": ".",
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "strict": true,
@@ -12,6 +12,6 @@
     "types": ["node"],
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts"],
+  "include": ["server.ts", "src/**/*.ts", "src/**/*.d.ts", "generated/prisma/**/*.ts"],
   "exclude": ["node_modules", "dist"]
 }
