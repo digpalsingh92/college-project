@@ -13,51 +13,59 @@ const SURGERY_META: Record<
   knee_replacement: {
     durationHours: "2-3 hours",
     recoveryDays: 42,
-    relatedDepartment: "orthopedics",
+    relatedDepartment: "Orthopedic Surgery",
     procedure: "Knee Replacement",
   },
   cataract: {
     durationHours: "30-45 min",
     recoveryDays: 7,
-    relatedDepartment: "ophthalmology",
+    relatedDepartment: "General Surgery",
     procedure: "Cataract Surgery",
   },
   appendectomy: {
     durationHours: "1-2 hours",
     recoveryDays: 14,
-    relatedDepartment: "general surgery",
+    relatedDepartment: "General Surgery",
     procedure: "Appendectomy",
   },
   hip_replacement: {
     durationHours: "2-4 hours",
     recoveryDays: 56,
-    relatedDepartment: "orthopedics",
+    relatedDepartment: "Orthopedic Surgery",
     procedure: "Hip Replacement",
   },
   hernia_repair: {
     durationHours: "1-2 hours",
     recoveryDays: 21,
-    relatedDepartment: "general surgery",
+    relatedDepartment: "General Surgery",
     procedure: "Hernia Repair",
   },
   cardiac_bypass: {
     durationHours: "4-6 hours",
     recoveryDays: 84,
-    relatedDepartment: "cardiac surgery",
+    relatedDepartment: "Cardiac Surgery",
     procedure: "Cardiac Bypass",
   },
   angioplasty: {
     durationHours: "1-3 hours",
     recoveryDays: 14,
-    relatedDepartment: "cardiac surgery",
+    relatedDepartment: "Cardiac Surgery",
     procedure: "Angioplasty",
   },
   ct_scan_and_medication: {
     durationHours: "1-2 hours",
     recoveryDays: 30,
-    relatedDepartment: "neurology",
+    relatedDepartment: "Neurology",
     procedure: "CT Scan and Medication",
   },
+};
+
+const PRICE_PROCEDURE_MAP: Record<string, string> = {
+  knee_replacement: "MAJOR JOINT REPLACEMENT OR REATTACHMENT OF LOWER EXTREMITY W/O MCC",
+  hip_replacement: "HIP & FEMUR PROCEDURES EXCEPT MAJOR JOINT W/O CC/MCC",
+  appendectomy: "Appendectomy",
+  cardiac_bypass: "Cardiac Catheterization",
+  angioplasty: "Angioplasty",
 };
 
 const DEFAULT_META = {
@@ -74,9 +82,10 @@ export const planSurgery = async (input: {
 }): Promise<SurgeryPlanResult> => {
   const key = input.surgeryType.toLowerCase().replace(/[\s-]+/g, "_");
   const meta = SURGERY_META[key] ?? { ...DEFAULT_META, procedure: input.surgeryType };
+  const priceProcedure = PRICE_PROCEDURE_MAP[key] ?? meta.procedure;
 
   // Get price estimation
-  const price = await estimatePrice({ procedure: meta.procedure });
+  const price = await estimatePrice({ procedure: priceProcedure });
 
   // Get bed availability for related department
   const bed = await estimateBedAvailability({ department: meta.relatedDepartment });

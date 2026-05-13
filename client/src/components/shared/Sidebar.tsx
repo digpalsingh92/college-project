@@ -39,8 +39,6 @@ const navByRole: Record<UserRole, NavItem[]> = {
     { href: "/admin/assistant", label: "Assistant", icon: MessageSquareHeart },
     { href: "/admin/ai-models", label: "AI Models", icon: Brain },
     { href: "/admin/beds", label: "Beds", icon: Bed },
-    { href: "/admin/ots", label: "Operation Theaters", icon: Activity },
-    { href: "/admin/labs", label: "Labs", icon: TestTube },
     { href: "/admin/machines", label: "Machines", icon: Cpu },
   ],
   doctor: [

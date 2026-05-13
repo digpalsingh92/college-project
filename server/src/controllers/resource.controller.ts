@@ -53,32 +53,47 @@ const toResponseItem = (resource: {
 
 export const getResources = async (req: Request, res: Response) => {
 	try {
-        const { category, search } = req.query;
+		const { category, search } = req.query;
 
-				const parsedCategory = normalizeCategory(category);
-				const searchText = typeof search === 'string' ? search : undefined;
+		const page = Math.max(1, Number(req.query.page) || 1);
+		const limit = Math.min(100, Math.max(1, Number(req.query.limit) || 10));
+		const skip = (page - 1) * limit;
 
-		const resources = await prisma.resource.findMany({
-						where: {
-							...(parsedCategory ? { resourceType: { category: parsedCategory } } : {}),
-							...(searchText
-								? {
-										resourceType: {
-											...(parsedCategory ? { category: parsedCategory } : {}),
-											name: { contains: searchText, mode: 'insensitive' },
-										},
-									}
-								: {}),
+		const parsedCategory = normalizeCategory(category);
+		const searchText = typeof search === 'string' ? search : undefined;
+
+		const where = {
+			...(parsedCategory ? { resourceType: { category: parsedCategory } } : {}),
+			...(searchText
+				? {
+						resourceType: {
+							...(parsedCategory ? { category: parsedCategory } : {}),
+							name: { contains: searchText, mode: 'insensitive' as const },
 						},
-						include: {
-							resourceType: true,
-						},
-						orderBy: { createdAt: 'desc' },
-        });
-		
+					}
+				: {}),
+		};
+
+		const [resources, total] = await Promise.all([
+			prisma.resource.findMany({
+				where,
+				include: { resourceType: true },
+				orderBy: { createdAt: 'desc' },
+				skip,
+				take: limit,
+			}),
+			prisma.resource.count({ where }),
+		]);
+
+		const totalPages = Math.ceil(total / limit);
+
 		res.status(200).json({
 			status: true,
 			data: resources.map(toResponseItem),
+			total,
+			page,
+			totalPages,
+			limit,
 		});
 	} catch (error) {
 		console.error('Error fetching resources:', error);
@@ -224,3 +239,73 @@ export const updateResource = async (req: Request, res: Response) => {
 	}
 };
 
+export const getResourceById = async (req: Request, res: Response) => {
+	try {
+		const { id } = req.params;
+		const resourceId = Array.isArray(id) ? id[0] : id;
+
+		const resource = await prisma.resource.findUnique({
+			where: { id: resourceId },
+			include: { resourceType: true },
+		});
+
+		if (!resource) {
+			throw new AppError('Resource not found', 404);
+		}
+
+		res.status(200).json({
+			status: true,
+			data: toResponseItem(resource as any),
+		});
+	} catch (error) {
+		if (error instanceof AppError) {
+			res.status(error.statusCode).json({ status: false, message: error.message });
+			return;
+		}
+		console.error('Error fetching resource:', error);
+		res.status(500).json({ status: false, message: 'Internal server error' });
+	}
+};
+
+export const deleteResource = async (req: Request, res: Response) => {
+	try {
+		const { id } = req.params;
+		const resourceId = Array.isArray(id) ? id[0] : id;
+
+		const existing = await prisma.resource.findUnique({
+			where: { id: resourceId },
+		});
+
+		if (!existing) {
+			throw new AppError('Resource not found', 404);
+		}
+
+		await prisma.resource.delete({
+			where: { id: resourceId },
+		});
+
+		// Check if any other resources reference the same ResourceType
+		const siblingCount = await prisma.resource.count({
+			where: { resourceTypeId: existing.resourceTypeId },
+		});
+
+		// If no more resources use this type, clean it up
+		if (siblingCount === 0) {
+			await prisma.resourceType.delete({
+				where: { id: existing.resourceTypeId },
+			});
+		}
+
+		res.status(200).json({
+			status: true,
+			message: 'Resource deleted successfully',
+		});
+	} catch (error) {
+		if (error instanceof AppError) {
+			res.status(error.statusCode).json({ status: false, message: error.message });
+			return;
+		}
+		console.error('Error deleting resource:', error);
+		res.status(500).json({ status: false, message: 'Internal server error' });
+	}
+};

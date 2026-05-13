@@ -32,7 +32,7 @@ export const noShowPredictionSchema = z.object({
 
 export const surgeryPlanSchema = z.object({
   surgeryType: z.string().trim().min(1),
-  patientAge: z.number().int().min(0).max(120),
+  patientAge: z.number().int().min(0).max(120).optional().default(45),
   conditions: z.array(z.string()).optional(),
 });
 

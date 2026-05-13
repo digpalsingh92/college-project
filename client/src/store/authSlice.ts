@@ -30,6 +30,7 @@ export function mapAuthUserDto(dto: AuthUserDto): AuthUser {
     name: dto.name,
     email: dto.email,
     role: dto.role as AuthUser["role"],
+    age: dto.age ?? undefined,
     doctorProfile: dto.doctorProfile,
   };
 }
