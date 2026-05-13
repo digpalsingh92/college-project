@@ -14,6 +14,7 @@ export interface AuthUserDto {
   email: string;
   role: Exclude<ApiRole, "admin"> | ApiRole;
   createdAt: string;
+  age?: number | null;
   doctorProfile?: DoctorProfileDto;
 }
 
@@ -95,6 +96,7 @@ export interface CreateAppointmentRequest {
   date: string;
   startTime: string;
   endTime: string;
+  patientAge?: number;
   remarks?: string;
 }
 
@@ -106,6 +108,7 @@ export interface AppointmentDto {
   date: string;
   startTime: string;
   endTime: string;
+  patientAge?: number | null;
   status: string;
   remarks?: string | null;
   estimatedWaitTime?: number | null;
@@ -380,7 +383,7 @@ export interface AssistantRequest {
 }
 
 export interface AssistantResponse {
-  intent: "surgery-plan" | "price" | "wait-time" | "bed" | "disease" | "recommendations" | "unknown";
+  intent: "emergency" | "surgery-plan" | "price" | "wait-time" | "bed" | "disease" | "recommendations" | "unknown";
   message: string;
   data: Record<string, unknown>;
   suggestions: string[];

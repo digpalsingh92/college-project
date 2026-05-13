@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
-  "trainedAt": "2026-04-25T22:57:45.097Z",
-  "datasetRecords": 120527,
+  "trainedAt": "2026-05-09T20:09:07.710Z",
+  "datasetRecords": 120534,
   "globalNoShowRate": 0.2127,
   "byAgeBucket": {
     "56+": {
@@ -17,7 +17,7 @@
       "noShowRate": 0.2461
     },
     "36-55": {
-      "count": 32471,
+      "count": 32478,
       "noShowRate": 0.2073
     }
   },
@@ -31,12 +31,12 @@
       "noShowRate": 0.1997
     },
     "Female": {
-      "count": 4942,
+      "count": 4946,
       "noShowRate": 0.3308
     },
     "Male": {
-      "count": 5058,
-      "noShowRate": 0.3323
+      "count": 5061,
+      "noShowRate": 0.3325
     }
   },
   "bySmsReceived": {
@@ -45,13 +45,13 @@
       "noShowRate": 0.1775
     },
     "yes": {
-      "count": 40525,
-      "noShowRate": 0.2821
+      "count": 40532,
+      "noShowRate": 0.2822
     }
   },
   "byDaysDiffBucket": {
     "same_day": {
-      "count": 50972,
+      "count": 50979,
       "noShowRate": 0.1101
     },
     "1-3_days": {
@@ -385,8 +385,8 @@
       "noShowRate": 0.3328
     },
     "36-55|Female|yes|same_day": {
-      "count": 629,
-      "noShowRate": 0.3068
+      "count": 633,
+      "noShowRate": 0.3065
     },
     "36-55|Male|no|same_day": {
       "count": 598,
@@ -397,8 +397,8 @@
       "noShowRate": 0.3553
     },
     "36-55|Male|yes|same_day": {
-      "count": 639,
-      "noShowRate": 0.3318
+      "count": 642,
+      "noShowRate": 0.3333
     },
     "19-35|Female|yes|same_day": {
       "count": 538,

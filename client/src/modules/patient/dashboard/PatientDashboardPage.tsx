@@ -35,6 +35,7 @@ export function PatientDashboardPage() {
   const [endTime, setEndTime] = useState("");
   const [patientName, setPatientName] = useState(user?.name ?? "");
   const [patientEmail, setPatientEmail] = useState(user?.email ?? "");
+  const [patientAge, setPatientAge] = useState("");
   const [issue, setIssue] = useState("");
   const [rescheduleFromId, setRescheduleFromId] = useState<string | null>(null);
   const slotRailRef = useRef<HTMLDivElement | null>(null);
@@ -171,6 +172,7 @@ export function PatientDashboardPage() {
         date,
         startTime,
         endTime,
+        patientAge: patientAge ? parseInt(patientAge, 10) : undefined,
         remarks: issue.trim(),
       }).unwrap();
 
@@ -180,6 +182,7 @@ export function PatientDashboardPage() {
       setDate("");
       setStartTime("");
       setEndTime("");
+      setPatientAge("");
       setIssue("");
       setRescheduleFromId(null);
     } catch {
@@ -499,6 +502,15 @@ export function PatientDashboardPage() {
                     onChange={(e) => setPatientEmail(e.target.value)}
                     required
                   />
+                  <Input
+                    type="number"
+                    label="Patient age"
+                    value={patientAge}
+                    onChange={(e) => setPatientAge(e.target.value)}
+                    placeholder="Enter age (optional)"
+                    min="0"
+                    max="120"
+                  />
                   <div className="flex w-full flex-col gap-1.5">
                     <label className="text-sm font-medium text-foreground" htmlFor="patient-issue">
                       Issue patient is facing
@@ -539,6 +551,9 @@ export function PatientDashboardPage() {
                     </p>
                     <p>
                       <span className="font-medium text-slate-900">Email:</span> {patientEmail || "Not provided"}
+                    </p>
+                    <p>
+                      <span className="font-medium text-slate-900">Age:</span> {patientAge || "Not provided"}
                     </p>
                     <p>
                       <span className="font-medium text-slate-900">Issue:</span> {issue || "Not provided"}

@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { apiHandler, ApiHandlerError } from "@/lib/api/apiHandler";
 import { clearAuthCookie } from "@/lib/auth";
 import { logout, mapAuthUserDto, setCredentials } from "@/store/authSlice";
+import { updateContext } from "@/services/assistant/context.service";
 import type {
   AddUnavailabilityRequest,
   AdminAppointmentsQuery,
@@ -122,6 +123,12 @@ export const api = createApi({
               user: mapAuthUserDto(data.user),
             })
           );
+          try {
+            const mapped = mapAuthUserDto(data.user);
+            if (mapped?.id && mapped?.age) {
+              updateContext(mapped.id, { entities: { age: mapped.age } });
+            }
+          } catch {}
         } catch {
           // Expected auth failures are handled by the shared API handler.
         }
@@ -146,6 +153,12 @@ export const api = createApi({
               user: mapAuthUserDto(data.user),
             })
           );
+          try {
+            const mapped = mapAuthUserDto(data.user);
+            if (mapped?.id && mapped?.age) {
+              updateContext(mapped.id, { entities: { age: mapped.age } });
+            }
+          } catch {}
         } catch {
           // Expected auth failures are handled by the shared API handler.
         }
@@ -170,6 +183,12 @@ export const api = createApi({
               user: mapAuthUserDto(data.user),
             })
           );
+          try {
+            const mapped = mapAuthUserDto(data.user);
+            if (mapped?.id && mapped?.age) {
+              updateContext(mapped.id, { entities: { age: mapped.age } });
+            }
+          } catch {}
         } catch {
           // Expected auth failures are handled by the shared API handler.
         }
@@ -193,6 +212,12 @@ export const api = createApi({
               user: mapAuthUserDto(data.user),
             })
           );
+          try {
+            const mapped = mapAuthUserDto(data.user);
+            if (mapped?.id && mapped?.age) {
+              updateContext(mapped.id, { entities: { age: mapped.age } });
+            }
+          } catch {}
         } catch {
           // Expected auth failures are handled by the shared API handler.
         }
@@ -216,6 +241,12 @@ export const api = createApi({
               user: mapAuthUserDto(data.user),
             })
           );
+          try {
+            const mapped = mapAuthUserDto(data.user);
+            if (mapped?.id && mapped?.age) {
+              updateContext(mapped.id, { entities: { age: mapped.age } });
+            }
+          } catch {}
         } catch {
           // Expected auth failures are handled by the shared API handler.
         }
@@ -707,14 +738,14 @@ export const api = createApi({
     }),
 
     getHospitalResources: builder.query<
-      { status: boolean; data: any[] },
-      { category?: string; search?: string }
+      { status: boolean; data: any[]; total: number; page: number; totalPages: number; limit: number },
+      { category?: string; search?: string; page?: number; limit?: number }
     >({
-      async queryFn({ category, search } = {}, api: BaseQueryApi) {
+      async queryFn({ category, search, page = 1, limit = 10 } = {}, api: BaseQueryApi) {
         return runRequest(
-          apiHandler.get<{ status: boolean; data: any[] }>("resources", {
+          apiHandler.get<{ status: boolean; data: any[]; total: number; page: number; totalPages: number; limit: number }>("resources", {
             token: (api.getState() as ApiAuthState).auth.token,
-            params: { category, search },
+            params: { category, search, page, limit },
           }),
           api
         );
@@ -743,6 +774,21 @@ export const api = createApi({
       async queryFn({ id, ...body }, api: BaseQueryApi) {
         return runRequest(
           apiHandler.patch<{ status: boolean; data: any }>(`resources/${id}`, body, {
+            token: (api.getState() as ApiAuthState).auth.token,
+          }),
+          api
+        );
+      },
+      invalidatesTags: ["Resource" as any],
+    }),
+
+    deleteHospitalResource: builder.mutation<
+      { status: boolean; message: string },
+      string
+    >({
+      async queryFn(id, api: BaseQueryApi) {
+        return runRequest(
+          apiHandler.delete<{ status: boolean; message: string }>(`resources/${id}`, {
             token: (api.getState() as ApiAuthState).auth.token,
           }),
           api
@@ -813,5 +859,6 @@ export const {
   useGetHospitalResourcesQuery,
   useCreateHospitalResourceMutation,
   useUpdateHospitalResourceMutation,
+  useDeleteHospitalResourceMutation,
   useTrainDiseaseMutation,
 } = api;

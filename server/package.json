@@ -8,6 +8,7 @@
     "build": "tsc",
     "start": "node dist/server.js",
     "admin:create": "tsx src/scripts/create-admin.ts",
+    "seed:resources": "tsx src/scripts/seed-resources.ts",
     "dataset:wait-time": "tsx src/scripts/generate-wait-time-dataset.ts",
     "ml:train": "tsx src/ml/train.ts",
     "prisma:generate": "prisma generate --schema prisma/schema.prisma",

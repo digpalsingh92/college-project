@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import dynamic from "next/dynamic";
-import { Building2, CalendarDays, ClipboardSignature, Users } from "lucide-react";
+import { CalendarDays, ClipboardSignature, Users, CheckCircle2, XCircle } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import DataTable from "@/components/shared/Table/DataTable";
 import { StatCard } from "@/components/shared/StatCard";
@@ -11,6 +11,7 @@ import {
   useGetDoctorsQuery,
 } from "@/store/apiSlice";
 import { cn } from "@/helpers/cn";
+import { toast } from "sonner";
 
 const AdminChartsPanel = dynamic(
   () => import("./AdminChartsPanel").then((m) => ({ default: m.AdminChartsPanel })),
@@ -20,98 +21,132 @@ const AdminChartsPanel = dynamic(
   }
 );
 
-interface PendingRow {
+interface DoctorRow {
   id: string;
   name: string;
-  type: "clinic" | "doctor";
-  location: string;
-  submitted: string;
+  email: string;
+  specialization: string;
+  createdAt: string;
   actions?: any;
 }
 
-const pendingRows: PendingRow[] = [
-  {
-    id: "1",
-    name: "Riverside Clinic",
-    type: "clinic",
-    location: "Portland, OR",
-    submitted: "Apr 2, 2026",
-  },
-  {
-    id: "2",
-    name: "Dr. Sarah Chen",
-    type: "doctor",
-    location: "Boston, MA",
-    submitted: "Apr 1, 2026",
-  },
-  {
-    id: "3",
-    name: "Northside Health",
-    type: "clinic",
-    location: "Austin, TX",
-    submitted: "Mar 30, 2026",
-  },
-];
+function SpecializationBadge({ specialization }: { specialization?: string }) {
+  const colors: Record<string, { bg: string; text: string }> = {
+    cardiology: { bg: "bg-red-50", text: "text-red-700" },
+    orthopedics: { bg: "bg-orange-50", text: "text-orange-700" },
+    dermatology: { bg: "bg-pink-50", text: "text-pink-700" },
+    neurology: { bg: "bg-purple-50", text: "text-purple-700" },
+    general: { bg: "bg-blue-50", text: "text-blue-700" },
+  };
 
-function TypeBadge({ type }: { type: PendingRow["type"] }) {
+  const spec = specialization?.toLowerCase() || "general";
+  const color = colors[spec] || colors.general;
+
   return (
     <span
       className={cn(
         "inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wide",
-        type === "clinic" ? "bg-blue-50 text-blue-700" : "bg-violet-50 text-violet-700"
+        color.bg,
+        color.text
       )}
     >
-      {type}
+      {specialization || "General"}
     </span>
   );
 }
 
+function formatDate(dateString: string): string {
+  try {
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+  } catch {
+    return dateString;
+  }
+}
+
 export function AdminDashboardPage() {
-  const { data: doctorsData } = useGetDoctorsQuery();
+  const { data: doctorsData, isLoading: doctorsLoading } = useGetDoctorsQuery();
   const { data: appointmentInsights } = useGetAdminAppointmentInsightsQuery();
   const doctorCount = doctorsData?.doctors?.length ?? 0;
 
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
 
-  const filteredPending = pendingRows.filter(
-    (row) => row.name.toLowerCase().includes(search.toLowerCase())
+  // Transform doctor data to table rows
+  const doctors: DoctorRow[] = (doctorsData?.doctors ?? []).map((doc) => ({
+    id: doc.id,
+    name: doc.name,
+    email: doc.email,
+    specialization: doc.doctorProfile?.specialization || "General Medicine",
+    createdAt: doc.createdAt,
+  }));
+
+  const filteredDoctors = doctors.filter(
+    (row) =>
+      row.name.toLowerCase().includes(search.toLowerCase()) ||
+      row.email.toLowerCase().includes(search.toLowerCase()) ||
+      row.specialization.toLowerCase().includes(search.toLowerCase())
   );
 
-  const columns: Array<{ key: keyof PendingRow; label: string; render?: (row: PendingRow) => React.ReactNode }> = [
+  const columns: Array<{ key: keyof DoctorRow; label: string; render?: (row: DoctorRow) => React.ReactNode }> = [
     { key: "name", label: "Name" },
     {
-      key: "type",
-      label: "Type",
-      render: (row) => <TypeBadge type={row.type} />,
+      key: "specialization",
+      label: "Specialization",
+      render: (row) => <SpecializationBadge specialization={row.specialization} />,
     },
-    { key: "location", label: "Location" },
-    { key: "submitted", label: "Date submitted" },
+    { key: "email", label: "Email" },
     {
-      key: "actions",
-      label: "Actions",
-      render: () => (
-        <div className="flex flex-wrap gap-2 justify-center">
-          <Button size="sm" variant="dangerSoft" type="button">
-            Reject
-          </Button>
-          <Button size="sm" variant="successSoft" type="button">
-            Approve
-          </Button>
-        </div>
-      ),
+      key: "createdAt",
+      label: "Registered",
+      render: (row) => <span className="text-sm text-slate-600">{formatDate(row.createdAt)}</span>,
     },
+    // {
+    //   key: "actions",
+    //   label: "Actions",
+    //   render: (row) => (
+    //     <div className="flex flex-wrap gap-2 justify-center">
+    //       <Button
+    //         size="sm"
+    //         variant="successSoft"
+    //         type="button"
+    //         onClick={() => toast.success(`Approved ${row.name}`)}
+    //         className="flex items-center gap-1"
+    //       >
+    //         <CheckCircle2 className="w-4 h-4" />
+    //         Approve
+    //       </Button>
+    //       <Button
+    //         size="sm"
+    //         variant="dangerSoft"
+    //         type="button"
+    //         onClick={() => toast.error(`Rejected ${row.name}`)}
+    //         className="flex items-center gap-1"
+    //       >
+    //         <XCircle className="w-4 h-4" />
+    //         Reject
+    //       </Button>
+    //     </div>
+    //   ),
+    // },
   ];
+
+  const totalPages = Math.ceil(filteredDoctors.length / 10);
+  const paginatedDoctors = filteredDoctors.slice((page - 1) * 10, page * 10);
 
   return (
     <div className="space-y-8">
+      {/* Key Metrics */}
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard
           title="Total doctors"
           value={doctorCount}
-          trend="Live from API"
+          trend="Active in system"
           trendPositive
-          icon={Building2}
+          icon={Users}
           iconClassName="bg-blue-100 text-blue-600"
         />
         <StatCard
@@ -140,14 +175,16 @@ export function AdminDashboardPage() {
 
       <AdminChartsPanel />
 
+      {/* Doctors List */}
       <DataTable
-        title="Pending approvals"
-        data={filteredPending}
+        title={`All Doctors (${doctorCount})`}
+        data={paginatedDoctors}
         columns={columns}
         page={page}
-        totalPages={1}
+        totalPages={Math.max(1, totalPages)}
         onPageChange={setPage}
         onSearch={setSearch}
+        loading={doctorsLoading}
       />
     </div>
   );

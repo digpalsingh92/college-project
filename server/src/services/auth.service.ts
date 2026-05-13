@@ -31,6 +31,7 @@ const buildAuthResponse = (user: {
   name: string;
   email: string;
   role: UserRole;
+  age?: number | null;
   createdAt: Date;
   doctorProfile: {
     specialization: string;
@@ -51,6 +52,7 @@ const buildAuthResponse = (user: {
       name: user.name,
       email: user.email,
       role: user.role,
+      age: user.age ?? undefined,
       createdAt: user.createdAt,
       doctorProfile: user.doctorProfile ?? undefined,
     },

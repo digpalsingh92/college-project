@@ -5,6 +5,7 @@ import TableCard from "./TableCard";
 import TableSearch from "./TableSearch";
 import TablePagination from "./TablePagination";
 import { Button } from "@/components/ui/Button";
+import { cn } from "@/helpers/cn";
 
 type Column<T> = {
   key: keyof T;
@@ -12,11 +13,22 @@ type Column<T> = {
   render?: (row: T) => React.ReactNode;
 };
 
+type ActionVariant = "view" | "status" | "delete" | "default";
+
 type Action<T> = {
   label: string;
   onClick: (row: T) => void;
   disabled?: (row: T) => boolean;
   className?: string;
+  icon?: ReactNode;
+  variant?: ActionVariant;
+};
+
+const actionVariantStyles: Record<ActionVariant, string> = {
+  view: "bg-blue-50 text-blue-700 hover:bg-blue-100 hover:text-blue-800",
+  status: "bg-amber-50 text-amber-700 hover:bg-amber-100 hover:text-amber-800",
+  delete: "bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700",
+  default: "bg-slate-50 text-slate-700 hover:bg-slate-100 hover:text-slate-800",
 };
 
 type Props<T> = {
@@ -123,17 +135,27 @@ export default function DataTable<T>({
 
                   {actions && (
                     <td className="p-3">
-                      <div className="flex flex-wrap justify-center gap-2">
-                      {actions.map((action, idx) => (
-                        <button
-                          key={idx}
-                          onClick={() => action.onClick(row)}
-                          disabled={action.disabled?.(row)}
-                          className={`text-blue-600 hover:underline disabled:cursor-not-allowed disabled:text-slate-400 ${action.className ?? ""}`}
-                        >
-                          {action.label}
-                        </button>
-                      ))}
+                      <div className="flex flex-wrap items-center justify-center gap-1.5">
+                      {actions.map((action, idx) => {
+                        const variant = action.variant ?? "default";
+                        return (
+                          <button
+                            key={idx}
+                            onClick={() => action.onClick(row)}
+                            disabled={action.disabled?.(row)}
+                            title={action.label}
+                            className={cn(
+                              "inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs font-medium transition-all duration-150 cursor-pointer",
+                              "disabled:cursor-not-allowed disabled:opacity-50",
+                              actionVariantStyles[variant],
+                              action.className,
+                            )}
+                          >
+                            {action.icon}
+                            {action.label}
+                          </button>
+                        );
+                      })}
                       </div>
                     </td>
                   )}

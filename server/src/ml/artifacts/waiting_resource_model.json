@@ -1,14 +1,14 @@
 {
   "version": "1.0.0",
-  "trainedAt": "2026-04-25T22:57:35.083Z",
+  "trainedAt": "2026-05-09T20:08:15.315Z",
   "datasetPath": "auto-discovery",
-  "datasetRecords": 10000,
+  "datasetRecords": 10007,
   "waitingTimeModel": {
     "global": {
-      "count": 10000,
-      "avgWaitingMinutes": 56.45,
+      "count": 10007,
+      "avgWaitingMinutes": 56.46,
       "p90WaitingMinutes": 110,
-      "noShowRate": 0.3316,
+      "noShowRate": 0.3317,
       "cancelRate": 0.3336
     },
     "byDepartment": {
@@ -20,11 +20,11 @@
         "cancelRate": 0.337
       },
       "Orthopedics": {
-        "count": 2516,
+        "count": 2517,
         "avgWaitingMinutes": 56.04,
         "p90WaitingMinutes": 109,
-        "noShowRate": 0.3414,
-        "cancelRate": 0.3279
+        "noShowRate": 0.3413,
+        "cancelRate": 0.3282
       },
       "Cardiology": {
         "count": 2441,
@@ -34,11 +34,11 @@
         "cancelRate": 0.3417
       },
       "General Medicine": {
-        "count": 2583,
-        "avgWaitingMinutes": 55.72,
+        "count": 2589,
+        "avgWaitingMinutes": 55.77,
         "p90WaitingMinutes": 110,
-        "noShowRate": 0.3237,
-        "cancelRate": 0.3283
+        "noShowRate": 0.3241,
+        "cancelRate": 0.3279
       }
     },
     "byDepartmentAppointmentType": {
@@ -64,11 +64,11 @@
         "cancelRate": 0.3293
       },
       "Orthopedics|New": {
-        "count": 1262,
-        "avgWaitingMinutes": 56.82,
+        "count": 1263,
+        "avgWaitingMinutes": 56.84,
         "p90WaitingMinutes": 110,
-        "noShowRate": 0.3415,
-        "cancelRate": 0.3265
+        "noShowRate": 0.3413,
+        "cancelRate": 0.327
       },
       "Cardiology|Follow-up": {
         "count": 1198,
@@ -78,11 +78,11 @@
         "cancelRate": 0.3397
       },
       "General Medicine|New": {
-        "count": 1284,
-        "avgWaitingMinutes": 55.25,
+        "count": 1290,
+        "avgWaitingMinutes": 55.35,
         "p90WaitingMinutes": 110,
-        "noShowRate": 0.3326,
-        "cancelRate": 0.3193
+        "noShowRate": 0.3333,
+        "cancelRate": 0.3186
       },
       "General Medicine|Follow-up": {
         "count": 1299,
@@ -311,11 +311,11 @@
         "cancelRate": 0.3438
       },
       "Orthopedics|New|15|Yes": {
-        "count": 28,
-        "avgWaitingMinutes": 72.75,
+        "count": 29,
+        "avgWaitingMinutes": 72.9,
         "p90WaitingMinutes": 82,
-        "noShowRate": 0.3571,
-        "cancelRate": 0.3929
+        "noShowRate": 0.3448,
+        "cancelRate": 0.4138
       },
       "Pediatrics|Follow-up|23|Yes": {
         "count": 19,
@@ -381,11 +381,11 @@
         "cancelRate": 0.4444
       },
       "General Medicine|New|15|Yes": {
-        "count": 40,
-        "avgWaitingMinutes": 71.75,
+        "count": 46,
+        "avgWaitingMinutes": 72.43,
         "p90WaitingMinutes": 84,
-        "noShowRate": 0.25,
-        "cancelRate": 0.3
+        "noShowRate": 0.2826,
+        "cancelRate": 0.2826
       },
       "General Medicine|Follow-up|5|No": {
         "count": 31,
@@ -3073,10 +3073,10 @@
         "riskLevel": "medium"
       },
       "Orthopedics|15": {
-        "observations": 101,
-        "avgWaitingMinutes": 69.44,
-        "noShowRate": 0.3465,
-        "cancelRate": 0.3762,
+        "observations": 102,
+        "avgWaitingMinutes": 69.51,
+        "noShowRate": 0.3431,
+        "cancelRate": 0.3824,
         "recommendedDoctors": 4,
         "recommendedNurses": 6,
         "recommendedFrontDesk": 3,
@@ -3153,10 +3153,10 @@
         "riskLevel": "medium"
       },
       "General Medicine|15": {
-        "observations": 107,
-        "avgWaitingMinutes": 70.64,
-        "noShowRate": 0.3178,
-        "cancelRate": 0.3645,
+        "observations": 113,
+        "avgWaitingMinutes": 70.98,
+        "noShowRate": 0.3274,
+        "cancelRate": 0.354,
         "recommendedDoctors": 4,
         "recommendedNurses": 6,
         "recommendedFrontDesk": 3,

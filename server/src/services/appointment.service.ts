@@ -136,6 +136,7 @@ const formatAppointment = (appointment: {
   date: Date;
   startTime: number;
   endTime: number;
+  patientAge?: number | null;
   status: string;
   remarks: string | null;
   createdAt: Date;
@@ -147,6 +148,7 @@ const formatAppointment = (appointment: {
   date: appointment.date,
   startTime: minutesToLabel(appointment.startTime),
   endTime: minutesToLabel(appointment.endTime),
+  patientAge: appointment.patientAge ?? null,
   status: appointment.status,
   remarks: appointment.remarks,
   createdAt: appointment.createdAt,
@@ -160,6 +162,18 @@ export const createAppointment = async (input: CreateAppointmentPayload) => {
 
   if (!patient || patient.role !== "patient") {
     throw new AppError("Patient account not found", 404);
+  }
+
+  // If the booking provided a patient age, persist to patient profile for future use
+  if (typeof input.patientAge === "number" && input.patientAge > 0) {
+    try {
+      const currentAge = (patient as any).age as number | undefined;
+      if (!currentAge || currentAge !== input.patientAge) {
+        await prisma.user.update({ where: { id: patient.id }, data: { age: input.patientAge } });
+      }
+    } catch (e) {
+      // Non-fatal: if updating age fails, continue with appointment creation
+    }
   }
 
   if (!doctor || doctor.role !== "doctor") {
@@ -255,6 +269,7 @@ export const createAppointment = async (input: CreateAppointmentPayload) => {
       date,
       startTime,
       endTime,
+      patientAge: input.patientAge ?? null,
       status: "booked",
       remarks: input.remarks ?? null,
     },
