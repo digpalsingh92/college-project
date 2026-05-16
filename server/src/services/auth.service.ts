@@ -17,6 +17,7 @@ type AuthResponse = {
     name: string;
     email: string;
     role: UserRole;
+    age?: number;
     createdAt: Date;
     doctorProfile?: {
       specialization: string;
