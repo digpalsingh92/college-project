@@ -15,8 +15,11 @@ export const getDoctorProfileController = async (req: Request, res: Response): P
   res.status(200).json({ doctor });
 };
 
-export const getAllDoctorsController = async (_req: Request, res: Response): Promise<void> => {
-  const doctors = await getAllDoctors();
+export const getAllDoctorsController = async (req: Request, res: Response): Promise<void> => {
+  const search = typeof req.query.search === "string" ? req.query.search : undefined;
+  const specialization = typeof req.query.specialization === "string" ? req.query.specialization : undefined;
+
+  const doctors = await getAllDoctors({ search, specialization });
   res.status(200).json({ doctors });
 };
 

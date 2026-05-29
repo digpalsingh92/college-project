@@ -19,6 +19,7 @@ import {
   Bed,
   TestTube,
   Cpu,
+  X,
 } from "lucide-react";
 import { cn } from "@/helpers/cn";
 import { useAppSelector } from "@/store/hooks";
@@ -111,23 +112,36 @@ export function Sidebar({ role, onNavigate }: SidebarProps) {
   return (
     <aside className="flex h-full w-64 shrink-0 flex-col border-r border-border bg-surface overflow-hidden">
       {/* Brand */}
-      <div className="flex items-center gap-2 border-b border-border px-4 py-5">
-        <div
-          className={cn(
-            "flex h-9 w-9 items-center justify-center rounded-lg text-white",
-            brandBg,
-          )}
-        >
-          <BrandIcon className="h-5 w-5" strokeWidth={2} />
+      <div className="flex items-center justify-between border-b border-border px-4 py-5">
+        <div className="flex items-center gap-2">
+          <div
+            className={cn(
+              "flex h-9 w-9 items-center justify-center rounded-lg text-white",
+              brandBg,
+            )}
+          >
+            <BrandIcon className="h-5 w-5" strokeWidth={2} />
+          </div>
+          <div className="min-w-0">
+            <p className="truncate text-base font-semibold tracking-tight text-foreground">
+              Mediso
+            </p>
+            <p className="truncate text-xs text-muted">
+              {isAdmin ? "Admin console" : `${role} portal`}
+            </p>
+          </div>
         </div>
-        <div className="min-w-0">
-          <p className="truncate text-base font-semibold tracking-tight text-foreground">
-            Mediso
-          </p>
-          <p className="truncate text-xs text-muted">
-            {isAdmin ? "Admin console" : `${role} portal`}
-          </p>
-        </div>
+
+        {onNavigate ? (
+          <button
+            type="button"
+            onClick={onNavigate}
+            className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-50 hover:text-slate-700 lg:hidden"
+            aria-label="Close navigation menu"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        ) : null}
       </div>
 
       {/* Main nav */}

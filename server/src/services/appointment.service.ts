@@ -687,11 +687,6 @@ export const getPredictedSlotsForDoctor = async (
         avgConsultationTimeMinutes
       ) + blockDelay;
 
-      // Apply 30% reduction for Video consultation wait times
-      if (appointmentType === "VIDEO") {
-        estimatedWaitTime = Math.max(0, Math.round(estimatedWaitTime * 0.7));
-      }
-
       predictedSlots.push({
         time: minutesToLabel(slotStart),
         startTime: minutesToLabel(slotStart),

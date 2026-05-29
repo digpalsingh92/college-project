@@ -49,9 +49,39 @@ export const getDoctorProfile = async (userId: string) => {
   return doctor;
 };
 
-export const getAllDoctors = async () => {
+export const getAllDoctors = async (filters?: { search?: string; specialization?: string }) => {
+  const search = filters?.search?.trim();
+  const specialization = filters?.specialization?.trim();
+
+  const where: any = {
+    role: "doctor" as const,
+  };
+
+  const andConditions: any[] = [];
+
+  if (search) {
+    andConditions.push({
+      OR: [
+        { name: { contains: search, mode: "insensitive" as const } },
+        { email: { contains: search, mode: "insensitive" as const } },
+      ],
+    });
+  }
+
+  if (specialization) {
+    andConditions.push({
+      doctorProfile: {
+        specialization: { contains: specialization, mode: "insensitive" as const },
+      },
+    });
+  }
+
+  if (andConditions.length > 0) {
+    where.AND = andConditions;
+  }
+
   return prisma.user.findMany({
-    where: { role: "doctor" },
+    where,
     select: doctorSelect,
     orderBy: { name: "asc" },
   });

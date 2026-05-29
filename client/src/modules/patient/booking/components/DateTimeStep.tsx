@@ -23,8 +23,6 @@ interface DateTimeStepProps {
   loadingSlots: boolean;
   recommendedSlot?: string | null;
   avoidSlot?: string | null;
-  appointmentType: "IN_PERSON" | "VIDEO";
-  setAppointmentType: (type: "IN_PERSON" | "VIDEO") => void;
   onBack: () => void;
   onNext: () => void;
   doctorId: string;
@@ -46,8 +44,6 @@ export function DateTimeStep({
   loadingSlots,
   recommendedSlot,
   avoidSlot,
-  appointmentType,
-  setAppointmentType,
   onBack,
   onNext,
   doctorId,
@@ -336,96 +332,6 @@ export function DateTimeStep({
           </div>
         </div>
 
-      </div>
-
-      {/* Bottom Section: Appointment Type */}
-      <div className="mt-4 mb-6">
-        <h3 className="text-lg font-bold text-slate-900 mb-4 font-headline-sm">Appointment Type</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          
-          {/* In-person card */}
-          <label className="cursor-pointer relative">
-            <input
-              type="radio"
-              name="appointment_type"
-              checked={appointmentType === "IN_PERSON"}
-              onChange={() => setAppointmentType("IN_PERSON")}
-              className="peer sr-only"
-            />
-            <div className={cn(
-              "bg-white rounded-2xl border p-5 flex items-start gap-4 transition-all duration-300 hover:shadow-xs relative",
-              appointmentType === "IN_PERSON"
-                ? "border-primary bg-primary/[0.03] shadow-xs"
-                : "border-slate-200 hover:border-slate-300"
-            )}>
-              <div className={cn(
-                "w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0",
-                appointmentType === "IN_PERSON"
-                  ? "bg-primary/10 text-primary"
-                  : "bg-slate-100 text-slate-500"
-              )}>
-                <MapPin className="h-5 w-5" />
-              </div>
-              <div className="pr-6">
-                <h4 className="text-sm font-bold text-slate-950 font-headline-sm">In-person Consultation</h4>
-                <p className="text-xs font-semibold text-slate-400 mt-1 font-body-md">Visit the doctor at the clinic.</p>
-              </div>
-              
-              <div className={cn(
-                "absolute top-4 right-4 w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all",
-                appointmentType === "IN_PERSON"
-                  ? "border-primary"
-                  : "border-slate-300"
-              )}>
-                {appointmentType === "IN_PERSON" && (
-                  <div className="w-2.5 h-2.5 bg-primary rounded-full animate-scale" />
-                )}
-              </div>
-            </div>
-          </label>
-
-          {/* Video card */}
-          <label className="cursor-pointer relative">
-            <input
-              type="radio"
-              name="appointment_type"
-              checked={appointmentType === "VIDEO"}
-              onChange={() => setAppointmentType("VIDEO")}
-              className="peer sr-only"
-            />
-            <div className={cn(
-              "bg-white rounded-2xl border p-5 flex items-start gap-4 transition-all duration-300 hover:shadow-xs relative",
-              appointmentType === "VIDEO"
-                ? "border-primary bg-primary/[0.03] shadow-xs"
-                : "border-slate-200 hover:border-slate-300"
-            )}>
-              <div className={cn(
-                "w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0",
-                appointmentType === "VIDEO"
-                  ? "bg-primary/10 text-primary"
-                  : "bg-slate-100 text-slate-500"
-              )}>
-                <Video className="h-5 w-5" />
-              </div>
-              <div className="pr-6">
-                <h4 className="text-sm font-bold text-slate-950 font-headline-sm">Video Consultation</h4>
-                <p className="text-xs font-semibold text-slate-400 mt-1 font-body-md">Online meeting via secure link.</p>
-              </div>
-              
-              <div className={cn(
-                "absolute top-4 right-4 w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all",
-                appointmentType === "VIDEO"
-                  ? "border-primary"
-                  : "border-slate-300"
-              )}>
-                {appointmentType === "VIDEO" && (
-                  <div className="w-2.5 h-2.5 bg-primary rounded-full animate-scale" />
-                )}
-              </div>
-            </div>
-          </label>
-
-        </div>
       </div>
 
       {/* Action Bar (Sticky or bottom card) */}

@@ -1,5 +1,5 @@
-import BookingWizard from "@/modules/website/booking/BookingWizard"
+import { DoctorSelectionStep } from "@/modules/website/booking/DoctorSelectionStep";
 
 export default function Page() {
-  return <BookingWizard initialStep={0} />
+  return <DoctorSelectionStep />;
 }

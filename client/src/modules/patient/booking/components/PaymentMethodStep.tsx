@@ -61,11 +61,8 @@ export function PaymentMethodStep({
   onNext,
 }: PaymentMethodStepProps) {
 
-  // Dynamic price calculation
   const docFee = selectedDoctor?.doctorProfile?.consultationFee ?? 500;
-  const platformFee = 50;
-  const taxes = Math.round(docFee * 0.08); // 8% dynamic tax
-  const totalAmount = docFee + platformFee + taxes;
+  const totalAmount = docFee;
 
   const isPaymentValid = () => {
     if (paymentMethod === "CARD") {
@@ -259,26 +256,6 @@ export function PaymentMethodStep({
             </div>
           </div>
 
-          {/* Net Banking Form */}
-          {paymentMethod === "NET_BANKING" && (
-            <div className="px-5 pb-5 pt-2 border-t border-slate-50 animate-slide-down">
-              <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-slate-500 font-label-sm">Select Your Bank</label>
-                <select
-                  value={selectedBank}
-                  onChange={(e) => setSelectedBank(e.target.value)}
-                  className="w-full bg-slate-50/50 border border-slate-200 rounded-lg px-4 py-3 font-body-md text-sm text-slate-800 focus:bg-white focus:border-primary focus:ring-2 focus:ring-primary-container outline-none transition-all font-semibold"
-                >
-                  <option value="" disabled>Choose a bank...</option>
-                  <option value="sbi">State Bank of India</option>
-                  <option value="hdfc">HDFC Bank</option>
-                  <option value="icici">ICICI Bank</option>
-                  <option value="axis">Axis Bank</option>
-                  <option value="kotak">Kotak Mahindra Bank</option>
-                </select>
-              </div>
-            </div>
-          )}
         </div>
 
         {/* Insurance Option */}
@@ -428,14 +405,6 @@ export function PaymentMethodStep({
             <div className="flex justify-between items-center text-xs font-semibold text-slate-400">
               <span>Consultation Fee</span>
               <span className="text-slate-800 font-bold">₹{docFee}</span>
-            </div>
-            <div className="flex justify-between items-center text-xs font-semibold text-slate-400">
-              <span>Platform Fee</span>
-              <span className="text-slate-800 font-bold">₹{platformFee}</span>
-            </div>
-            <div className="flex justify-between items-center text-xs font-semibold text-slate-400">
-              <span>Taxes (GST 8%)</span>
-              <span className="text-slate-800 font-bold">₹{taxes}</span>
             </div>
           </div>
 

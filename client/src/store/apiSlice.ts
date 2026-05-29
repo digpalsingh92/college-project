@@ -253,11 +253,20 @@ export const api = createApi({
       },
     }),
 
-    getDoctors: builder.query<DoctorsListResponse, void>({
-      async queryFn(_arg, api: BaseQueryApi): Promise<ApiResult<DoctorsListResponse>> {
+    getDoctors: builder.query<
+      DoctorsListResponse,
+      { search?: string; specialization?: string } | void
+    >({
+      async queryFn(arg, api: BaseQueryApi): Promise<ApiResult<DoctorsListResponse>> {
+        const params: Record<string, string> = {};
+        if (arg) {
+          if (arg.search) params.search = arg.search;
+          if (arg.specialization) params.specialization = arg.specialization;
+        }
         return runRequest(
           apiHandler.get<DoctorsListResponse>("doctors", {
             token: (api.getState() as any).auth.token,
+            params,
           }),
           api
         );
