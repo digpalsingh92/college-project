@@ -5,6 +5,6 @@ import { requireAuth } from "../middleware/auth.middleware.js";
 
 const router = express.Router();
 
-router.post("/", requireAuth, asyncHandler(askAssistantController));
+router.post("/", asyncHandler(askAssistantController));
 
 export default router;

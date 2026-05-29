@@ -79,7 +79,7 @@ export function AdminChartsPanel() {
           description="This month"
           action={
             <span className="text-right text-sm">
-              <span className="block font-semibold text-foreground">$12,450</span>
+              <span className="block font-semibold text-foreground">₹10,300</span>
               <span className="text-teal-600">+8.1%</span>
             </span>
           }

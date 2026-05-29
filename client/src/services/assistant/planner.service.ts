@@ -326,8 +326,18 @@ export function buildActionPlan(
     default:
       actions.push(buildRecommendationsAction());
       planTrace.push("Unknown intent → falling back to recommendations");
-      break;
-  }
+      }
+
+  // Always include the server-side RAG search as a supplementary action
+  actions.push({
+    key: "rag-context",
+    endpoint: "/api/assistant",
+    method: "POST",
+    body: { message },
+    priority: "supplementary",
+    critical: false,
+    label: "Hospital Records Search",
+  });
 
   planTrace.push(`Total actions planned: ${actions.length} (${actions.filter((a) => a.priority === "primary").length} primary)`);
 

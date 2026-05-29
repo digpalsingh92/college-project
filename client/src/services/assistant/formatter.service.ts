@@ -394,6 +394,10 @@ export function formatResponse(
   const prefix = TONE_PREFIX[plan.tone];
   let message: string;
 
+  // 1. Look for RAG supplementary result first!
+  const ragResult = results.find((r) => r.key === "rag-context" && r.ok);
+  const ragData = ragResult ? (ragResult.data as any) : null;
+
   // Check if all critical actions failed
   const criticalResults = results.filter((r) => r.priority === "primary");
   const allCriticalFailed = criticalResults.length > 0 && criticalResults.every((r) => !r.ok);
@@ -401,7 +405,37 @@ export function formatResponse(
   if (allCriticalFailed) {
     const firstError = criticalResults[0];
     message = formatErrorMessage(intent, firstError?.status ?? 500);
+  } else if (ragData && ragData.message) {
+    // If server RAG is available, use its rich, grounded message as the primary answer!
+    message = `📖 **Based on Hospital Records**\n\n${ragData.message}`;
+
+    // Append retrieved documents as citations for visual excellence and premium feel!
+    if (Array.isArray(ragData.retrievedDocs) && ragData.retrievedDocs.length > 0) {
+      message += "\n\n---\n### Official Records Reference Citations\n";
+      ragData.retrievedDocs.slice(0, 3).forEach((doc: any, idx: number) => {
+        const scorePct = typeof doc.score === "number" ? ` (Match: ${Math.round(doc.score * 100)}%)` : "";
+        message += `\n**[${idx + 1}]** *Source: \`${doc.source}\`*${scorePct}\n> ${doc.content}\n`;
+      });
+    }
+
+    // Also check if we have primary ML prediction data that we can merge as a neat bonus!
+    const primaryOkResult = results.find((r) => r.priority === "primary" && r.ok);
+    const primData = primaryOkResult ? unwrapData(primaryOkResult.data) : null;
+    if (primData) {
+      if (intent === "wait-time" && (primData.waitingDays !== undefined || primData.waitTime !== undefined)) {
+        const wait = primData.waitingDays ?? primData.waitTime;
+        message += `\n\n🤖 **Predictive Model Forecast**: Current queue patterns estimate a wait time of **${wait} days** for this department.`;
+      } else if (intent === "bed" && primData.freeBeds !== undefined) {
+        message += `\n\n🤖 **Live Capacity Sensor**: Real-time status shows **${primData.freeBeds} available beds** in the ward.`;
+      } else if (intent === "disease" && (primData.disease !== undefined || primData.prediction !== undefined)) {
+        const diseaseName = primData.disease ?? primData.prediction;
+        const confidenceVal = primData.confidence ?? primData.probability;
+        const confText = typeof confidenceVal === "number" ? ` (Confidence: ${Math.round(confidenceVal * 100)}%)` : "";
+        message += `\n\n🤖 **Predictive Disease Classifier**: Based on clinical datasets, the most statistically likely disease matching your profile is **${diseaseName}**${confText}.`;
+      }
+    }
   } else {
+    // Standard template-based formatting if RAG didn't return a message
     switch (intent) {
       case "emergency":
         message = formatEmergency(results, entities, reasoning);
@@ -429,10 +463,15 @@ export function formatResponse(
     }
   }
 
+  // Use RAG suggestions if available to make follow-ups highly context-aware
+  const suggestions = (ragData && Array.isArray(ragData.suggestions) && ragData.suggestions.length > 0)
+    ? ragData.suggestions.slice(0, 3)
+    : plan.followUps;
+
   return {
     message: prefix + message,
     sections: [],
-    suggestions: plan.followUps,
+    suggestions,
   };
 }
 

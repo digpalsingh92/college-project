@@ -10,6 +10,7 @@ import { AppError } from './utils/app-error.js';
 import cors from "cors"
 import rateLimit from 'express-rate-limit';
 import cookieParser from 'cookie-parser';
+import { ZodError } from 'zod';
 
 const app = express();
 
@@ -40,6 +41,17 @@ app.use((err: unknown, _req: express.Request, res: express.Response, _next: expr
 			status: false,
 			statusCode: err.statusCode,
 			message: err.message,
+		});
+		return;
+	}
+
+	if (err instanceof ZodError) {
+		const zodErr = err as any;
+		res.status(400).json({
+			status: false,
+			statusCode: 400,
+			message: 'Validation failed: ' + zodErr.errors.map((e: any) => `${e.path.join('.')}: ${e.message}`).join(', '),
+			errors: zodErr.errors,
 		});
 		return;
 	}

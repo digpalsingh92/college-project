@@ -33,12 +33,15 @@ type AssistantRouteResult = {
 
 // ── Backend call execution ──
 
-async function executeBackendCall(action: BackendAction): Promise<BackendResult> {
+async function executeBackendCall(action: BackendAction, authorization?: string): Promise<BackendResult> {
   const url = `${backendUrl}${action.endpoint}`;
   const init: RequestInit = {
     method: action.method,
     cache: "no-store",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      ...(authorization ? { Authorization: authorization } : {}),
+    },
   };
 
   if (action.method === "POST") {
@@ -99,14 +102,14 @@ async function executeBackendCall(action: BackendAction): Promise<BackendResult>
  * Primary actions run sequentially (order matters).
  * Supplementary actions run in parallel for speed.
  */
-async function executeActionPlan(actions: BackendAction[]): Promise<BackendResult[]> {
+async function executeActionPlan(actions: BackendAction[], authorization?: string): Promise<BackendResult[]> {
   const primaryActions = actions.filter((a) => a.priority === "primary");
   const supplementaryActions = actions.filter((a) => a.priority === "supplementary");
 
   // Execute primary actions sequentially
   const results: BackendResult[] = [];
   for (const action of primaryActions) {
-    const result = await executeBackendCall(action);
+    const result = await executeBackendCall(action, authorization);
     results.push(result);
 
     // If a critical action fails, don't bother with supplementary
@@ -118,7 +121,7 @@ async function executeActionPlan(actions: BackendAction[]): Promise<BackendResul
   // Execute supplementary actions in parallel (best-effort)
   if (supplementaryActions.length > 0) {
     const supplementaryResults = await Promise.allSettled(
-      supplementaryActions.map((a) => executeBackendCall(a))
+      supplementaryActions.map((a) => executeBackendCall(a, authorization))
     );
 
     for (const settled of supplementaryResults) {
@@ -222,7 +225,7 @@ export async function routeAssistantRequest(input: ParsedAssistantRequest): Prom
     let results: BackendResult[];
 
     if (plan.actions.length > 0) {
-      results = await executeActionPlan(plan.actions);
+      results = await executeActionPlan(plan.actions, input.authorization);
     } else {
       // Fallback: no actions planned → recommendations
       const fallback = await callRecommendationsFallback(input.authorization);
@@ -250,11 +253,14 @@ export async function routeAssistantRequest(input: ParsedAssistantRequest): Prom
     // Persist context after successful processing
     updateContext(input.userId, { lastIntent: effectiveIntent, entities });
 
-    // Assemble the primary result data for structured UI cards
+    // Assemble the primary result data for structured UI cards (prefer RAG grounded data if available)
+    const ragResult = results.find((r) => r.key === "rag-context" && r.ok);
+    const ragData = ragResult ? (ragResult.data as any) : null;
+
     const primaryResult = results.find((r) => r.priority === "primary" && r.ok);
-    const responseData = primaryResult
-      ? unwrapResponseData(primaryResult.data)
-      : null;
+    const responseData = (ragData && ragData.data && Object.keys(ragData.data).length > 0)
+      ? ragData.data
+      : (primaryResult ? unwrapResponseData(primaryResult.data) : null);
 
     return {
       status: 200,

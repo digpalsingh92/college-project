@@ -185,7 +185,7 @@ export function AdminResourcePage({
       label: "Base Price",
       render: (row: ResourceRow) => (
         <span className="tabular-nums font-medium text-slate-700">
-          ${row.basePrice.toLocaleString()}
+          ₹{row.basePrice.toLocaleString("en-IN")}
         </span>
       ),
     },
@@ -388,7 +388,7 @@ export function AdminResourcePage({
           />
           <Input
             id="resource-price"
-            label="Base Price ($)"
+            label="Base Price (₹)"
             type="number"
             placeholder="e.g. 2500"
             min={0}
@@ -465,7 +465,7 @@ export function AdminResourcePage({
               <DetailItem label="Category" value={selectedResource.category} />
               <DetailItem
                 label="Base Price"
-                value={`$${selectedResource.basePrice.toLocaleString()}`}
+                value={`₹${selectedResource.basePrice.toLocaleString("en-IN")}`}
               />
               <DetailItem
                 label="Status"

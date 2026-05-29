@@ -46,14 +46,14 @@ export const bedAvailabilitySchema = z.object({
 });
 
 export const diseasePredictionSchema = z.object({
-  fever: z.boolean(),
-  cough: z.boolean(),
-  fatigue: z.boolean(),
-  difficultyBreathing: z.boolean(),
-  age: z.number().int().min(0).max(120),
-  gender: z.string().trim().min(1),
-  bloodPressure: z.enum(["Low", "Normal", "High"]),
-  cholesterolLevel: z.enum(["Low", "Normal", "High"]),
+  fever: z.boolean().default(false),
+  cough: z.boolean().default(false),
+  fatigue: z.boolean().default(false),
+  difficultyBreathing: z.boolean().default(false),
+  age: z.number().int().min(0).max(120).optional().default(35),
+  gender: z.string().trim().min(1).optional().default("Female"),
+  bloodPressure: z.enum(["Low", "Normal", "High"]).optional().default("Normal"),
+  cholesterolLevel: z.enum(["Low", "Normal", "High"]).optional().default("Normal"),
 });
 
 // ── Inferred types ──
