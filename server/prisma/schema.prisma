@@ -97,6 +97,13 @@ model Appointment {
   status     AppointmentStatus @default(booked)
   remarks    String?
 
+  // Payment fields
+  paymentStatus     String    @default("PENDING") // PENDING, PAID, FAILED, INSURANCE_CLAIMED
+  paymentMethod     String?   // CARD, UPI, INSURANCE
+  amountPaid        Float     @default(0.0)
+  insuranceProvider String?
+  insurancePolicy   String?
+
   createdAt DateTime @default(now())
 
   patient User @relation("PatientAppointments", fields: [patientId], references: [id])

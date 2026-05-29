@@ -12,9 +12,12 @@ import {
   XAxis,
 } from "recharts";
 import { Card, CardHeader } from "@/components/ui/Card";
+import { useGetAdminAppointmentInsightsQuery } from "@/store/apiSlice";
 
 export function AdminChartsPanel() {
-  const appointmentTrend = useMemo(
+  const { data: insights } = useGetAdminAppointmentInsightsQuery();
+
+  const fallbackAppointmentTrend = useMemo(
     () =>
       [3, 5, 8, 12, 10, 14, 18, 16, 20, 22, 19, 24, 28, 26, 30, 27, 32, 35, 31, 29, 33, 36, 34, 38, 40, 37, 42, 45, 43, 48].map(
         (v, i) => ({ day: String(i + 1), appointments: v })
@@ -22,7 +25,7 @@ export function AdminChartsPanel() {
     []
   );
 
-  const revenueBars = useMemo(
+  const fallbackRevenueBars = useMemo(
     () =>
       ["Jan", "Feb", "Mar", "Apr", "May", "Jun"].map((m, i) => ({
         month: m,
@@ -30,6 +33,12 @@ export function AdminChartsPanel() {
       })),
     []
   );
+
+  const appointmentTrend = insights?.appointmentTrend ?? fallbackAppointmentTrend;
+  const revenueBars = insights?.revenueBars ?? fallbackRevenueBars;
+  const commissionRevenueFormatted = insights?.commissionRevenue !== undefined
+    ? `₹${insights.commissionRevenue.toLocaleString()}`
+    : "₹10,300";
 
   return (
     <div className="grid gap-6 lg:grid-cols-3">
@@ -79,7 +88,7 @@ export function AdminChartsPanel() {
           description="This month"
           action={
             <span className="text-right text-sm">
-              <span className="block font-semibold text-foreground">₹10,300</span>
+              <span className="block font-semibold text-foreground">{commissionRevenueFormatted}</span>
               <span className="text-teal-600">+8.1%</span>
             </span>
           }

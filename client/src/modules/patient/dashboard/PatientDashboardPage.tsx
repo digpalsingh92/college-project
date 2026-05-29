@@ -1,20 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useRef, useState } from "react";
-import { CalendarCheck, CheckCircle2, ChevronLeft, ChevronRight, Stethoscope } from "lucide-react";
+import { useMemo } from "react";
+import { CalendarCheck, Stethoscope, PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Card, CardHeader } from "@/components/ui/Card";
-import { Input } from "@/components/ui/Input";
 import { Table } from "@/components/ui/Table";
-import { SlotCard } from "@/components/SlotCard";
 import { TableColumn } from "@/types";
-import type { AppointmentDto, AppointmentSlotsResponse, DoctorListItem } from "@/types/api";
+import type { AppointmentDto } from "@/types/api";
 import {
   useCancelAppointmentMutation,
-  useCreateAppointmentMutation,
-  useGetDoctorsQuery,
-  useGetAppointmentSlotsQuery,
   useGetPatientAppointmentsQuery,
 } from "@/store/apiSlice";
 import { cn } from "@/helpers/cn";
@@ -22,42 +17,8 @@ import { useAuth } from "@/hooks/useAuth";
 
 export function PatientDashboardPage() {
   const { user } = useAuth();
-  const { data: doctorsData, isLoading: doctorsLoading } = useGetDoctorsQuery();
   const { data: appts, isLoading: apptsLoading } = useGetPatientAppointmentsQuery({});
-  const [createAppointment, { isLoading: creating }] = useCreateAppointmentMutation();
   const [cancelAppointment, { isLoading: cancelling }] = useCancelAppointmentMutation();
-
-  const [showAppointmentFlow, setShowAppointmentFlow] = useState(false);
-  const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
-  const [doctorId, setDoctorId] = useState("");
-  const [date, setDate] = useState("");
-  const [startTime, setStartTime] = useState("");
-  const [endTime, setEndTime] = useState("");
-  const [patientName, setPatientName] = useState(user?.name ?? "");
-  const [patientEmail, setPatientEmail] = useState(user?.email ?? "");
-  const [patientAge, setPatientAge] = useState("");
-  const [issue, setIssue] = useState("");
-  const [rescheduleFromId, setRescheduleFromId] = useState<string | null>(null);
-  const slotRailRef = useRef<HTMLDivElement | null>(null);
-
-  const { data: slotPredictions, isFetching: loadingSlots } = useGetAppointmentSlotsQuery(
-    {
-      doctorId,
-      date,
-    },
-    {
-      skip: !doctorId || !date,
-    }
-  );
-
-  const slots = (slotPredictions?.slots ?? []) as AppointmentSlotsResponse["slots"];
-
-  const selectedDoctor = (doctorsData?.doctors ?? []).find((d: DoctorListItem) => d.id === doctorId) ?? null;
-
-  const isStep1Complete = Boolean(doctorId);
-  const isStep2Complete = Boolean(date && startTime && endTime);
-  const isStep3Complete = Boolean(patientName.trim() && patientEmail.trim() && issue.trim());
-  const canSubmit = isStep1Complete && isStep2Complete && isStep3Complete;
 
   const upcomingAppointment = useMemo(() => {
     const now = Date.now();
@@ -124,33 +85,19 @@ export function PatientDashboardPage() {
               onClick={async () => {
                 try {
                   await cancelAppointment(row.id).unwrap();
-                  if (rescheduleFromId === row.id) {
-                    setRescheduleFromId(null);
-                  }
                 } catch {
-                  /* toast via API layer */
+                  /* handled by API layer error toaster */
                 }
               }}
             >
               Cancel
             </Button>
-            <Button
-              size="sm"
-              variant="outline"
-              type="button"
-              onClick={() => {
-                setShowAppointmentFlow(true);
-                setStep(1);
-                setRescheduleFromId(row.id);
-                setDoctorId(row.doctorId);
-                setDate("");
-                setStartTime("");
-                setEndTime("");
-                setIssue("");
-              }}
+            <Link
+              href="/patient/booking-appointment"
+              className="inline-flex h-8 items-center justify-center rounded-md border border-slate-200 bg-white px-3 text-xs font-medium text-slate-800 transition-colors hover:bg-slate-50"
             >
               Reschedule
-            </Button>
+            </Link>
           </div>
         ) : (
           <span className="text-muted">—</span>
@@ -158,70 +105,22 @@ export function PatientDashboardPage() {
     },
   ];
 
-  async function handleBook(event: React.FormEvent) {
-    event.preventDefault();
-    if (!canSubmit) return;
-
-    try {
-      if (rescheduleFromId) {
-        await cancelAppointment(rescheduleFromId).unwrap();
-      }
-
-      await createAppointment({
-        doctorId,
-        date,
-        startTime,
-        endTime,
-        patientAge: patientAge ? parseInt(patientAge, 10) : undefined,
-        remarks: issue.trim(),
-      }).unwrap();
-
-      setShowAppointmentFlow(false);
-      setStep(1);
-      setDoctorId("");
-      setDate("");
-      setStartTime("");
-      setEndTime("");
-      setPatientAge("");
-      setIssue("");
-      setRescheduleFromId(null);
-    } catch {
-      /* toast via API layer */
-    }
-  }
-
-  function nextStep() {
-    if (step === 1 && !isStep1Complete) return;
-    if (step === 2 && !isStep2Complete) return;
-    if (step === 3 && !isStep3Complete) return;
-    setStep((prev) => (prev < 4 ? ((prev + 1) as 1 | 2 | 3 | 4) : prev));
-  }
-
-  function previousStep() {
-    setStep((prev) => (prev > 1 ? ((prev - 1) as 1 | 2 | 3 | 4) : prev));
-  }
-
-  function scrollSlots(direction: "left" | "right") {
-    if (!slotRailRef.current) return;
-    const amount = direction === "left" ? -320 : 320;
-    slotRailRef.current.scrollBy({ left: amount, behavior: "smooth" });
-  }
-
   const booked = appts?.appointments?.filter((a: AppointmentDto) => a.status === "booked").length ?? 0;
 
   return (
     <div className="space-y-8">
+      {/* Header Dashboard Bar */}
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-semibold tracking-tight text-slate-900">Appointments</h2>
-          <p className="mt-1 text-sm text-muted">Book a visit, then jump to AI answers or estimations when needed.</p>
+          <h2 className="text-2xl font-bold tracking-tight text-slate-900">Appointments Dashboard</h2>
+          <p className="mt-1 text-sm text-muted">Track your booking history, active appointments, and schedule consults.</p>
         </div>
-        <div className="flex gap-3">
+        <div className="flex flex-wrap gap-3">
           <Link
             href="/patient/surgery-planner"
             className="inline-flex h-10 items-center justify-center rounded-md border border-slate-200 bg-white px-4 text-sm font-medium text-slate-800 transition-colors hover:bg-slate-50"
           >
-            AI answers
+            AI Answers
           </Link>
           <Link
             href="/patient/surgery-planner"
@@ -232,17 +131,17 @@ export function PatientDashboardPage() {
           <Card className="flex items-center gap-3 border-emerald-100 bg-emerald-50/50 px-4 py-3 shadow-none" padding="none">
             <CalendarCheck className="h-8 w-8 text-emerald-600" strokeWidth={1.75} />
             <div>
-              <p className="text-xs font-medium uppercase tracking-wide text-emerald-800/80">Upcoming</p>
-              <p className="text-lg font-semibold text-emerald-900">{booked} active</p>
+              <p className="text-xs font-medium uppercase tracking-wide text-emerald-800/80">Active</p>
+              <p className="text-lg font-semibold text-emerald-900">{booked} booked</p>
             </div>
           </Card>
           <Card className="flex items-center gap-3 border-slate-200 bg-white px-4 py-3 shadow-none" padding="none">
             <div>
-              <p className="text-xs font-medium uppercase tracking-wide text-slate-600">Next visit</p>
+              <p className="text-xs font-medium uppercase tracking-wide text-slate-600">Next Visit</p>
               <p className="text-sm font-semibold text-slate-900">
                 {upcomingAppointment
                   ? `${new Date(upcomingAppointment.date).toLocaleDateString()} ${upcomingAppointment.startTime}`
-                  : "No upcoming visit"}
+                  : "None scheduled"}
               </p>
               <p className="text-xs text-slate-600">
                 Expected wait: {upcomingAppointment?.estimatedWaitTime ?? 0} mins
@@ -252,376 +151,34 @@ export function PatientDashboardPage() {
         </div>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-2">
-        <Card>
-          <CardHeader title="Find providers" description="Browse doctors accepting appointments" />
-          <div className="max-h-72 space-y-2 overflow-y-auto pr-1">
-            {doctorsLoading ? (
-              <p className="text-sm text-muted">Loading doctors…</p>
-            ) : (
-              (doctorsData?.doctors ?? []).map((d: DoctorListItem) => (
-                <button
-                  key={d.id}
-                  type="button"
-                  onClick={() => {
-                    setDoctorId(d.id);
-                    setDate("");
-                    setStartTime("");
-                    setEndTime("");
-                    setShowAppointmentFlow(true);
-                    setStep(1);
-                  }}
-                  className={cn(
-                    "flex w-full items-center gap-3 rounded-xl border px-3 py-3 text-left transition-colors",
-                    doctorId === d.id
-                      ? "border-emerald-500 bg-emerald-50/60 ring-1 ring-emerald-200"
-                      : "border-slate-200 bg-white hover:border-slate-300"
-                  )}
-                >
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
-                    <Stethoscope className="h-5 w-5" />
-                  </span>
-                  <div className="min-w-0">
-                    <p className="truncate font-medium text-slate-900">{d.name}</p>
-                    <p className="truncate text-sm text-muted">{d.doctorProfile?.specialization ?? "General"}</p>
-                  </div>
-                </button>
-              ))
-            )}
+      {/* Premium Booking CTA Card */}
+      <div className="rounded-2xl bg-linear-to-r from-slate-900 via-slate-850 to-emerald-950 p-8 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
+        <div className="space-y-2 max-w-xl">
+          <div className="inline-flex items-center gap-2 rounded-full bg-emerald-500/20 px-3 py-1 text-xs font-semibold text-emerald-400">
+            <Stethoscope className="h-3.5 w-3.5" /> Direct Doctor Consultation
           </div>
-        </Card>
-
-        <Card>
-          <CardHeader
-            title={rescheduleFromId ? "Reschedule appointment" : "Add appointment"}
-            description={
-              rescheduleFromId
-                ? "Use this multi-step flow to pick a new slot."
-                : "Start a guided multi-step form to schedule your next visit."
-            }
-          />
-          {!showAppointmentFlow ? (
-            <div className="flex flex-col gap-3">
-              <Button
-                type="button"
-                onClick={() => {
-                  setShowAppointmentFlow(true);
-                  setStep(1);
-                  if (!rescheduleFromId) {
-                    setDoctorId("");
-                    setDate("");
-                    setStartTime("");
-                    setEndTime("");
-                    setIssue("");
-                  }
-                }}
-              >
-                Add appointment
-              </Button>
-              <p className="text-sm text-muted">
-                You will complete 4 steps: doctor, date and time, patient details with issue, then confirmation.
-              </p>
-            </div>
-          ) : (
-            <form className="space-y-4" onSubmit={handleBook}>
-              <div className="space-y-3">
-                <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
-                  {[
-                    { id: 1, label: "Doctor" },
-                    { id: 2, label: "Date & Time" },
-                    { id: 3, label: "Patient Details" },
-                    { id: 4, label: "Confirmation" },
-                  ].map((item) => {
-                    const active = step === item.id;
-                    const done = step > item.id;
-                    return (
-                      <button
-                        key={item.id}
-                        type="button"
-                        onClick={() => {
-                          if (item.id < step) {
-                            setStep(item.id as 1 | 2 | 3 | 4);
-                          }
-                        }}
-                        className={cn(
-                          "flex items-center gap-2 rounded-xl border px-3 py-2 text-left transition-all",
-                          done
-                            ? "border-emerald-300 bg-emerald-50 text-emerald-800"
-                            : active
-                              ? "border-emerald-500 bg-emerald-50/80 text-emerald-900 shadow-sm"
-                              : "border-slate-200 bg-white text-slate-500",
-                          item.id < step ? "cursor-pointer hover:border-emerald-400" : "cursor-default"
-                        )}
-                      >
-                        <span
-                          className={cn(
-                            "inline-flex h-6 w-6 items-center justify-center rounded-full text-xs font-semibold",
-                            done
-                              ? "bg-emerald-600 text-white"
-                              : active
-                                ? "bg-emerald-600 text-white"
-                                : "bg-slate-200 text-slate-600"
-                          )}
-                        >
-                          {done ? <CheckCircle2 className="h-4 w-4" /> : item.id}
-                        </span>
-                        <span className="text-xs font-medium uppercase tracking-wide">{item.label}</span>
-                      </button>
-                    );
-                  })}
-                </div>
-                <p className="text-xs font-medium uppercase tracking-wide text-slate-600">Step {step} of 4</p>
-              </div>
-
-              {step === 1 ? (
-                <div className="space-y-4">
-                  <div>
-                    <label className="mb-1 block text-sm font-medium text-slate-800" htmlFor="doctor-select">
-                      Select doctor
-                    </label>
-                    <select
-                      id="doctor-select"
-                      className="h-10 w-full rounded-lg border border-slate-200 bg-white px-3 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
-                      value={doctorId}
-                      onChange={(e) => {
-                        setDoctorId(e.target.value);
-                        setDate("");
-                        setStartTime("");
-                        setEndTime("");
-                      }}
-                      required
-                      disabled={doctorsLoading}
-                    >
-                      <option value="">Select a doctor</option>
-                      {(doctorsData?.doctors ?? []).map((d: DoctorListItem) => (
-                        <option key={d.id} value={d.id}>
-                          {d.name} — {d.doctorProfile?.specialization ?? "Doctor"}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-              ) : null}
-
-              {step === 2 ? (
-                <div className="space-y-4">
-                  <Input
-                    type="date"
-                    label="Select date"
-                    value={date}
-                    onChange={(e) => {
-                      setDate(e.target.value);
-                      setStartTime("");
-                      setEndTime("");
-                    }}
-                    required
-                  />
-                  {startTime && endTime ? (
-                    <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-800">
-                      Selected slot: <span className="font-semibold">{startTime} - {endTime}</span>
-                    </div>
-                  ) : null}
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between gap-2">
-                      <p className="text-sm font-medium text-slate-800">Time slots</p>
-                      <div className="flex items-center gap-2">
-                        <Button type="button" size="sm" variant="outline" onClick={() => scrollSlots("left")}> 
-                          <ChevronLeft className="h-4 w-4" />
-                        </Button>
-                        <Button type="button" size="sm" variant="outline" onClick={() => scrollSlots("right")}> 
-                          <ChevronRight className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </div>
-                    {!doctorId || !date ? (
-                      <p className="text-sm text-muted">Choose doctor and date to load slots.</p>
-                    ) : loadingSlots ? (
-                      <p className="text-sm text-muted">Loading slots…</p>
-                    ) : slots.length === 0 ? (
-                      <p className="text-sm text-muted">No available slots for this date.</p>
-                    ) : (
-                      <>
-                        <div className="flex flex-wrap gap-2">
-                          {slotPredictions?.recommendedSlot ? (
-                            <span className="inline-flex rounded-full bg-emerald-600 px-2 py-1 text-xs font-medium text-white">
-                              Recommended: {slotPredictions.recommendedSlot}
-                            </span>
-                          ) : null}
-                          {slotPredictions?.avoidSlot ? (
-                            <span className="inline-flex rounded-full bg-red-600 px-2 py-1 text-xs font-medium text-white">
-                              Avoid: {slotPredictions.avoidSlot}
-                            </span>
-                          ) : null}
-                        </div>
-                        <div className="relative">
-                          <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-8 bg-linear-to-r from-white to-transparent" />
-                          <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-8 bg-linear-to-l from-white to-transparent" />
-                          <div
-                            ref={slotRailRef}
-                            className="hide-scrollbar flex gap-3 overflow-x-auto pb-2 pt-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-                          >
-                          {slots.map((slot) => {
-                            const selected = slot.startTime === startTime && slot.endTime === endTime;
-                            return (
-                              <div key={`${slot.startTime}-${slot.endTime}`} className="w-60 min-w-60 shrink-0">
-                                <SlotCard
-                                  time={slot.time}
-                                  waitTime={slot.estimatedWaitTime}
-                                  waitLevel={slot.waitLevel}
-                                  isRecommended={slotPredictions?.recommendedSlot === slot.time}
-                                  isAvoid={slotPredictions?.avoidSlot === slot.time}
-                                  selected={selected}
-                                  onSelect={() => {
-                                    setStartTime(slot.startTime);
-                                    setEndTime(slot.endTime);
-                                  }}
-                                />
-                              </div>
-                            );
-                          })}
-                          </div>
-                        </div>
-                      </>
-                    )}
-                  </div>
-                </div>
-              ) : null}
-
-              {step === 3 ? (
-                <div className="space-y-4">
-                  <Input
-                    label="Patient name"
-                    value={patientName}
-                    onChange={(e) => setPatientName(e.target.value)}
-                    required
-                  />
-                  <Input
-                    type="email"
-                    label="Patient email"
-                    value={patientEmail}
-                    onChange={(e) => setPatientEmail(e.target.value)}
-                    required
-                  />
-                  <Input
-                    type="number"
-                    label="Patient age"
-                    value={patientAge}
-                    onChange={(e) => setPatientAge(e.target.value)}
-                    placeholder="Enter age (optional)"
-                    min="0"
-                    max="120"
-                  />
-                  <div className="flex w-full flex-col gap-1.5">
-                    <label className="text-sm font-medium text-foreground" htmlFor="patient-issue">
-                      Issue patient is facing
-                    </label>
-                    <textarea
-                      id="patient-issue"
-                      className="min-h-28 rounded-md border border-slate-200 bg-white px-3 py-2 text-sm outline-none transition-colors focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
-                      value={issue}
-                      onChange={(e) => setIssue(e.target.value)}
-                      placeholder="Briefly describe symptoms or reason for visit"
-                      required
-                    />
-                  </div>
-                </div>
-              ) : null}
-
-              {step === 4 ? (
-                <div className="space-y-3 rounded-lg border border-slate-200 bg-slate-50 p-4">
-                  <p className="text-sm font-semibold text-slate-900">Confirm appointment details</p>
-                  <div className="space-y-1 text-sm text-slate-700">
-                    <p>
-                      <span className="font-medium text-slate-900">Doctor:</span>{" "}
-                      {selectedDoctor?.name ?? "Not selected"}
-                    </p>
-                    <p>
-                      <span className="font-medium text-slate-900">Specialization:</span>{" "}
-                      {selectedDoctor?.doctorProfile?.specialization ?? "General"}
-                    </p>
-                    <p>
-                      <span className="font-medium text-slate-900">Date:</span> {date || "Not selected"}
-                    </p>
-                    <p>
-                      <span className="font-medium text-slate-900">Time:</span>{" "}
-                      {startTime && endTime ? `${startTime} - ${endTime}` : "Not selected"}
-                    </p>
-                    <p>
-                      <span className="font-medium text-slate-900">Patient:</span> {patientName || "Not provided"}
-                    </p>
-                    <p>
-                      <span className="font-medium text-slate-900">Email:</span> {patientEmail || "Not provided"}
-                    </p>
-                    <p>
-                      <span className="font-medium text-slate-900">Age:</span> {patientAge || "Not provided"}
-                    </p>
-                    <p>
-                      <span className="font-medium text-slate-900">Issue:</span> {issue || "Not provided"}
-                    </p>
-                    {rescheduleFromId ? (
-                      <p className="pt-1 text-xs text-amber-700">
-                        Reschedule mode is active: the previous booked appointment will be cancelled before this new
-                        appointment is created.
-                      </p>
-                    ) : null}
-                  </div>
-                </div>
-              ) : null}
-
-              <div className="flex flex-wrap gap-2">
-                {step > 1 ? (
-                  <Button type="button" variant="outline" onClick={previousStep}>
-                    Previous
-                  </Button>
-                ) : null}
-
-                {step < 4 ? (
-                  <Button
-                    type="button"
-                    onClick={nextStep}
-                    disabled={
-                      (step === 1 && !isStep1Complete) ||
-                      (step === 2 && !isStep2Complete) ||
-                      (step === 3 && !isStep3Complete)
-                    }
-                  >
-                    Next
-                  </Button>
-                ) : (
-                  <Button
-                    type="submit"
-                    loading={creating || (Boolean(rescheduleFromId) && cancelling)}
-                    disabled={creating || cancelling || !canSubmit}
-                  >
-                    {rescheduleFromId ? "Confirm reschedule" : "Submit appointment"}
-                  </Button>
-                )}
-
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => {
-                    setShowAppointmentFlow(false);
-                    setStep(1);
-                    setRescheduleFromId(null);
-                  }}
-                >
-                  Cancel
-                </Button>
-              </div>
-            </form>
-          )}
-        </Card>
+          <h3 className="text-2xl font-bold tracking-tight">Need to consult with a specialist?</h3>
+          <p className="text-slate-300 text-sm leading-relaxed">
+            Select your preferred healthcare specialist, view waiting-time optimized slots, fill patient symptoms, and confirm with safe payment integrations (Card, UPI, or Health Insurance).
+          </p>
+        </div>
+        <Link href="/patient/booking-appointment">
+          <Button size="lg" className="bg-emerald-600 hover:bg-emerald-500 text-white font-semibold flex items-center gap-2 shadow-lg hover:shadow-emerald-500/20">
+            <PlusCircle className="h-5 w-5" />
+            Book New Appointment
+          </Button>
+        </Link>
       </div>
 
+      {/* History table card */}
       <Card>
-        <CardHeader title="Your appointments" description="Track status and manage upcoming visits" />
+        <CardHeader title="Your Appointment History" description="Manage and review status of all past and upcoming visits" />
         <Table
           columns={columns}
           data={appts?.appointments ?? []}
           keyExtractor={(row) => row.id}
           loading={apptsLoading}
-          emptyState="No appointments yet — book your first visit above."
+          emptyState="No appointments scheduled yet. Click Book New Appointment above to get started!"
         />
       </Card>
     </div>

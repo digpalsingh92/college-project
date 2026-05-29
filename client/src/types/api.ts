@@ -98,6 +98,11 @@ export interface CreateAppointmentRequest {
   endTime: string;
   patientAge?: number;
   remarks?: string;
+  paymentMethod?: string;
+  paymentStatus?: string;
+  amountPaid?: number;
+  insuranceProvider?: string;
+  insurancePolicy?: string;
 }
 
 export interface AppointmentDto {
@@ -146,6 +151,9 @@ export interface AdminAppointmentInsightsResponse {
   totalAppointments: number;
   expectedPatients: number;
   predictedNoShows: number;
+  commissionRevenue: number;
+  appointmentTrend: Array<{ day: string; appointments: number }>;
+  revenueBars: Array<{ month: string; value: number }>;
 }
 
 export interface AppointmentCreateResponse {
