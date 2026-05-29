@@ -7,6 +7,11 @@ export const createAppointmentSchema = z.object({
   endTime: z.string().trim().min(1),
   patientAge: z.number().int().min(0).max(120).optional(),
   remarks: z.string().trim().max(500).optional(),
+  paymentMethod: z.string().trim().optional(),
+  paymentStatus: z.string().trim().optional(),
+  amountPaid: z.number().optional(),
+  insuranceProvider: z.string().trim().optional(),
+  insurancePolicy: z.string().trim().optional(),
 });
 
 export const updateAppointmentByDoctorSchema = z.object({

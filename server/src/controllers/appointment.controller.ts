@@ -74,12 +74,17 @@ export const getAdminAppointmentsController = async (req: Request, res: Response
 export const getPredictedSlotsController = async (req: Request, res: Response): Promise<void> => {
   const doctorId = Array.isArray(req.query.doctorId) ? req.query.doctorId[0] : req.query.doctorId;
   const date = Array.isArray(req.query.date) ? req.query.date[0] : req.query.date;
+  const appointmentType = Array.isArray(req.query.appointmentType) ? req.query.appointmentType[0] : req.query.appointmentType;
 
   if (!doctorId || !date) {
     throw new AppError("doctorId and date are required", 400);
   }
 
-  const result = await getPredictedSlotsForDoctor(String(doctorId), String(date));
+  const result = await getPredictedSlotsForDoctor(
+    String(doctorId),
+    String(date),
+    appointmentType ? String(appointmentType) : undefined
+  );
   res.status(200).json(result);
 };
 

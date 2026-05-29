@@ -2,8 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { FormEvent } from "react";
-import { ArrowRight, Sparkles } from "lucide-react";
-import { Card, CardHeader } from "@/components/ui/Card";
+import { Bot, SendHorizontal, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/helpers/cn";
 import { getToken } from "@/lib/auth";
@@ -17,6 +16,12 @@ type AssistantApiResponse = {
   intent?: string;
   type?: string;
 };
+
+const SUGGESTED_PROMPTS = [
+  "What is the cost of cataract surgery?",
+  "How long is the wait time?",
+  "Do you have beds available?",
+];
 
 function createMessageId(): string {
   return typeof crypto !== "undefined" && typeof crypto.randomUUID === "function"
@@ -43,12 +48,17 @@ export function AssistantChat() {
   const [isSending, setIsSending] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
-  }, [messages]);
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
-  const sendMessage = async () => {
-    const trimmedInput = input.trim();
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages, isSending]);
+
+  const sendMessage = async (messageText?: string) => {
+    const textToSend = messageText !== undefined ? messageText : input;
+    const trimmedInput = textToSend.trim();
     if (!trimmedInput || isSending) return;
 
     const loadingId = createMessageId();
@@ -59,7 +69,10 @@ export function AssistantChat() {
       { id: createMessageId(), role: "user", content: trimmedInput },
       { id: loadingId, role: "assistant", content: "Thinking...", status: "loading" },
     ]);
-    setInput("");
+    
+    if (messageText === undefined) {
+      setInput("");
+    }
     setIsSending(true);
 
     try {
@@ -90,6 +103,7 @@ export function AssistantChat() {
                 role: "assistant",
                 content: reply,
                 structuredData,
+                intent: payload.intent,
                 status: "done",
               }
             : message
@@ -119,80 +133,88 @@ export function AssistantChat() {
   };
 
   return (
-    <Card className="overflow-hidden">
-      <div className="flex min-h-[36rem] flex-col">
-        <CardHeader
-          title="AI Assistant"
-          description="Ask about price, wait time, or bed availability. The assistant uses backend logic only."
-          action={
-            <div className="inline-flex items-center gap-2 rounded-full border border-emerald-100 bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700">
-              <Sparkles className="h-3.5 w-3.5" />
-              API powered
-            </div>
-          }
-          className="mb-0 border-b border-border px-6 py-5"
-        />
+    <div className="flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 shadow-sm">
+      {/* Header */}
+      <div className="flex items-center gap-3 border-b border-slate-200 bg-white px-6 py-4">
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-100 text-blue-600">
+          <Sparkles className="h-5 w-5" />
+        </div>
+        <div>
+          <h2 className="text-sm font-semibold tracking-tight text-slate-900">AI Patient Assistant</h2>
+          <p className="text-xs text-slate-500">Ask about pricing, wait times, or bed availability</p>
+        </div>
+      </div>
 
-        <div className="flex-1 overflow-y-auto px-4 py-5 md:px-6">
-          {messages.length === 0 ? (
-            <div className="flex min-h-[18rem] items-center justify-center rounded-2xl border border-dashed border-slate-200 bg-slate-50 px-6 py-10 text-center">
-              <div className="max-w-md space-y-3">
-                <p className="text-base font-semibold text-slate-900">Start a conversation</p>
-                <p className="text-sm leading-6 text-muted">
-                  Ask a question about surgery cost, expected wait time, or current bed availability. Results will appear here in a clean, structured format.
-                </p>
-                <div className="flex flex-wrap justify-center gap-2 pt-2 text-xs text-muted">
-                  {["What is the price for cataract surgery?", "How long is the wait time?", "Do you have free beds?"].map((chip) => (
-                    <span key={chip} className="rounded-full border border-slate-200 bg-white px-3 py-1.5 shadow-sm">
-                      {chip}
-                    </span>
-                  ))}
-                </div>
-              </div>
+      {/* Messages Area */}
+      <div className="flex-1 overflow-y-auto p-4 sm:p-6">
+        {messages.length === 0 ? (
+          <div className="flex h-full flex-col items-center justify-center gap-6">
+            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-100 text-blue-600 shadow-sm">
+              <Bot className="h-8 w-8" />
             </div>
-          ) : (
-            <div className="space-y-4">
-              {messages.map((message) => (
-                <AssistantMessage key={message.id} message={message} />
+            <div className="text-center">
+              <h3 className="text-lg font-semibold text-slate-900">How can I help you?</h3>
+              <p className="mt-1 text-sm text-slate-500">Select a suggestion below or type your question.</p>
+            </div>
+            <div className="flex flex-col gap-2 w-full max-w-sm mt-4">
+              {SUGGESTED_PROMPTS.map((prompt) => (
+                <button
+                  key={prompt}
+                  onClick={() => void sendMessage(prompt)}
+                  className="rounded-xl border border-slate-200 bg-white px-4 py-3 text-left text-[0.95rem] text-slate-700 shadow-sm transition-colors hover:border-blue-300 hover:bg-blue-50/50 hover:text-blue-700"
+                >
+                  {prompt}
+                </button>
               ))}
             </div>
-          )}
-          <div ref={messagesEndRef} />
-        </div>
+          </div>
+        ) : (
+          <div className="mx-auto flex max-w-3xl flex-col gap-6">
+            {messages.map((message) => (
+              <AssistantMessage key={message.id} message={message} />
+            ))}
+            <div ref={messagesEndRef} />
+          </div>
+        )}
+      </div>
 
-        <div className="sticky bottom-0 border-t border-border bg-surface/95 px-4 py-4 backdrop-blur md:px-6">
-          <form className="flex items-end gap-3" onSubmit={handleSubmit}>
-            <label className="sr-only" htmlFor="assistant-message">
-              Ask the assistant
-            </label>
+      {/* Input Area */}
+      <div className="border-t border-slate-200 bg-white p-4">
+        <div className="mx-auto max-w-3xl">
+          <form className="relative flex w-full items-end gap-2 rounded-2xl border border-slate-200 bg-white p-2 shadow-sm focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500" onSubmit={handleSubmit}>
             <textarea
               id="assistant-message"
               value={input}
-              onChange={(event) => setInput(event.target.value)}
-              onKeyDown={(event) => {
-                if (event.key === "Enter" && !event.shiftKey) {
-                  event.preventDefault();
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
                   void sendMessage();
                 }
               }}
-              placeholder="Ask about price, wait time, or bed availability..."
-              rows={2}
-              className={cn(
-                "min-h-12 flex-1 resize-none rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100",
-                isSending ? "opacity-90" : ""
-              )}
               disabled={isSending}
+              placeholder="Ask about price, wait time, or bed availability..."
+              className="max-h-32 min-h-[44px] w-full resize-none bg-transparent px-3 py-2.5 text-[0.95rem] text-slate-900 placeholder:text-slate-400 focus:outline-none disabled:opacity-50"
+              rows={1}
+              style={{ overflowY: input.split('\n').length > 1 ? 'auto' : 'hidden' }}
+              onInput={(e) => {
+                const target = e.target as HTMLTextAreaElement;
+                target.style.height = "auto";
+                target.style.height = `${target.scrollHeight}px`;
+              }}
             />
-            <Button type="submit" size="md" loading={isSending} className="shrink-0 px-5">
-              <span className="inline-flex items-center gap-2">
-                Send
-                <ArrowRight className="h-4 w-4" />
-              </span>
+            <Button
+              type="submit"
+              size="sm"
+              className="h-10 w-10 shrink-0 rounded-xl px-0 py-0 flex items-center justify-center"
+              disabled={!input.trim() || isSending}
+            >
+              <SendHorizontal className="h-5 w-5" />
             </Button>
           </form>
-          <p className="mt-2 text-xs text-muted">Press Enter to send. Use Shift + Enter for a new line.</p>
+          <p className="mt-2 text-center text-xs text-slate-400">Press Enter to send. Use Shift + Enter for a new line.</p>
         </div>
       </div>
-    </Card>
+    </div>
   );
 }

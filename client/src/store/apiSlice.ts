@@ -436,13 +436,13 @@ export const api = createApi({
     }),
     getAppointmentSlots: builder.query<
       AppointmentSlotsResponse,
-      { doctorId: string; date: string }
+      { doctorId: string; date: string; appointmentType?: "IN_PERSON" | "VIDEO" }
     >({
-      async queryFn({ doctorId, date }, api: BaseQueryApi): Promise<ApiResult<AppointmentSlotsResponse>> {
+      async queryFn({ doctorId, date, appointmentType }, api: BaseQueryApi): Promise<ApiResult<AppointmentSlotsResponse>> {
         return runRequest(
           apiHandler.get<AppointmentSlotsResponse>("appointments/slots", {
             token: (api.getState() as any).auth.token,
-            params: { doctorId, date },
+            params: { doctorId, date, appointmentType },
           }),
           api
         );
