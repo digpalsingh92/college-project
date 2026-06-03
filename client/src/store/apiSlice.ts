@@ -102,7 +102,7 @@ async function runRequest<T>(
 export const api = createApi({
   reducerPath: "api",
   baseQuery: fakeBaseQuery(),
-  tagTypes: ["Appointment", "Doctor", "DoctorProfile", "Schedule", "Unavailability", "Availability"],
+  tagTypes: ["Appointment", "Doctor", "DoctorProfile", "Schedule", "Unavailability", "Availability", "Resource"],
   endpoints: (builder) => ({
     loginPatient: builder.mutation<AuthResponse, LoginRequest>({
       async queryFn(body, api: BaseQueryApi): Promise<ApiResult<AuthResponse>> {
@@ -759,6 +759,7 @@ export const api = createApi({
           api
         );
       },
+      providesTags: ["Resource"],
     }),
 
     createHospitalResource: builder.mutation<
@@ -817,6 +818,78 @@ export const api = createApi({
       },
     }),
 
+    getHospitalResourceAllocations: builder.query<{ status: boolean; data: any[] }, void>({
+      async queryFn(_arg, api: BaseQueryApi) {
+        return runRequest(
+          apiHandler.get<{ status: boolean; data: any[] }>("resources/allocations", {
+            token: (api.getState() as ApiAuthState).auth.token,
+          }),
+          api
+        );
+      },
+      providesTags: ["Resource", "Appointment"],
+    }),
+
+    allocateHospitalResource: builder.mutation<
+      { status: boolean; data: any },
+      { resourceId: string; patientId: string; unitId: string; notes?: string }
+    >({
+      async queryFn(body, api: BaseQueryApi) {
+        return runRequest(
+          apiHandler.post<{ status: boolean; data: any }>("resources/allocate", body, {
+            token: (api.getState() as ApiAuthState).auth.token,
+          }),
+          api
+        );
+      },
+      invalidatesTags: ["Resource", "Appointment"],
+    }),
+
+    releaseHospitalResource: builder.mutation<
+      { status: boolean; data: any },
+      { allocationId: string }
+    >({
+      async queryFn(body, api: BaseQueryApi) {
+        return runRequest(
+          apiHandler.post<{ status: boolean; data: any }>("resources/release", body, {
+            token: (api.getState() as ApiAuthState).auth.token,
+          }),
+          api
+        );
+      },
+      invalidatesTags: ["Resource", "Appointment"],
+    }),
+
+    getResourceUnits: builder.query<
+      { status: boolean; data: any[]; resourceName: string; category: string },
+      string
+    >({
+      async queryFn(resourceId, api: BaseQueryApi) {
+        return runRequest(
+          apiHandler.get<{ status: boolean; data: any[]; resourceName: string; category: string }>(`resources/${resourceId}/units`, {
+            token: (api.getState() as ApiAuthState).auth.token,
+          }),
+          api
+        );
+      },
+      providesTags: ["Resource"],
+    }),
+
+    updateResourceUnit: builder.mutation<
+      { status: boolean; data: any; summary: any },
+      { unitId: string; isActive?: boolean; occupancyStatus?: string }
+    >({
+      async queryFn({ unitId, ...body }, api: BaseQueryApi) {
+        return runRequest(
+          apiHandler.patch<{ status: boolean; data: any; summary: any }>(`resources/units/${unitId}`, body, {
+            token: (api.getState() as ApiAuthState).auth.token,
+          }),
+          api
+        );
+      },
+      invalidatesTags: ["Resource"],
+    }),
+
   }),
 });
 
@@ -870,4 +943,11 @@ export const {
   useUpdateHospitalResourceMutation,
   useDeleteHospitalResourceMutation,
   useTrainDiseaseMutation,
+  useGetHospitalResourceAllocationsQuery,
+  useAllocateHospitalResourceMutation,
+  useReleaseHospitalResourceMutation,
+  useGetResourceUnitsQuery,
+  useLazyGetResourceUnitsQuery,
+  useUpdateResourceUnitMutation,
 } = api;
+

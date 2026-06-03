@@ -1,6 +1,7 @@
 import { AppError } from "../utils/app-error.js";
 import { loadModelArtifact } from "./model-store.js";
 import { BucketStats, ResourceRecommendation, TrainedPredictionModel } from "./types.js";
+import prisma from "../lib/prisma.js";
 
 let cachedModel: TrainedPredictionModel | null = null;
 
@@ -30,6 +31,32 @@ const confidenceFromCount = (count: number): "low" | "medium" | "high" => {
   return "low";
 };
 
+const getLiveDepartmentCapacityFactor = async (department: string): Promise<number> => {
+  try {
+    const resources = await prisma.resource.findMany({
+      where: {
+        resourceType: {
+          OR: [
+            { category: "BED", name: { contains: department, mode: "insensitive" } },
+            { category: "OT" }
+          ]
+        }
+      }
+    });
+
+    if (resources.length === 0) return 0.5;
+
+    const total = resources.reduce((s, r) => s + r.totalUnits, 0);
+    const available = resources.reduce((s, r) => s + r.availableUnits, 0);
+    const occupied = total - available;
+
+    return total > 0 ? occupied / total : 0.5;
+  } catch (error) {
+    console.error("Failed to calculate live capacity factor:", error);
+    return 0.5;
+  }
+};
+
 export const predictWaitingTime = async (input: {
   department: string;
   appointmentType: string;
@@ -48,11 +75,21 @@ export const predictWaitingTime = async (input: {
   const selected = level1 ?? level2 ?? level3 ?? model.waitingTimeModel.global;
 
   const previousNoShowPenalty = Math.min(input.previousNoShows * 2, 16);
-  const predictedWaitingTimeMinutes = Math.round(selected.avgWaitingMinutes + previousNoShowPenalty);
+
+  // Live telemetry scaling
+  const liveCapacityFactor = await getLiveDepartmentCapacityFactor(input.department);
+  
+  // High-congestion trigger: scale exponentially if occupancy exceeds 80%
+  const congestionMultiplier = liveCapacityFactor > 0.8
+    ? 1.0 + Math.pow((liveCapacityFactor - 0.8) * 5, 2)
+    : 1.0;
+
+  const baseWait = selected.avgWaitingMinutes;
+  const predictedWaitingTimeMinutes = Math.round((baseWait * congestionMultiplier) + previousNoShowPenalty);
 
   return {
     predictedWaitingTimeMinutes,
-    p90WaitingTimeMinutes: Math.round(selected.p90WaitingMinutes),
+    p90WaitingTimeMinutes: Math.round(selected.p90WaitingMinutes * congestionMultiplier),
     confidence: confidenceFromCount(selected.count),
     supportingSamples: selected.count,
     noShowRisk: Number(selected.noShowRate.toFixed(3)),

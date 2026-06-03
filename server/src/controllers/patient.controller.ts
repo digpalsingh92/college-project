@@ -3,7 +3,7 @@ import { getPatientAnalytics } from "../services/patient.service.js";
 import { AppError } from "../utils/app-error.js";
 
 export const getPatientsController = async (req: Request, res: Response): Promise<void> => {
-  if (!req.user || req.user.role !== "admin") {
+  if (!req.user || (req.user.role !== "admin" && req.user.role !== "doctor")) {
     throw new AppError("Unauthorized", 401);
   }
 

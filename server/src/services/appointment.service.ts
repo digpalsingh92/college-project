@@ -5,6 +5,7 @@ import {
 } from "../schemas/appointment.schemas.js";
 import { AppError } from "../utils/app-error.js";
 import { minutesToLabel, normalizeDateOnly, parseTimeToMinutes } from "../utils/time.js";
+import { broadcastOccupancyUpdate } from "../lib/socket.js";
 import {
   calculateExpectedPatients,
   calculateWaitTime,
@@ -167,10 +168,45 @@ const formatAppointment = (appointment: {
   createdAt: appointment.createdAt,
 });
 
+const releaseAppointmentResources = async (appointmentId: string) => {
+  try {
+    const allocations = await prisma.appointmentResource.findMany({
+      where: { appointmentId, status: "ALLOCATED" },
+      include: { resource: { include: { resourceType: true } } }
+    });
+
+    if (allocations.length === 0) return;
+
+    for (const alloc of allocations) {
+      await prisma.appointmentResource.update({
+        where: { id: alloc.id },
+        data: { status: "RELEASED" }
+      });
+
+      const updated = await prisma.resource.update({
+        where: { id: alloc.resourceId },
+        data: { availableUnits: { increment: 1 } },
+        include: { resourceType: true }
+      });
+
+      broadcastOccupancyUpdate({
+        category: updated.resourceType.category,
+        availableUnits: updated.availableUnits,
+        totalUnits: updated.totalUnits
+      });
+    }
+  } catch (error) {
+    console.error("Failed to release appointment resources:", error);
+  }
+};
+
 export const createAppointment = async (input: CreateAppointmentPayload) => {
   const [patient, doctor] = await Promise.all([
     prisma.user.findUnique({ where: { id: input.patientId } }),
-    prisma.user.findUnique({ where: { id: input.doctorId } }),
+    prisma.user.findUnique({
+      where: { id: input.doctorId },
+      include: { doctorProfile: true },
+    }),
   ]);
 
   if (!patient || patient.role !== "patient") {
@@ -274,6 +310,101 @@ export const createAppointment = async (input: CreateAppointmentPayload) => {
     throw new AppError("This slot has already been booked", 409);
   }
 
+  // Resource reservation logic for specialty appointments (OT / Bed)
+  const specialization = doctor?.doctorProfile?.specialization;
+  const isSpecialist = ["Ophthalmologist", "Cardiologist", "Gastroenterologist", "Orthopedic Surgeon"].includes(specialization ?? "");
+
+  let otResource: any = null;
+  let bedResource: any = null;
+  let allocatedFrom: Date | null = null;
+  let allocatedTo: Date | null = null;
+
+  if (isSpecialist) {
+    allocatedFrom = new Date(date);
+    allocatedFrom.setMinutes(allocatedFrom.getMinutes() + startTime);
+    allocatedTo = new Date(date);
+    allocatedTo.setMinutes(allocatedTo.getMinutes() + endTime);
+
+    // Fetch or create an active Operating Theatre (OT) ResourceType
+    let otResourceType = await prisma.resourceType.findFirst({
+      where: { category: "OT" }
+    });
+    if (!otResourceType) {
+      otResourceType = await prisma.resourceType.create({
+        data: {
+          name: "General Operating Theatre",
+          category: "OT",
+          basePrice: 15000,
+          description: "Surgical Operating Theatre equipped for major operations"
+        }
+      });
+    }
+
+    let foundOt = await prisma.resource.findFirst({
+      where: { resourceTypeId: otResourceType.id }
+    });
+    if (!foundOt) {
+      foundOt = await prisma.resource.create({
+        data: {
+          resourceTypeId: otResourceType.id,
+          totalUnits: 5,
+          availableUnits: 5,
+          status: "ACTIVE"
+        }
+      });
+    }
+    otResource = foundOt;
+
+    // Fetch or create post-operative recovery BED ResourceType
+    let bedResourceType = await prisma.resourceType.findFirst({
+      where: { category: "BED", name: { contains: specialization || "General", mode: "insensitive" } }
+    });
+    if (!bedResourceType) {
+      bedResourceType = await prisma.resourceType.findFirst({
+        where: { category: "BED" }
+      });
+    }
+    if (!bedResourceType) {
+      bedResourceType = await prisma.resourceType.create({
+        data: {
+          name: `${specialization || "General"} Ward Bed`,
+          category: "BED",
+          basePrice: 2000,
+          description: "Post-operative recovery bed"
+        }
+      });
+    }
+
+    let foundBed = await prisma.resource.findFirst({
+      where: { resourceTypeId: bedResourceType.id }
+    });
+    if (!foundBed) {
+      foundBed = await prisma.resource.create({
+        data: {
+          resourceTypeId: bedResourceType.id,
+          totalUnits: 30,
+          availableUnits: 30,
+          status: "ACTIVE"
+        }
+      });
+    }
+    bedResource = foundBed;
+
+    // Concurrency validation: check if OT is already fully booked at this window
+    const activeAllocations = await prisma.appointmentResource.count({
+      where: {
+        resourceId: otResource.id,
+        status: "ALLOCATED",
+        allocatedFrom: { lt: allocatedTo },
+        allocatedTo: { gt: allocatedFrom }
+      }
+    });
+
+    if (activeAllocations >= otResource.totalUnits) {
+      throw new AppError("All Operation Theatres are currently occupied by other surgical teams during this slot. Please try another time.", 409);
+    }
+  }
+
   const appointment = await prisma.appointment.create({
     data: {
       patientId: input.patientId,
@@ -292,6 +423,57 @@ export const createAppointment = async (input: CreateAppointmentPayload) => {
       insurancePolicy: (input as any).insurancePolicy ?? null,
     },
   });
+
+  // Create real-time allocations & broadcast updates
+  if (isSpecialist && otResource && bedResource && allocatedFrom && allocatedTo) {
+    try {
+      await prisma.appointmentResource.createMany({
+        data: [
+          {
+            appointmentId: appointment.id,
+            resourceId: otResource.id,
+            allocatedFrom,
+            allocatedTo,
+            status: "ALLOCATED"
+          },
+          {
+            appointmentId: appointment.id,
+            resourceId: bedResource.id,
+            allocatedFrom,
+            allocatedTo,
+            status: "ALLOCATED"
+          }
+        ]
+      });
+
+      const updatedOt = await prisma.resource.update({
+        where: { id: otResource.id },
+        data: { availableUnits: { decrement: 1 } },
+        include: { resourceType: true }
+      });
+
+      const updatedBed = await prisma.resource.update({
+        where: { id: bedResource.id },
+        data: { availableUnits: { decrement: 1 } },
+        include: { resourceType: true }
+      });
+
+      // Broadcast changes to WebSocket clients
+      broadcastOccupancyUpdate({
+        category: "OT",
+        availableUnits: updatedOt.availableUnits,
+        totalUnits: updatedOt.totalUnits
+      });
+
+      broadcastOccupancyUpdate({
+        category: "BED",
+        availableUnits: updatedBed.availableUnits,
+        totalUnits: updatedBed.totalUnits
+      });
+    } catch (allocError) {
+      console.error("Failed to commit resource allocations in DB:", allocError);
+    }
+  }
 
   return formatAppointment(appointment);
 };
@@ -511,6 +693,8 @@ export const cancelAppointmentById = async (
     data: { status: "cancelled", remarks: appointment.remarks },
   });
 
+  await releaseAppointmentResources(appointmentId);
+
   return formatAppointment(updated);
 };
 
@@ -538,6 +722,8 @@ export const completeAppointmentById = async (
     where: { id: appointmentId },
     data: { status: "completed" },
   });
+
+  await releaseAppointmentResources(appointmentId);
 
   return formatAppointment(updated);
 };
@@ -568,6 +754,10 @@ export const updateAppointmentByDoctor = async (
       remarks: input.remarks ?? appointment.remarks,
     },
   });
+
+  if (input.status === "completed" || input.status === "cancelled" || input.status === "no_show") {
+    await releaseAppointmentResources(appointmentId);
+  }
 
   return formatAppointment(updated);
 };

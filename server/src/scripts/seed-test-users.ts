@@ -44,6 +44,22 @@ async function main() {
       experience: 15,
       consultationFee: 600,
     },
+    {
+      name: "Dr. Emily Vance",
+      email: "vance@mediso.com",
+      role: "doctor" as const,
+      specialization: "Ophthalmologist",
+      experience: 14,
+      consultationFee: 700,
+    },
+    {
+      name: "Dr. Arthur Dent",
+      email: "dent@mediso.com",
+      role: "doctor" as const,
+      specialization: "Orthopedic Surgeon",
+      experience: 11,
+      consultationFee: 550,
+    },
   ];
 
   const testPatients = [

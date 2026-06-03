@@ -55,6 +55,7 @@ const navByRole: Record<UserRole, NavItem[]> = {
       icon: CalendarDays,
     },
     { href: "/doctor/schedules", label: "Schedules", icon: CalendarClock },
+    { href: "/doctor/resources", label: "Resource Blocker", icon: Cpu },
   ],
   patient: [
     { href: "/patient", label: "Dashboard", icon: LayoutDashboard },

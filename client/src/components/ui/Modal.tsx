@@ -8,9 +8,10 @@ interface ModalProps {
   title: string;
   onClose: () => void;
   children: ReactNode;
+  wide?: boolean;
 }
 
-export function Modal({ open, title, onClose, children }: ModalProps) {
+export function Modal({ open, title, onClose, children, wide }: ModalProps) {
   if (!open) return null;
 
   return (
@@ -20,7 +21,7 @@ export function Modal({ open, title, onClose, children }: ModalProps) {
       aria-modal="true"
       aria-labelledby="modal-title"
     >
-      <div className="w-full max-w-lg rounded-lg bg-background p-5 shadow-lg">
+      <div className={`w-full ${wide ? "max-w-3xl" : "max-w-lg"} rounded-lg bg-background p-5 shadow-lg max-h-[90vh] overflow-y-auto`}>
         <div className="mb-4 flex items-center justify-between">
           <h2 id="modal-title" className="text-lg font-semibold">
             {title}

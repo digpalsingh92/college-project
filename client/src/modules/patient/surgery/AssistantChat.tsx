@@ -169,7 +169,7 @@ export function AssistantChat() {
             </div>
           </div>
         ) : (
-          <div className="mx-auto flex max-w-3xl flex-col gap-6">
+          <div className="mx-auto flex max-w-[85%] flex-col gap-6">
             {messages.map((message) => (
               <AssistantMessage key={message.id} message={message} />
             ))}

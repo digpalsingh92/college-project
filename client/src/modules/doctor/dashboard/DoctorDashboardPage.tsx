@@ -1,22 +1,16 @@
 "use client";
 
 import {
-  Mail,
-  Stethoscope,
-  CheckCircle2,
   CalendarCheck,
+  CheckCircle2,
   XCircle,
   Clock,
 } from "lucide-react";
-import { Button } from "@/components/ui/Button";
-import { TableColumn } from "@/types";
-import type { AppointmentDto } from "@/types/api";
 import {
-  useCompleteAppointmentMutation,
   useGetDoctorAppointmentsQuery,
   useGetDoctorProfileQuery,
 } from "@/store/apiSlice";
-import { cn } from "@/helpers/cn";
+import type { AppointmentDto } from "@/types/api";
 import dynamic from "next/dynamic";
 
 const DoctorChartsPanel = dynamic(
@@ -25,105 +19,58 @@ const DoctorChartsPanel = dynamic(
 );
 
 export function DoctorDashboardPage() {
-  const { data: profile, isLoading: profileLoading } =
-    useGetDoctorProfileQuery();
-  const { data: appts, isLoading: apptsLoading } =
-    useGetDoctorAppointmentsQuery({});
-  const [complete, { isLoading: completing }] =
-    useCompleteAppointmentMutation();
-
-  const columns: Array<TableColumn<AppointmentDto>> = [
-    {
-      key: "date",
-      header: "Date",
-      render: (row) => new Date(row.date).toLocaleDateString(),
-    },
-    { key: "startTime", header: "Start" },
-    { key: "endTime", header: "End" },
-    {
-      key: "status",
-      header: "Status",
-      render: (row) => (
-        <span
-          className={cn(
-            "inline-flex rounded-full px-2 py-0.5 text-xs font-medium capitalize",
-            row.status === "booked" && "bg-amber-50 text-amber-800",
-            row.status === "completed" && "bg-emerald-50 text-emerald-800",
-            row.status === "cancelled" && "bg-slate-100 text-slate-600",
-          )}
-        >
-          {row.status.replace("_", " ")}
-        </span>
-      ),
-    },
-    {
-      key: "actions",
-      header: "Actions",
-      render: (row) =>
-        row.status === "booked" ? (
-          <Button
-            size="sm"
-            loading={completing}
-            type="button"
-            onClick={async () => {
-              try {
-                await complete(row.id).unwrap();
-              } catch {
-                /* toast via API layer */
-              }
-            }}
-          >
-            Complete visit
-          </Button>
-        ) : (
-          <span className="text-muted">—</span>
-        ),
-    },
-  ];
+  const { data: profile, isLoading: profileLoading } = useGetDoctorProfileQuery();
+  const { data: appts, isLoading: apptsLoading } = useGetDoctorAppointmentsQuery({});
 
   const d = profile?.doctor;
   const appointments = appts?.appointments ?? [];
-  const bookedCount = appointments.filter(
-    (a: AppointmentDto) => a.status === "booked",
-  ).length;
-  const completedCount = appointments.filter(
-    (a: AppointmentDto) => a.status === "completed",
-  ).length;
-  const cancelledCount = appointments.filter(
-    (a: AppointmentDto) => a.status === "cancelled",
-  ).length;
+  const bookedCount = appointments.filter((a: AppointmentDto) => a.status === "booked").length;
+  const completedCount = appointments.filter((a: AppointmentDto) => a.status === "completed").length;
+  const cancelledCount = appointments.filter((a: AppointmentDto) => a.status === "cancelled").length;
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 pb-12">
+      {/* ── Welcome Banner ── */}
+      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between border-b border-slate-100 pb-5">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight text-slate-800">
+            Welcome back, Dr. {d?.name || "Doctor"}
+          </h1>
+          <p className="text-sm text-slate-500">
+            Specialization: <span className="font-semibold text-emerald-600 capitalize">{d?.doctorProfile?.specialization || "Clinical Staff"}</span> | Practice overview
+          </p>
+        </div>
+      </div>
+
       {/* ── Stat strip ── */}
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
         <MiniStat
           icon={<CalendarCheck className="h-5 w-5 text-amber-500" />}
-          label="Booked"
+          label="Booked Visits"
           value={bookedCount}
-          bg="bg-amber-50"
+          bg="bg-amber-50 border border-amber-100/60"
         />
         <MiniStat
           icon={<CheckCircle2 className="h-5 w-5 text-emerald-500" />}
-          label="Completed"
+          label="Completed Visits"
           value={completedCount}
-          bg="bg-emerald-50"
+          bg="bg-emerald-50 border border-emerald-100/60"
         />
         <MiniStat
           icon={<XCircle className="h-5 w-5 text-slate-400" />}
-          label="Cancelled"
+          label="Cancelled Visits"
           value={cancelledCount}
-          bg="bg-slate-50"
+          bg="bg-slate-50 border border-slate-100"
         />
         <MiniStat
           icon={<Clock className="h-5 w-5 text-blue-500" />}
-          label="Total"
+          label="Total Visits Scheduled"
           value={appointments.length}
-          bg="bg-blue-50"
+          bg="bg-blue-50 border border-blue-100/60"
         />
       </div>
 
-      {/* ── Charts ── */}
+      {/* ── Appointment Charts Panel ── */}
       <DoctorChartsPanel />
     </div>
   );
@@ -141,12 +88,15 @@ function MiniStat({
   bg: string;
 }) {
   return (
-    <div className={`flex items-center gap-3 rounded-xl px-4 py-4 ${bg}`}>
-      {icon}
+    <div className={`flex items-center gap-4 rounded-2xl px-5 py-4 shadow-sm hover:shadow transition-shadow ${bg}`}>
+      <div className="p-2.5 rounded-xl bg-white/90 shadow-sm shrink-0">
+        {icon}
+      </div>
       <div>
-        <p className="text-xl font-bold text-foreground">{value}</p>
-        <p className="text-xs text-muted">{label}</p>
+        <p className="text-2xl font-bold text-slate-800 tracking-tight">{value}</p>
+        <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mt-0.5">{label}</p>
       </div>
     </div>
   );
 }
+

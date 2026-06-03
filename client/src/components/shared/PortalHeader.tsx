@@ -15,6 +15,7 @@ function titleForPath(pathname: string, role: UserRole): string {
   if (role === "doctor") {
     if (pathname.startsWith("/doctor/patients")) return "Patients";
     if (pathname.startsWith("/doctor/schedules")) return "Schedules";
+    if (pathname.startsWith("/doctor/resources")) return "Resource Blocker";
     return "Doctor dashboard";
   }
   if (pathname.startsWith("/patient/appointments")) return "Appointments";
@@ -27,6 +28,7 @@ function subtitleForPath(pathname: string, role: UserRole): string {
     return "Quick summary of platform activity and tools.";
   }
   if (role === "doctor") {
+    if (pathname.startsWith("/doctor/resources")) return "On-demand asset blocking and live telemetry.";
     return "Schedule, visits, and your practice overview.";
   }
   return "Book visits and track your health journey.";

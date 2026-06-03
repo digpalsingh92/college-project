@@ -57,7 +57,28 @@ function findRecommendedDoctor(intent: string, department: string, doctors: Doct
   // Try to find a specialization that matches the query terms
   const matched = doctors.find(doc => {
     const spec = (doc.doctorProfile?.specialization ?? "").toLowerCase();
+    
+    // Standardize/Stem checks to cover spelling variations and adjacent terms (ist vs ogy)
+    const isOphth = (spec.includes("ophthal") || spec.includes("eye")) && 
+                    (deptQuery.includes("ophthal") || deptQuery.includes("eye") || intentQuery.includes("cataract") || intentQuery.includes("ophthalmology"));
+    const isCardio = (spec.includes("cardio") || spec.includes("heart")) && 
+                     (deptQuery.includes("cardio") || deptQuery.includes("heart"));
+    const isGastro = (spec.includes("gastro") || spec.includes("stomach") || spec.includes("gall")) && 
+                     (deptQuery.includes("gastro") || deptQuery.includes("stomach") || deptQuery.includes("gall"));
+    const isDerm = (spec.includes("derm") || spec.includes("skin")) && 
+                   (deptQuery.includes("derm") || deptQuery.includes("skin"));
+    const isNeuro = (spec.includes("neuro") || spec.includes("brain")) && 
+                    (deptQuery.includes("neuro") || deptQuery.includes("brain"));
+    const isOrtho = (spec.includes("ortho") || spec.includes("bone") || spec.includes("joint")) && 
+                    (deptQuery.includes("ortho") || deptQuery.includes("bone") || deptQuery.includes("joint"));
+
     return (
+      isOphth ||
+      isCardio ||
+      isGastro ||
+      isDerm ||
+      isNeuro ||
+      isOrtho ||
       spec.includes(deptQuery) || 
       deptQuery.includes(spec) ||
       spec.includes(intentQuery) ||
@@ -390,8 +411,26 @@ function ConsultationDashboardCard({
   const doctorName = recommendedDoc ? recommendedDoc.name : "Dr. Robert Chen";
   const doctorSpecialty = recommendedDoc?.doctorProfile?.specialization ?? `${inferredDept} Specialist`;
   const doctorId = recommendedDoc ? recommendedDoc.id : "";
-  const doctorAvatar = "https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=256&h=256&q=80";
 
+  // Generate beautiful dynamic initials avatar with background color matching
+  const initials = doctorName
+    .replace(/^Dr\.\s+/i, "") // Remove Dr. prefix if present
+    .split(" ")
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0])
+    .join("")
+    .toUpperCase();
+
+  const bgColors = [
+    "bg-emerald-50 text-emerald-800 border-emerald-200",
+    "bg-teal-50 text-teal-800 border-teal-200",
+    "bg-sky-50 text-sky-800 border-sky-200",
+    "bg-cyan-50 text-cyan-800 border-cyan-200",
+    "bg-indigo-50 text-indigo-800 border-indigo-200",
+  ];
+  const colorIndex = doctorName.length % bgColors.length;
+  const bgClass = bgColors[colorIndex];
   return (
     <div className="mt-4 flex w-full flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white text-slate-800 shadow-md md:flex-row">
       {/* Left Column - Detailed Diagnostic Widgets */}
@@ -502,16 +541,8 @@ function ConsultationDashboardCard({
         </span>
         
         {/* Surgeon Avatar */}
-        <div className="relative h-20 w-20 rounded-full border-2 border-white shadow-md overflow-hidden bg-slate-100 flex items-center justify-center shrink-0">
-          {doctorAvatar ? (
-            <img 
-              src={doctorAvatar} 
-              alt={doctorName}
-              className="h-full w-full object-cover object-top"
-            />
-          ) : (
-            <User className="h-8 w-8 text-slate-400" />
-          )}
+        <div className={cn("relative h-20 w-20 rounded-full border-2 border-white shadow-md flex items-center justify-center shrink-0 font-bold text-xl", bgClass)}>
+          {initials}
         </div>
 
         {/* Surgeon Identity */}
@@ -542,6 +573,95 @@ function ConsultationDashboardCard({
   );
 }
 
+function renderFormattedText(text: string) {
+  // Parses inline formatting: **bold**, `code`, *italic*
+  const parts = text.split(/(\*\*.*?\*\*|`.*?`|\*.*?\*)/g);
+  return parts.map((part, idx) => {
+    if (part.startsWith("**") && part.endsWith("**")) {
+      return <strong key={idx} className="font-extrabold text-slate-900">{part.slice(2, -2)}</strong>;
+    }
+    if (part.startsWith("`") && part.endsWith("`")) {
+      return (
+        <code key={idx} className="mx-0.5 rounded-md bg-emerald-50 border border-emerald-100 px-1.5 py-0.5 text-xs font-mono font-bold text-emerald-800">
+          {part.slice(1, -1)}
+        </code>
+      );
+    }
+    if (part.startsWith("*") && part.endsWith("*")) {
+      return <em key={idx} className="italic text-slate-700">{part.slice(1, -1)}</em>;
+    }
+    return part;
+  });
+}
+
+function PremiumMarkdownRenderer({ text }: { text: string }) {
+  const lines = text.split("\n");
+  
+  return (
+    <div className="space-y-3 font-body-md text-slate-700">
+      {lines.map((line, index) => {
+        const trimmed = line.trim();
+        if (!trimmed) {
+          return <div key={index} className="h-2" />;
+        }
+        
+        // 1. Heading Header (e.g. starting with 📖 or ### or #)
+        if (trimmed.startsWith("📖") || trimmed.startsWith("###") || trimmed.startsWith("##") || trimmed.startsWith("#")) {
+          let cleanText = trimmed;
+          let icon = "📖";
+          if (trimmed.startsWith("📖")) {
+            cleanText = trimmed.replace(/^📖\s*/, "");
+          } else {
+            cleanText = trimmed.replace(/^#+\s*/, "");
+            icon = "✨";
+          }
+          
+          return (
+            <h4 key={index} className="mt-4 flex items-center gap-2 text-base font-bold tracking-tight text-emerald-900 border-b border-emerald-100/50 pb-2">
+              <span className="text-lg">{icon}</span>
+              <span>{renderFormattedText(cleanText)}</span>
+            </h4>
+          );
+        }
+        
+        // 2. Bullet point line
+        if (trimmed.startsWith("-") || trimmed.startsWith("*")) {
+          const cleanText = trimmed.replace(/^[-*]\s*/, "");
+          const keyValueMatch = cleanText.match(/^\*\*(.*?)\*\*:\s*(.*)/);
+          if (keyValueMatch) {
+            const [, key, val] = keyValueMatch;
+            return (
+              <div key={index} className="ml-2 flex items-start gap-2.5 py-1">
+                <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-600 shadow-sm" />
+                <div className="text-[0.92rem] leading-relaxed">
+                  <span className="font-bold text-slate-800 mr-1.5">{key}:</span>
+                  <span className="text-slate-600 font-semibold">{renderFormattedText(val)}</span>
+                </div>
+              </div>
+            );
+          }
+          
+          return (
+            <div key={index} className="ml-2 flex items-start gap-2.5 py-1">
+              <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-600 shadow-sm" />
+              <p className="text-[0.92rem] leading-relaxed text-slate-600 font-semibold">
+                {renderFormattedText(cleanText)}
+              </p>
+            </div>
+          );
+        }
+        
+        // 3. Regular paragraph
+        return (
+          <p key={index} className="text-[0.95rem] leading-relaxed font-medium text-slate-700">
+            {renderFormattedText(line)}
+          </p>
+        );
+      })}
+    </div>
+  );
+}
+
 export function AssistantMessage({ message }: { message: AssistantChatMessage }) {
   const isUser = message.role === "user";
   const { mainText, citations } = parseMessageContent(message.content);
@@ -556,7 +676,7 @@ export function AssistantMessage({ message }: { message: AssistantChatMessage })
     message.structuredData
   );
 
-  const shouldRenderTextBubble = isUser || !!mainText || message.status === "loading";
+  const shouldRenderTextBubble = isUser || (!!mainText && !shouldRenderDashboard) || message.status === "loading";
 
   return (
     <div className={cn("flex w-full", isUser ? "justify-end" : "justify-start")}>
@@ -584,10 +704,10 @@ export function AssistantMessage({ message }: { message: AssistantChatMessage })
             {shouldRenderTextBubble ? (
               <div
                 className={cn(
-                  "px-6 py-4 text-[0.95rem] leading-relaxed shadow-sm",
+                  "px-6 py-5 text-[0.95rem] leading-relaxed shadow-sm border transition-all duration-300 w-full",
                   isUser
-                    ? "bg-slate-100 border border-slate-200 text-slate-800 rounded-3xl rounded-tr-sm font-medium"
-                    : "bg-white border border-slate-100 text-slate-700 rounded-3xl rounded-tl-sm ring-1 ring-black/5"
+                    ? "bg-slate-100 border-slate-200 text-slate-800 rounded-3xl rounded-tr-sm font-medium"
+                    : "bg-linear-to-br from-white to-emerald-50/20 border-slate-100 text-slate-700 rounded-3xl rounded-tl-sm ring-1 ring-black/5 hover:border-emerald-100/50 hover:shadow-lg"
                 )}
               >
                 {message.status === "loading" ? (
@@ -596,8 +716,10 @@ export function AssistantMessage({ message }: { message: AssistantChatMessage })
                     <span className="h-2 w-2 animate-bounce rounded-full bg-slate-400 [animation-delay:-0.15s]"></span>
                     <span className="h-2 w-2 animate-bounce rounded-full bg-slate-400"></span>
                   </div>
+                ) : isUser ? (
+                  <p className="whitespace-pre-wrap font-medium">{mainText}</p>
                 ) : (
-                  <p className="whitespace-pre-wrap">{mainText}</p>
+                  <PremiumMarkdownRenderer text={mainText} />
                 )}
               </div>
             ) : null}

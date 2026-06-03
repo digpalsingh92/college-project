@@ -45,6 +45,7 @@ model User {
   unavailableSlots DoctorUnavailability[]
   appointmentsAsPatient Appointment[] @relation("PatientAppointments")
   appointmentsAsDoctor  Appointment[] @relation("DoctorAppointments")
+  allocations AppointmentResource[] @relation("PatientAllocations")
 }
 
 model DoctorProfile {
@@ -109,6 +110,7 @@ model Appointment {
   patient User @relation("PatientAppointments", fields: [patientId], references: [id])
   doctor  User @relation("DoctorAppointments", fields: [doctorId], references: [id])
   schedule Schedule @relation(fields: [scheduleId], references: [id])
+  resources AppointmentResource[]
 
   @@index([patientId, doctorId, date])
 }
@@ -127,6 +129,12 @@ enum ResourceStatus {
   OCCUPIED
   VACANT
 }
+
+enum OccupancyStatus {
+  OCCUPIED
+  VACANT
+}
+
 model Resource {
   id            String   @id @default(uuid())
   resourceTypeId String
@@ -140,6 +148,8 @@ model Resource {
   updatedAt     DateTime @updatedAt
 
   resourceType ResourceType @relation(fields: [resourceTypeId], references: [id])
+  appointments AppointmentResource[]
+  units        ResourceUnit[]
 }
 
 model ResourceType {
@@ -153,4 +163,46 @@ model ResourceType {
   updatedAt   DateTime @updatedAt
 
   resources   Resource[]
+}
+
+model ResourceUnit {
+  id              String          @id @default(uuid())
+  unitNumber      String          // e.g. "BED-001", "MRI-003"
+  isActive        Boolean         @default(true)
+  occupancyStatus OccupancyStatus @default(VACANT)
+
+  resourceId String
+  resource   Resource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+
+  allocations AppointmentResource[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([resourceId])
+}
+
+enum ResourceAllocationStatus {
+  ALLOCATED
+  RELEASED
+  HOLD
+}
+
+model AppointmentResource {
+  id            String                  @id @default(uuid())
+  appointmentId String?
+  patientId     String?
+  resourceId    String
+  resourceUnitId String?
+  allocatedFrom DateTime                @default(now())
+  allocatedTo   DateTime?
+  status        ResourceAllocationStatus @default(ALLOCATED)
+  notes         String?
+
+  appointment   Appointment?            @relation(fields: [appointmentId], references: [id])
+  patient       User?                   @relation("PatientAllocations", fields: [patientId], references: [id])
+  resource      Resource                @relation(fields: [resourceId], references: [id])
+  resourceUnit  ResourceUnit?           @relation(fields: [resourceUnitId], references: [id])
+
+  @@index([resourceId, allocatedFrom])
 }

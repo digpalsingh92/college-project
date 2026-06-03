@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { Sidebar } from "@/components/shared/Sidebar";
 import { PortalHeader } from "@/components/shared/PortalHeader";
 import type { UserRole } from "@/types";
+import { useLiveOperationsTelemetry } from "@/hooks/useLiveOperationsTelemetry";
 
 interface PortalLayoutProps {
   role: UserRole;
@@ -12,6 +13,9 @@ interface PortalLayoutProps {
 }
 
 export function PortalLayout({ role, children }: PortalLayoutProps) {
+  // Activate live database operations telemetry over WebSockets
+  useLiveOperationsTelemetry();
+
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const pathname = usePathname();
 

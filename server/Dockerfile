@@ -7,6 +7,9 @@ RUN npm ci
 
 COPY . .
 
+# prisma.config.ts reads DATABASE_URL at generate time; a placeholder is enough (no DB connection needed).
+ARG DATABASE_URL=postgresql://postgres:postgres@localhost:5432/collegeProject?schema=public
+ENV DATABASE_URL=${DATABASE_URL}
 RUN npm run prisma:generate && npm run build
 
 EXPOSE 4000

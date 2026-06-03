@@ -1,5 +1,7 @@
+import http from 'http';
 import app from './src/app.js';
 import prisma from './src/lib/prisma.js';
+import { initWebSocket } from './src/lib/socket.js';
 
 const startServer = async () => {
     try {
@@ -18,11 +20,12 @@ const startServer = async () => {
     }
 
     const PORT = process.env.PORT || 4000;
-    app.listen(PORT, () => {
+    const server = http.createServer(app);
+    initWebSocket(server);
+
+    server.listen(PORT, () => {
         console.log(`Server is running on port ${PORT}`);
     });
-
-    
 };
 
 void startServer();

@@ -5,6 +5,6 @@ import { getPatientsController } from "../controllers/patient.controller.js";
 
 const router = express.Router();
 
-router.get("/", requireAuth, requireRole("admin"), asyncHandler(getPatientsController));
+router.get("/", requireAuth, requireRole("admin", "doctor"), asyncHandler(getPatientsController));
 
 export default router;

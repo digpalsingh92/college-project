@@ -23,6 +23,13 @@ export const analyzeSlots = async (
   const targetDate = new Date(date);
   const dayOfWeek = dayNameByIndex[targetDate.getUTCDay()];
 
+  // Fetch doctor profile to resolve their dynamic specialization department
+  const doctor = await prisma.user.findUnique({
+    where: { id: doctorId },
+    include: { doctorProfile: true },
+  });
+  const dept = doctor?.doctorProfile?.specialization ?? "General";
+
   // Get doctor's schedules for that day
   const schedules = await prisma.schedule.findMany({
     where: { doctorId, dayOfWeek },
@@ -88,7 +95,7 @@ export const analyzeSlots = async (
       // Also try using the trained waiting time model
       try {
         const wtResult = await predictWaitingTime({
-          department: "General",
+          department: dept,
           appointmentType: "Consultation",
           scheduledHour: hour,
           reminderSent: "Yes",

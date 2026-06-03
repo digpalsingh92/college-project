@@ -1,12 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import {
   Download,
   Plus,
   Eye,
   Trash2,
-  ArrowRightLeft,
+  Settings2,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import DataTable from "@/components/shared/Table/DataTable";
 import { Button } from "@/components/ui/Button";
@@ -18,6 +20,8 @@ import {
   useCreateHospitalResourceMutation,
   useUpdateHospitalResourceMutation,
   useDeleteHospitalResourceMutation,
+  useLazyGetResourceUnitsQuery,
+  useUpdateResourceUnitMutation,
 } from "@/store/apiSlice";
 import { toast } from "sonner";
 import { cn } from "@/helpers/cn";
@@ -41,23 +45,23 @@ type ResourceRow = {
   resourceTypeId: string;
   createdAt: string;
   updatedAt: string;
+  activeCount?: number;
+  inactiveCount?: number;
+  occupiedCount?: number;
+  vacantCount?: number;
 };
 
-const STATUS_OPTIONS = [
-  "ACTIVE",
-  "INACTIVE",
-  "MAINTENANCE",
-  "OCCUPIED",
-  "VACANT",
-] as const;
-
-const statusColors: Record<string, string> = {
-  ACTIVE: "bg-emerald-50 text-emerald-700 ring-emerald-600/20",
-  OCCUPIED: "bg-amber-50 text-amber-700 ring-amber-600/20",
-  VACANT: "bg-blue-50 text-blue-700 ring-blue-600/20",
-  INACTIVE: "bg-slate-100 text-slate-600 ring-slate-500/20",
-  MAINTENANCE: "bg-purple-50 text-purple-700 ring-purple-600/20",
+type UnitRow = {
+  id: string;
+  unitNumber: string;
+  isActive: boolean;
+  occupancyStatus: "OCCUPIED" | "VACANT";
+  resourceId: string;
+  createdAt: string;
+  updatedAt: string;
 };
+
+const UNITS_PER_PAGE = 20;
 
 export function AdminResourcePage({
   title,
@@ -73,7 +77,7 @@ export function AdminResourcePage({
   const [addOpen, setAddOpen] = useState(false);
   const [viewOpen, setViewOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
-  const [statusOpen, setStatusOpen] = useState(false);
+  const [unitsOpen, setUnitsOpen] = useState(false);
   const [selectedResource, setSelectedResource] = useState<ResourceRow | null>(
     null
   );
@@ -82,10 +86,12 @@ export function AdminResourcePage({
   const [formName, setFormName] = useState("");
   const [formPrice, setFormPrice] = useState("");
   const [formDesc, setFormDesc] = useState("");
-  const [formStatus, setFormStatus] = useState<string>("ACTIVE");
+  const [formTotalUnits, setFormTotalUnits] = useState("1");
 
-  // ── Status change state ──
-  const [newStatus, setNewStatus] = useState<string>("");
+  // ── Units state ──
+  const [units, setUnits] = useState<UnitRow[]>([]);
+  const [unitsResourceName, setUnitsResourceName] = useState("");
+  const [unitsPage, setUnitsPage] = useState(1);
 
   const {
     data: response,
@@ -96,10 +102,12 @@ export function AdminResourcePage({
 
   const [createResource, { isLoading: isCreating }] =
     useCreateHospitalResourceMutation();
-  const [updateResource, { isLoading: isUpdating }] =
-    useUpdateHospitalResourceMutation();
+  const [_updateResource] = useUpdateHospitalResourceMutation();
   const [deleteResource, { isLoading: isDeleting }] =
     useDeleteHospitalResourceMutation();
+  const [fetchUnits, { isFetching: isLoadingUnits }] =
+    useLazyGetResourceUnitsQuery();
+  const [updateUnit] = useUpdateResourceUnitMutation();
 
   const resources: ResourceRow[] = response?.data || [];
 
@@ -108,7 +116,7 @@ export function AdminResourcePage({
     setFormName("");
     setFormPrice("");
     setFormDesc("");
-    setFormStatus("ACTIVE");
+    setFormTotalUnits("1");
   };
 
   const handleAdd = async () => {
@@ -121,6 +129,7 @@ export function AdminResourcePage({
       toast.error("Enter a valid price");
       return;
     }
+    const totalUnits = Math.max(1, Math.floor(Number(formTotalUnits) || 1));
 
     try {
       await createResource({
@@ -128,33 +137,16 @@ export function AdminResourcePage({
         category,
         basePrice: price,
         description: formDesc.trim() || undefined,
-        status: formStatus,
+        status: "ACTIVE",
       }).unwrap();
       toast.success(
-        `${category === "BED" ? "Bed" : "Machine"} added successfully`
+        `${category === "BED" ? "Bed" : "Machine"} added successfully (${totalUnits} units)`
       );
       setAddOpen(false);
       resetForm();
       refetch();
     } catch {
       toast.error("Failed to add resource");
-    }
-  };
-
-  const handleStatusChange = async () => {
-    if (!selectedResource || !newStatus) return;
-    try {
-      await updateResource({
-        id: selectedResource.id,
-        status: newStatus,
-      }).unwrap();
-      toast.success(`Status updated to ${newStatus}`);
-      setStatusOpen(false);
-      setSelectedResource(null);
-      setNewStatus("");
-      refetch();
-    } catch {
-      toast.error("Failed to update status");
     }
   };
 
@@ -168,6 +160,75 @@ export function AdminResourcePage({
       refetch();
     } catch {
       toast.error("Failed to delete resource");
+    }
+  };
+
+  const openUnitsModal = useCallback(
+    async (row: ResourceRow) => {
+      setSelectedResource(row);
+      setUnitsResourceName(row.name);
+      setUnitsPage(1);
+      setUnitsOpen(true);
+
+      try {
+        const result = await fetchUnits(row.id).unwrap();
+        setUnits(result.data || []);
+      } catch {
+        toast.error("Failed to load units");
+        setUnits([]);
+      }
+    },
+    [fetchUnits]
+  );
+
+  const handleUnitToggleActive = async (unit: UnitRow) => {
+    const newActive = !unit.isActive;
+    // Optimistic update
+    setUnits((prev) =>
+      prev.map((u) => (u.id === unit.id ? { ...u, isActive: newActive } : u))
+    );
+    try {
+      await updateUnit({ unitId: unit.id, isActive: newActive }).unwrap();
+      // Refetch parent list for updated summaries
+      refetch();
+    } catch {
+      // Rollback
+      setUnits((prev) =>
+        prev.map((u) =>
+          u.id === unit.id ? { ...u, isActive: !newActive } : u
+        )
+      );
+      toast.error("Failed to update unit");
+    }
+  };
+
+  const handleUnitOccupancyChange = async (
+    unit: UnitRow,
+    newStatus: "OCCUPIED" | "VACANT"
+  ) => {
+    if (newStatus === unit.occupancyStatus) return;
+    // Optimistic update
+    setUnits((prev) =>
+      prev.map((u) =>
+        u.id === unit.id ? { ...u, occupancyStatus: newStatus } : u
+      )
+    );
+    try {
+      await updateUnit({
+        unitId: unit.id,
+        occupancyStatus: newStatus,
+      }).unwrap();
+      refetch();
+    } catch {
+      // Rollback
+      setUnits((prev) =>
+        prev.map((u) =>
+          u.id === unit.id
+            ? { ...u, occupancyStatus: unit.occupancyStatus }
+            : u
+        )
+      );
+      toast.error("Failed to update unit");
     }
   };
 
@@ -197,27 +258,35 @@ export function AdminResourcePage({
       ),
     },
     {
-      key: "availableUnits",
-      label: "Available",
+      key: "activeInactive",
+      label: "Active / Inactive",
       render: (row: ResourceRow) => (
-        <span className="tabular-nums text-slate-700">
-          {row.availableUnits}
-        </span>
+        <div className="flex items-center gap-1.5">
+          <span className="inline-flex items-center rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-semibold text-emerald-700 ring-1 ring-inset ring-emerald-600/20">
+            {row.activeCount ?? row.totalUnits} active
+          </span>
+          {(row.inactiveCount ?? 0) > 0 && (
+            <span className="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-xs font-semibold text-slate-600 ring-1 ring-inset ring-slate-500/20">
+              {row.inactiveCount} inactive
+            </span>
+          )}
+        </div>
       ),
     },
     {
-      key: "status",
-      label: "Status",
+      key: "occupancy",
+      label: "Occupied / Vacant",
       render: (row: ResourceRow) => (
-        <span
-          className={cn(
-            "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ring-1 ring-inset",
-            statusColors[row.status] ||
-              "bg-slate-100 text-slate-600 ring-slate-500/20"
+        <div className="flex items-center gap-1.5">
+          {(row.occupiedCount ?? 0) > 0 && (
+            <span className="inline-flex items-center rounded-full bg-amber-50 px-2 py-0.5 text-xs font-semibold text-amber-700 ring-1 ring-inset ring-amber-600/20">
+              {row.occupiedCount} occupied
+            </span>
           )}
-        >
-          {row.status}
-        </span>
+          <span className="inline-flex items-center rounded-full bg-blue-50 px-2 py-0.5 text-xs font-semibold text-blue-700 ring-1 ring-inset ring-blue-600/20">
+            {row.vacantCount ?? row.availableUnits} vacant
+          </span>
+        </div>
       ),
     },
     {
@@ -248,14 +317,10 @@ export function AdminResourcePage({
       variant: "view" as const,
     },
     {
-      label: "Status",
-      onClick: (row: ResourceRow) => {
-        setSelectedResource(row);
-        setNewStatus(row.status);
-        setStatusOpen(true);
-      },
+      label: "Manage Units",
+      onClick: (row: ResourceRow) => openUnitsModal(row),
       className: "",
-      icon: <ArrowRightLeft className="h-3.5 w-3.5" />,
+      icon: <Settings2 className="h-3.5 w-3.5" />,
       variant: "status" as const,
     },
     {
@@ -280,34 +345,26 @@ export function AdminResourcePage({
 
   const resourceLabel = category === "BED" ? "Bed" : "Machine";
 
-  // ── Action button renderer ──
-  const actionRenderer = (row: ResourceRow) => (
-    <div className="flex items-center justify-center gap-1.5">
-      {actions.map((action, idx) => {
-        const baseStyles =
-          "inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs font-medium transition-all duration-150 cursor-pointer";
+  // ── Paginated units ──
+  const totalUnitPages = Math.ceil(units.length / UNITS_PER_PAGE);
+  const paginatedUnits = units.slice(
+    (unitsPage - 1) * UNITS_PER_PAGE,
+    unitsPage * UNITS_PER_PAGE
+  );
 
-        const variantStyles = {
-          view: "bg-blue-50 text-blue-700 hover:bg-blue-100 hover:text-blue-800",
-          status:
-            "bg-amber-50 text-amber-700 hover:bg-amber-100 hover:text-amber-800",
-          delete:
-            "bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700",
-        };
-
-        return (
-          <button
-            key={idx}
-            onClick={() => action.onClick(row)}
-            className={cn(baseStyles, variantStyles[action.variant])}
-            title={action.label}
-          >
-            {action.icon}
-            {action.label}
-          </button>
-        );
-      })}
-    </div>
+  // Unit summary from local state
+  const unitSummary = units.reduce(
+    (acc, u) => {
+      if (u.isActive) {
+        acc.active++;
+        if (u.occupancyStatus === "OCCUPIED") acc.occupied++;
+        else acc.vacant++;
+      } else {
+        acc.inactive++;
+      }
+      return acc;
+    },
+    { active: 0, inactive: 0, occupied: 0, vacant: 0 }
   );
 
   return (
@@ -395,26 +452,15 @@ export function AdminResourcePage({
             value={formPrice}
             onChange={(e) => setFormPrice(e.target.value)}
           />
-          <div className="flex w-full flex-col gap-1.5">
-            <label
-              htmlFor="resource-status"
-              className="text-sm font-medium text-foreground"
-            >
-              Status
-            </label>
-            <select
-              id="resource-status"
-              value={formStatus}
-              onChange={(e) => setFormStatus(e.target.value)}
-              className="h-10 rounded-md border border-slate-200 bg-white px-3 text-sm outline-none transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-            >
-              {STATUS_OPTIONS.map((s) => (
-                <option key={s} value={s}>
-                  {s}
-                </option>
-              ))}
-            </select>
-          </div>
+          <Input
+            id="resource-total-units"
+            label="Total Units"
+            type="number"
+            placeholder="e.g. 10"
+            min={1}
+            value={formTotalUnits}
+            onChange={(e) => setFormTotalUnits(e.target.value)}
+          />
           <div className="flex w-full flex-col gap-1.5">
             <label
               htmlFor="resource-description"
@@ -468,28 +514,46 @@ export function AdminResourcePage({
                 value={`₹${selectedResource.basePrice.toLocaleString("en-IN")}`}
               />
               <DetailItem
-                label="Status"
-                value={
-                  <span
-                    className={cn(
-                      "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ring-1 ring-inset",
-                      statusColors[selectedResource.status] ||
-                        "bg-slate-100 text-slate-600 ring-slate-500/20"
-                    )}
-                  >
-                    {selectedResource.status}
-                  </span>
-                }
-              />
-              <DetailItem
                 label="Total Units"
                 value={String(selectedResource.totalUnits)}
               />
-              <DetailItem
-                label="Available Units"
-                value={String(selectedResource.availableUnits)}
-              />
             </div>
+
+            {/* Unit breakdown */}
+            <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
+              <p className="text-xs font-medium uppercase tracking-wide text-slate-400 mb-3">
+                Unit Breakdown
+              </p>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="flex items-center gap-2">
+                  <span className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
+                  <span className="text-sm text-slate-700">
+                    <strong>{selectedResource.activeCount ?? 0}</strong> Active
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="h-2.5 w-2.5 rounded-full bg-slate-400" />
+                  <span className="text-sm text-slate-700">
+                    <strong>{selectedResource.inactiveCount ?? 0}</strong>{" "}
+                    Inactive
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="h-2.5 w-2.5 rounded-full bg-amber-500" />
+                  <span className="text-sm text-slate-700">
+                    <strong>{selectedResource.occupiedCount ?? 0}</strong>{" "}
+                    Occupied
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="h-2.5 w-2.5 rounded-full bg-blue-500" />
+                  <span className="text-sm text-slate-700">
+                    <strong>{selectedResource.vacantCount ?? 0}</strong> Vacant
+                  </span>
+                </div>
+              </div>
+            </div>
+
             {selectedResource.description && (
               <DetailItem
                 label="Description"
@@ -523,82 +587,200 @@ export function AdminResourcePage({
         )}
       </Modal>
 
-      {/* ── Change Status Modal ── */}
+      {/* ── Manage Units Modal ── */}
       <Modal
-        open={statusOpen}
-        title="Change Status"
+        open={unitsOpen}
+        title={`Manage Units — ${unitsResourceName}`}
         onClose={() => {
-          setStatusOpen(false);
+          setUnitsOpen(false);
           setSelectedResource(null);
-          setNewStatus("");
+          setUnits([]);
         }}
+        wide
       >
-        {selectedResource && (
-          <div className="space-y-4">
-            <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
-              <p className="text-sm text-slate-600">
-                Changing status for{" "}
-                <strong className="text-slate-900">
-                  {selectedResource.name}
-                </strong>
-              </p>
-              <div className="mt-2 flex items-center gap-2">
-                <span className="text-xs text-slate-500">Current:</span>
-                <span
-                  className={cn(
-                    "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ring-1 ring-inset",
-                    statusColors[selectedResource.status] ||
-                      "bg-slate-100 text-slate-600 ring-slate-500/20"
-                  )}
-                >
-                  {selectedResource.status}
-                </span>
-              </div>
-            </div>
-
-            <div className="flex w-full flex-col gap-1.5">
-              <label
-                htmlFor="new-status"
-                className="text-sm font-medium text-foreground"
-              >
-                New Status
-              </label>
-              <select
-                id="new-status"
-                value={newStatus}
-                onChange={(e) => setNewStatus(e.target.value)}
-                className="h-10 rounded-md border border-slate-200 bg-white px-3 text-sm outline-none transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-              >
-                {STATUS_OPTIONS.map((s) => (
-                  <option key={s} value={s}>
-                    {s}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="flex justify-end gap-3 pt-2">
-              <Button
-                variant="outline"
-                onClick={() => {
-                  setStatusOpen(false);
-                  setSelectedResource(null);
-                  setNewStatus("");
-                }}
-              >
-                Cancel
-              </Button>
-              <Button
-                variant="admin"
-                loading={isUpdating}
-                onClick={handleStatusChange}
-                disabled={newStatus === selectedResource.status}
-              >
-                Update Status
-              </Button>
-            </div>
+        <div className="space-y-4">
+          {/* Summary badges */}
+          <div className="flex flex-wrap items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-4 py-3">
+            <span className="text-xs font-medium text-slate-500 mr-1">
+              Summary:
+            </span>
+            <span className="inline-flex items-center rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-semibold text-emerald-700 ring-1 ring-inset ring-emerald-600/20">
+              {unitSummary.active} Active
+            </span>
+            <span className="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-semibold text-slate-600 ring-1 ring-inset ring-slate-500/20">
+              {unitSummary.inactive} Inactive
+            </span>
+            <span className="inline-flex items-center rounded-full bg-amber-50 px-2.5 py-0.5 text-xs font-semibold text-amber-700 ring-1 ring-inset ring-amber-600/20">
+              {unitSummary.occupied} Occupied
+            </span>
+            <span className="inline-flex items-center rounded-full bg-blue-50 px-2.5 py-0.5 text-xs font-semibold text-blue-700 ring-1 ring-inset ring-blue-600/20">
+              {unitSummary.vacant} Vacant
+            </span>
+            <span className="ml-auto text-xs text-slate-400">
+              {units.length} total units
+            </span>
           </div>
-        )}
+
+          {/* Units table */}
+          {isLoadingUnits ? (
+            <div className="flex items-center justify-center py-12">
+              <div className="h-8 w-8 animate-spin rounded-full border-2 border-slate-300 border-t-slate-600" />
+            </div>
+          ) : units.length === 0 ? (
+            <div className="flex items-center justify-center py-12 text-sm text-slate-400">
+              No units found for this resource.
+            </div>
+          ) : (
+            <>
+              <div className="overflow-hidden rounded-lg border border-slate-200">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-slate-200 bg-slate-50">
+                      <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">
+                        Unit ID
+                      </th>
+                      <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-slate-500">
+                        Active / Inactive
+                      </th>
+                      <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider text-slate-500">
+                        Occupancy
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {paginatedUnits.map((unit) => (
+                      <tr
+                        key={unit.id}
+                        className={cn(
+                          "transition-colors",
+                          !unit.isActive && "bg-slate-50/60 opacity-60"
+                        )}
+                      >
+                        <td className="px-4 py-3">
+                          <span className="inline-flex items-center gap-2">
+                            <span className="font-mono text-xs font-medium text-slate-800">
+                              {unit.unitNumber}
+                            </span>
+                            {!unit.isActive && (
+                              <span className="rounded bg-slate-200 px-1.5 py-0.5 text-[10px] font-semibold uppercase text-slate-500">
+                                Disabled
+                              </span>
+                            )}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3">
+                          <div className="flex items-center justify-center">
+                            {/* Toggle slider */}
+                            <button
+                              onClick={() => handleUnitToggleActive(unit)}
+                              className={cn(
+                                "relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2",
+                                unit.isActive
+                                  ? "bg-emerald-500"
+                                  : "bg-slate-300"
+                              )}
+                              role="switch"
+                              aria-checked={unit.isActive}
+                              aria-label={`Toggle ${unit.unitNumber} active`}
+                            >
+                              <span
+                                className={cn(
+                                  "pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out",
+                                  unit.isActive
+                                    ? "translate-x-5"
+                                    : "translate-x-0"
+                                )}
+                              />
+                            </button>
+                            <span
+                              className={cn(
+                                "ml-2 text-xs font-medium",
+                                unit.isActive
+                                  ? "text-emerald-700"
+                                  : "text-slate-500"
+                              )}
+                            >
+                              {unit.isActive ? "Active" : "Inactive"}
+                            </span>
+                          </div>
+                        </td>
+                        <td className="px-4 py-3">
+                          <div className="flex items-center justify-center">
+                            <select
+                              value={unit.occupancyStatus}
+                              onChange={(e) =>
+                                handleUnitOccupancyChange(
+                                  unit,
+                                  e.target.value as "OCCUPIED" | "VACANT"
+                                )
+                              }
+                              disabled={!unit.isActive}
+                              className={cn(
+                                "h-8 rounded-md border px-2.5 text-xs font-medium outline-none transition-all focus:ring-2 focus:ring-offset-1",
+                                unit.occupancyStatus === "OCCUPIED"
+                                  ? "border-amber-200 bg-amber-50 text-amber-700 focus:ring-amber-400"
+                                  : "border-blue-200 bg-blue-50 text-blue-700 focus:ring-blue-400",
+                                !unit.isActive &&
+                                  "cursor-not-allowed opacity-50"
+                              )}
+                            >
+                              <option value="OCCUPIED">Occupied</option>
+                              <option value="VACANT">Vacant</option>
+                            </select>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Unit pagination */}
+              {totalUnitPages > 1 && (
+                <div className="flex items-center justify-between px-1 pt-1">
+                  <span className="text-xs text-slate-500">
+                    Page {unitsPage} of {totalUnitPages}
+                  </span>
+                  <div className="flex items-center gap-1">
+                    <button
+                      onClick={() =>
+                        setUnitsPage((p) => Math.max(1, p - 1))
+                      }
+                      disabled={unitsPage <= 1}
+                      className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-slate-200 text-slate-500 transition-colors hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed"
+                    >
+                      <ChevronLeft className="h-4 w-4" />
+                    </button>
+                    <button
+                      onClick={() =>
+                        setUnitsPage((p) =>
+                          Math.min(totalUnitPages, p + 1)
+                        )
+                      }
+                      disabled={unitsPage >= totalUnitPages}
+                      className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-slate-200 text-slate-500 transition-colors hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed"
+                    >
+                      <ChevronRight className="h-4 w-4" />
+                    </button>
+                  </div>
+                </div>
+              )}
+            </>
+          )}
+
+          <div className="flex justify-end pt-2">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setUnitsOpen(false);
+                setSelectedResource(null);
+                setUnits([]);
+              }}
+            >
+              Close
+            </Button>
+          </div>
+        </div>
       </Modal>
 
       {/* ── Delete Confirmation Modal ── */}
@@ -622,7 +804,8 @@ export function AdminResourcePage({
                     Are you sure you want to delete this resource?
                   </p>
                   <p className="mt-1 text-sm text-red-600">
-                    <strong>{selectedResource.name}</strong> will be permanently
+                    <strong>{selectedResource.name}</strong> and all its{" "}
+                    {selectedResource.totalUnits} units will be permanently
                     removed. This action cannot be undone.
                   </p>
                 </div>
