@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { Role } from "../types/api.types.js";
 import { verifyToken } from "../lib/jwt.js";
 import { AppError } from "../utils/app-error.js";
+import prisma from "../lib/prisma.js";
 
 type TokenPayload = {
 	id: string;
@@ -22,18 +23,27 @@ const extractBearerToken = (headerValue?: string): string => {
 	return token;
 };
 
-export const requireAuth = (req: Request, _res: Response, next: NextFunction): void => {
-	const token = extractBearerToken(req.headers.authorization);
-
+export const requireAuth = async (req: Request, _res: Response, next: NextFunction): Promise<void> => {
 	try {
+		const token = extractBearerToken(req.headers.authorization);
+
+		// Check if token is blacklisted in database
+		const isBlacklisted = await prisma.blacklistedToken.findUnique({
+			where: { token },
+		});
+
+		if (isBlacklisted) {
+			return next(new AppError("Unauthorized. Token is blacklisted", 401));
+		}
+
 		const decoded = verifyToken(token);
 		if (typeof decoded === "string") {
-			throw new AppError("Invalid token", 401);
+			return next(new AppError("Invalid token", 401));
 		}
 
 		const payload = decoded as Partial<TokenPayload>;
 		if (!payload.id || !payload.email || !payload.role) {
-			throw new AppError("Invalid token payload", 401);
+			return next(new AppError("Invalid token payload", 401));
 		}
 
 		req.user = {
@@ -43,8 +53,8 @@ export const requireAuth = (req: Request, _res: Response, next: NextFunction): v
 		};
 
 		next();
-	} catch (_error) {
-		throw new AppError("Unauthorized. Please login again", 401);
+	} catch (error) {
+		next(new AppError("Unauthorized. Please login again", 401));
 	}
 };
 

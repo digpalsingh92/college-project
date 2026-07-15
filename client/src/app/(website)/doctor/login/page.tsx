@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/Input";
 import { ROLE_HOME, ROUTES } from "@/constants/routes";
 import { mapAuthUserDto, setCredentials } from "@/store/authSlice";
 import { useAppDispatch } from "@/store/hooks";
-import { useLoginPatientMutation } from "@/store/apiSlice";
+import { useLoginDoctorMutation } from "@/store/apiSlice";
 import { useAuth } from "@/hooks/useAuth";
 
 function getLoginErrorMessage(error: unknown): string {
@@ -38,15 +38,15 @@ export default function Page() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const [loginPatient, { isLoading: loadingPatient }] = useLoginPatientMutation();
+  const [loginDoctor, { isLoading: loadingDoctor }] = useLoginDoctorMutation();
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     try {
-      const result = await loginPatient({ email, password }).unwrap();
+      const result = await loginDoctor({ email, password }).unwrap();
 
       const mappedUser = mapAuthUserDto(result.user);
-      const destination = ROLE_HOME[mappedUser.role] ?? ROUTES.patient;
+      const destination = ROLE_HOME[mappedUser.role] ?? ROUTES.doctor;
 
       dispatch(
         setCredentials({
@@ -71,11 +71,11 @@ export default function Page() {
   return (
     <section className="mx-auto max-w-md space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold">Sign in</h1>
+        <h1 className="text-2xl font-semibold">Doctor Sign in</h1>
         <p className="text-sm text-muted">
-          Use your patient account. New here?{" "}
-          <Link href={ROUTES.register} className="font-medium text-emerald-700 hover:underline">
-            Create an account
+          Access your clinician dashboard. New here?{" "}
+          <Link href={ROUTES.doctorRegister} className="font-medium text-emerald-700 hover:underline">
+            Register as Doctor
           </Link>
         </p>
       </div>
@@ -85,7 +85,7 @@ export default function Page() {
           label="Email"
           type="email"
           autoComplete="email"
-          placeholder="you@example.com"
+          placeholder="doctor@example.com"
           value={email}
           onChange={(event) => setEmail(event.target.value)}
           required
@@ -98,15 +98,15 @@ export default function Page() {
           onChange={(event) => setPassword(event.target.value)}
           required
         />
-        <Button type="submit" className="w-full" loading={loadingPatient} disabled={loadingPatient}>
+        <Button type="submit" className="w-full" loading={loadingDoctor} disabled={loadingDoctor}>
           Continue
         </Button>
       </form>
 
       <div className="text-center pt-4 border-t border-slate-100">
         <p className="text-sm text-slate-500">
-          Are you a doctor?{" "}
-          <Link href={ROUTES.doctorLogin} className="font-medium text-emerald-700 hover:underline">
+          Are you a patient?{" "}
+          <Link href={ROUTES.login} className="font-medium text-emerald-700 hover:underline">
             Sign in here
           </Link>
         </p>

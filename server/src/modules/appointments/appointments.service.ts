@@ -1,15 +1,15 @@
-import prisma from "../lib/prisma.js";
-import {
+import prisma from "../../lib/prisma.js";
+import type {
   CreateAppointmentInput,
   UpdateAppointmentByDoctorInput,
-} from "../schemas/appointment.schemas.js";
-import { AppError } from "../utils/app-error.js";
-import { minutesToLabel, normalizeDateOnly, parseTimeToMinutes } from "../utils/time.js";
+} from "./appointments.schemas.js";
+import { AppError } from "../../utils/app-error.js";
+import { minutesToLabel, normalizeDateOnly, parseTimeToMinutes } from "../../utils/time.js";
 import {
   calculateExpectedPatients,
   calculateWaitTime,
   predictNoShow,
-} from "./predictionService.js";
+} from "../predictions/predictions.service.js";
 
 type CreateAppointmentPayload = CreateAppointmentInput & {
   patientId: string;
@@ -170,7 +170,7 @@ const formatAppointment = (appointment: {
 export const createAppointment = async (input: CreateAppointmentPayload) => {
   const [patient, doctor] = await Promise.all([
     prisma.user.findUnique({ where: { id: input.patientId } }),
-    prisma.user.findUnique({ where: { id: input.doctorId } }),
+    prisma.doctor.findUnique({ where: { id: input.doctorId } }),
   ]);
 
   if (!patient || patient.role !== "patient") {
@@ -180,7 +180,7 @@ export const createAppointment = async (input: CreateAppointmentPayload) => {
   // If the booking provided a patient age, persist to patient profile for future use
   if (typeof input.patientAge === "number" && input.patientAge > 0) {
     try {
-      const currentAge = (patient as any).age as number | undefined;
+      const currentAge = patient.age;
       if (!currentAge || currentAge !== input.patientAge) {
         await prisma.user.update({ where: { id: patient.id }, data: { age: input.patientAge } });
       }
@@ -189,7 +189,7 @@ export const createAppointment = async (input: CreateAppointmentPayload) => {
     }
   }
 
-  if (!doctor || doctor.role !== "doctor") {
+  if (!doctor) {
     throw new AppError("Doctor account not found", 404);
   }
 
@@ -285,11 +285,11 @@ export const createAppointment = async (input: CreateAppointmentPayload) => {
       patientAge: input.patientAge ?? null,
       status: "booked",
       remarks: input.remarks ?? null,
-      paymentMethod: (input as any).paymentMethod ?? null,
-      paymentStatus: (input as any).paymentStatus ?? "PENDING",
-      amountPaid: (input as any).amountPaid ?? 0.0,
-      insuranceProvider: (input as any).insuranceProvider ?? null,
-      insurancePolicy: (input as any).insurancePolicy ?? null,
+      paymentMethod: input.paymentMethod ?? null,
+      paymentStatus: input.paymentStatus ?? "PENDING",
+      amountPaid: input.amountPaid ?? 0.0,
+      insuranceProvider: input.insuranceProvider ?? null,
+      insurancePolicy: input.insurancePolicy ?? null,
     },
   });
 
@@ -317,9 +317,8 @@ export const getAppointmentsForPatient = async (
             id: true,
             name: true,
             email: true,
-            doctorProfile: {
-              select: { specialization: true, consultationFee: true },
-            },
+            specialization: true,
+            consultationFee: true,
           },
         },
       },
@@ -369,15 +368,25 @@ export const getAppointmentsForPatient = async (
   return {
     appointments: appointments.map((a) => {
       const formatted = formatAppointment(a);
+      const mappedDoctor = a.doctor ? {
+        id: a.doctor.id,
+        name: a.doctor.name,
+        email: a.doctor.email,
+        doctorProfile: {
+          specialization: a.doctor.specialization,
+          consultationFee: a.doctor.consultationFee,
+        },
+      } : null;
+
       if (a.status !== "booked") {
-        return { ...formatted, doctor: a.doctor, estimatedWaitTime: null };
+        return { ...formatted, doctor: mappedDoctor, estimatedWaitTime: null };
       }
 
       const key = `${a.doctorId}|${a.date.toISOString().slice(0, 10)}`;
       const dayAppointments = bookedByDoctorDateKey.get(key) ?? [];
       const estimatedWaitTime = estimateWaitForSlot(a.startTime, dayAppointments);
 
-      return { ...formatted, doctor: a.doctor, estimatedWaitTime };
+      return { ...formatted, doctor: mappedDoctor, estimatedWaitTime };
     }),
     total,
     page,
@@ -464,17 +473,27 @@ export const getAppointmentsForAdmin = async (
       take: limit,
       include: {
         patient: { select: { id: true, name: true, email: true } },
-        doctor: { select: { id: true, name: true, email: true } },
+        doctor: { select: { id: true, name: true, email: true, specialization: true } },
       },
     }),
   ]);
 
   return {
-    appointments: appointments.map((a) => ({
-      ...formatAppointment(a),
-      patient: a.patient,
-      doctor: a.doctor,
-    })),
+    appointments: appointments.map((a) => {
+      const mappedDoctor = a.doctor ? {
+        id: a.doctor.id,
+        name: a.doctor.name,
+        email: a.doctor.email,
+        doctorProfile: {
+          specialization: a.doctor.specialization,
+        },
+      } : null;
+      return {
+        ...formatAppointment(a),
+        patient: a.patient,
+        doctor: mappedDoctor,
+      };
+    }),
     total,
     page,
     totalPages: Math.max(1, Math.ceil(total / limit)),
@@ -578,8 +597,8 @@ export const getPredictedSlotsForDoctor = async (
   appointmentType?: string,
   avgConsultationTimeMinutes = DEFAULT_AVG_CONSULTATION_TIME_MINUTES
 ): Promise<PredictedSlotResponse> => {
-  const doctor = await prisma.user.findUnique({ where: { id: doctorId } });
-  if (!doctor || doctor.role !== "doctor") {
+  const doctor = await prisma.doctor.findUnique({ where: { id: doctorId } });
+  if (!doctor) {
     throw new AppError("Doctor account not found", 404);
   }
 

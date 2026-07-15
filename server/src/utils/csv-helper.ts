@@ -53,7 +53,7 @@ export class CSVHelper {
           this.csvCache.set(absolutePath, results);
           resolve(results);
         })
-        .on('error', (error) => {
+        .on('error', (error: any) => {
           reject(error);
         });
     });

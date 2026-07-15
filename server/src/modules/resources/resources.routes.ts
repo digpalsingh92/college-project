@@ -1,5 +1,5 @@
 import express from 'express';
-import { getResources, createResource, updateResource, deleteResource, getResourceById } from '../controllers/resource.controller.js';
+import { getResources, createResource, updateResource, deleteResource, getResourceById } from './resources.controller.js';
 
 const router = express.Router();
 

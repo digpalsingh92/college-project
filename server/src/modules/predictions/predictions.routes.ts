@@ -16,9 +16,9 @@ import {
   trainBedController,
   trainDiseaseController,
   diseasePredictionController,
-} from "../controllers/prediction.controller.js";
-import { asyncHandler } from "../utils/async-handler.js";
-import { requireAuth, requireRole } from "../middleware/auth.middleware.js";
+} from "./predictions.controller.js";
+import { asyncHandler } from "../../utils/async-handler.js";
+import { requireAuth, requireRole } from "../../middleware/auth.middleware.js";
 
 const router = express.Router();
 
