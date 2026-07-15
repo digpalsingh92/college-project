@@ -2,24 +2,24 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { 
-  Activity, 
-  Bot, 
-  BedDouble, 
-  Clock, 
-  DollarSign, 
-  Loader2, 
-  User, 
-  Award, 
-  Building2, 
-  Calendar, 
-  ChevronDown, 
-  ChevronUp, 
-  FileText, 
-  Star, 
-  Users, 
-  CheckCircle2, 
-  Sparkles 
+import {
+  Activity,
+  Bot,
+  BedDouble,
+  Clock,
+  DollarSign,
+  Loader2,
+  User,
+  Award,
+  Building2,
+  Calendar,
+  ChevronDown,
+  ChevronUp,
+  FileText,
+  Star,
+  Users,
+  CheckCircle2,
+  Sparkles
 } from "lucide-react";
 import { cn } from "@/helpers/cn";
 import { useGetDoctorsQuery } from "@/store/apiSlice";
@@ -50,21 +50,21 @@ function toRecord(value: unknown): Record<string, unknown> | null {
 // Helper to match doctor by department or intent
 function findRecommendedDoctor(intent: string, department: string, doctors: DoctorListItem[] = []) {
   if (!doctors || doctors.length === 0) return null;
-  
+
   const deptQuery = department.toLowerCase();
   const intentQuery = intent.toLowerCase();
-  
+
   // Try to find a specialization that matches the query terms
   const matched = doctors.find(doc => {
     const spec = (doc.doctorProfile?.specialization ?? "").toLowerCase();
     return (
-      spec.includes(deptQuery) || 
+      spec.includes(deptQuery) ||
       deptQuery.includes(spec) ||
       spec.includes(intentQuery) ||
       intentQuery.includes(spec)
     );
   });
-  
+
   return matched ?? doctors[0];
 }
 
@@ -91,13 +91,13 @@ function parseMessageContent(content: string) {
   const parts = content.split(/---|\n\n---\n### Official Records Reference Citations\n|### Official Records Reference Citations/);
   const mainText = parts[0].trim();
   const citationsSection = parts[1] || "";
-  
+
   const citations: Array<{ id: number; source: string; matchPct?: number; content: string }> = [];
-  
+
   if (citationsSection) {
     const lines = citationsSection.split("\n");
     let currentCitation: any = null;
-    
+
     for (const line of lines) {
       const match = line.match(/\*\*\[(\d+)\]\*\*\s*\*Source:\s*`([^`]+)`\*(?:\s*\(Match:\s*(\d+)%\))?/);
       if (match) {
@@ -116,28 +116,28 @@ function parseMessageContent(content: string) {
         currentCitation.content += (currentCitation.content ? " " : "") + line.trim();
       }
     }
-    
+
     if (currentCitation) {
       citations.push(currentCitation);
     }
   }
-  
+
   return { mainText, citations };
 }
 
 // The Premium AI Health Consultation Dashboard Card
-function ConsultationDashboardCard({ 
-  intent, 
-  structuredData, 
-  citations 
-}: { 
-  intent: string; 
-  structuredData: any; 
-  citations: Array<{ id: number; source: string; matchPct?: number; content: string }> 
+function ConsultationDashboardCard({
+  intent,
+  structuredData,
+  citations
+}: {
+  intent: string;
+  structuredData: any;
+  citations: Array<{ id: number; source: string; matchPct?: number; content: string }>
 }) {
   const [isSourcesOpen, setIsSourcesOpen] = useState(false);
   const { data: doctorsData } = useGetDoctorsQuery();
-  
+
   const data = toRecord(structuredData);
   if (!data) return null;
 
@@ -145,7 +145,7 @@ function ConsultationDashboardCard({
   let inferredDept = "General Medical";
   let procedureName = "Clinical Consultation";
   let confidenceVal = "95%";
-  
+
   if (intent === "surgery-plan") {
     procedureName = typeof data.surgeryType === "string" ? data.surgeryType : "Surgical Procedure";
     inferredDept = getSurgeryDepartment(procedureName);
@@ -174,7 +174,7 @@ function ConsultationDashboardCard({
 
   // 2. Build 3x2 Grid Cards based on intent
   const gridCards: DashboardCardItem[] = [];
-  
+
   if (intent === "surgery-plan") {
     const costRange = toRecord(data.estimatedCostRange);
     gridCards.push(
@@ -197,7 +197,7 @@ function ConsultationDashboardCard({
         icon: Activity,
       }
     );
-    
+
     const beds = toRecord(data.bedAvailability);
     gridCards.push(
       {
@@ -386,7 +386,7 @@ function ConsultationDashboardCard({
   // 3. Dynamic Doctor Recommendation from Database
   const doctorsList = doctorsData?.doctors ?? [];
   const recommendedDoc = findRecommendedDoctor(intent, inferredDept, doctorsList);
-  
+
   const doctorName = recommendedDoc ? recommendedDoc.name : "Dr. Robert Chen";
   const doctorSpecialty = recommendedDoc?.doctorProfile?.specialization ?? `${inferredDept} Specialist`;
   const doctorId = recommendedDoc ? recommendedDoc.id : "";
@@ -419,8 +419,8 @@ function ConsultationDashboardCard({
             {gridCards.map((card) => {
               const CardIcon = card.icon;
               return (
-                <div 
-                  key={card.title} 
+                <div
+                  key={card.title}
                   className="flex min-h-[5.5rem] flex-col justify-between rounded-2xl border border-slate-100 bg-slate-50 p-4 transition-all hover:bg-slate-100/50"
                 >
                   <div className="flex items-center justify-between text-slate-400">
@@ -449,7 +449,7 @@ function ConsultationDashboardCard({
         )}
 
         {/* CTA - Direct Booking */}
-        <Link 
+        <Link
           href={doctorId ? `/patient/booking-appointment?doctorId=${doctorId}` : "/patient/booking-appointment"}
           className="mt-6 flex w-full items-center justify-center gap-2 rounded-2xl bg-emerald-800 px-5 py-4 text-sm font-bold text-white shadow-sm transition hover:bg-emerald-900"
         >
@@ -470,7 +470,7 @@ function ConsultationDashboardCard({
               </div>
               {isSourcesOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
             </button>
-            
+
             {isSourcesOpen && (
               <div className="mt-4 space-y-3 pl-1 animate-fadeIn">
                 {citations.map((cite) => (
@@ -500,12 +500,12 @@ function ConsultationDashboardCard({
         <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-6 block">
           Recommended Surgeon
         </span>
-        
+
         {/* Surgeon Avatar */}
         <div className="relative h-20 w-20 rounded-full border-2 border-white shadow-md overflow-hidden bg-slate-100 flex items-center justify-center shrink-0">
           {doctorAvatar ? (
-            <img 
-              src={doctorAvatar} 
+            <img
+              src={doctorAvatar}
               alt={doctorName}
               className="h-full w-full object-cover object-top"
             />
@@ -531,7 +531,7 @@ function ConsultationDashboardCard({
         </div>
 
         {/* Action button */}
-        <Link 
+        <Link
           href={doctorId ? `/patient/booking-appointment?doctorId=${doctorId}` : "/patient/booking-appointment"}
           className="mt-6 flex w-full items-center justify-center rounded-xl border border-emerald-200 bg-white px-4 py-3 text-xs font-bold text-emerald-800 transition hover:bg-emerald-50"
         >
@@ -549,10 +549,10 @@ export function AssistantMessage({ message }: { message: AssistantChatMessage })
   // Check if we have an intent that should trigger the unified consultation card layout
   const validIntents = ["surgery-plan", "price", "bed", "wait-time", "disease"];
   const shouldRenderDashboard = Boolean(
-    message.role === "assistant" && 
-    message.status !== "loading" && 
-    message.intent && 
-    validIntents.includes(message.intent) && 
+    message.role === "assistant" &&
+    message.status !== "loading" &&
+    message.intent &&
+    validIntents.includes(message.intent) &&
     message.structuredData
   );
 
@@ -596,17 +596,15 @@ export function AssistantMessage({ message }: { message: AssistantChatMessage })
                     <span className="h-2 w-2 animate-bounce rounded-full bg-slate-400 [animation-delay:-0.15s]"></span>
                     <span className="h-2 w-2 animate-bounce rounded-full bg-slate-400"></span>
                   </div>
-                ) : (
-                  <p className="whitespace-pre-wrap">{mainText}</p>
-                )}
+                ) : null}
               </div>
             ) : null}
 
             {/* Structured Premium Clinical Consultation Dashboard Card */}
             {shouldRenderDashboard ? (
-              <ConsultationDashboardCard 
-                intent={message.intent!} 
-                structuredData={message.structuredData} 
+              <ConsultationDashboardCard
+                intent={message.intent!}
+                structuredData={message.structuredData}
                 citations={citations}
               />
             ) : null}

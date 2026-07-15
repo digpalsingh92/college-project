@@ -9,9 +9,9 @@ import {
   completeAppointmentController,
   updateAppointmentByDoctorController,
   getAdminAppointmentsController,
-} from "../controllers/appointment.controller.js";
-import { asyncHandler } from "../utils/async-handler.js";
-import { requireAuth, requireRole } from "../middleware/auth.middleware.js";
+} from "./appointments.controller.js";
+import { asyncHandler } from "../../utils/async-handler.js";
+import { requireAuth, requireRole } from "../../middleware/auth.middleware.js";
 
 const router = express.Router();
 
@@ -21,7 +21,7 @@ router.get("/slots", requireAuth, asyncHandler(getPredictedSlotsController));
 router.post("/", requireAuth, requireRole("patient"), asyncHandler(createAppointmentController));
 router.patch("/:id/cancel", requireAuth, asyncHandler(cancelAppointmentController));
 
-// Admin endpoint
+// Admin endpoints
 router.get(
   "/admin/insights",
   requireAuth,

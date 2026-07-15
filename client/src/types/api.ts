@@ -37,6 +37,7 @@ export interface RegisterDoctorRequest extends RegisterPatientRequest {
 
 export interface AuthResponse {
   token: string;
+  refreshToken: string;
   user: AuthUserDto;
 }
 

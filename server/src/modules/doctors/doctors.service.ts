@@ -1,13 +1,268 @@
-import type { DayOfWeek } from "../../generated/prisma/enums.js";
-import prisma from "../lib/prisma.js";
-import { AppError } from "../utils/app-error.js";
-import {
+import bcrypt from "bcrypt";
+import type { DayOfWeek } from "../../../generated/prisma/enums.js";
+import prisma from "../../lib/prisma.js";
+import { signAccessToken, signRefreshToken } from "../../lib/jwt.js";
+import { AppError } from "../../utils/app-error.js";
+import { minutesToLabel, normalizeDateOnly, parseTimeToMinutes } from "../../utils/time.js";
+import type {
+  RegisterDoctorInput,
+  LoginInput,
   CreateScheduleInput,
-  GetAvailabilityQuery,
   UpdateScheduleInput,
   UpsertUnavailabilityInput,
-} from "../schemas/schedule.schemas.js";
-import { minutesToLabel, normalizeDateOnly, parseTimeToMinutes } from "../utils/time.js";
+  GetAvailabilityQuery,
+} from "./doctors.schemas.js";
+
+// ── Auth Services ──
+
+type UserRole = "doctor" | "patient" | "admin";
+
+type AuthResponse = {
+  token: string;
+  refreshToken: string;
+  user: {
+    id: string;
+    name: string;
+    email: string;
+    role: UserRole;
+    createdAt: Date;
+    doctorProfile?: {
+      specialization: string;
+      experience: number;
+      consultationFee: number;
+    };
+  };
+};
+
+const buildDoctorAuthResponse = async (doctor: any): Promise<AuthResponse> => {
+  const token = signAccessToken({
+    id: doctor.id,
+    email: doctor.email,
+    role: "doctor",
+  });
+
+  const refreshToken = signRefreshToken({
+    id: doctor.id,
+    email: doctor.email,
+    role: "doctor",
+  });
+
+  await prisma.doctor.update({
+    where: { id: doctor.id },
+    data: { refreshToken },
+  });
+
+  return {
+    token,
+    refreshToken,
+    user: {
+      id: doctor.id,
+      name: doctor.name,
+      email: doctor.email,
+      role: "doctor",
+      createdAt: doctor.createdAt,
+      doctorProfile: {
+        specialization: doctor.specialization,
+        experience: doctor.experience,
+        consultationFee: doctor.consultationFee,
+      },
+    },
+  };
+};
+
+export const registerDoctor = async (input: RegisterDoctorInput): Promise<AuthResponse> => {
+  const passwordHash = await bcrypt.hash(input.password, 10);
+
+  const existingDoctor = await prisma.doctor.findUnique({
+    where: { email: input.email },
+  });
+
+  if (existingDoctor) {
+    throw new AppError("Email already in use", 409);
+  }
+
+  const existingUser = await prisma.user.findUnique({
+    where: { email: input.email },
+  });
+
+  if (existingUser) {
+    throw new AppError("Email already in use", 409);
+  }
+
+  const doctor = await prisma.doctor.create({
+    data: {
+      name: input.name,
+      email: input.email,
+      passwordHash,
+      specialization: input.specialization,
+      experience: input.experience,
+      consultationFee: input.consultationFee,
+    },
+  });
+
+  return await buildDoctorAuthResponse(doctor);
+};
+
+export const loginDoctor = async (input: LoginInput): Promise<AuthResponse> => {
+  const doctor = await prisma.doctor.findUnique({
+    where: { email: input.email },
+  });
+
+  if (!doctor) {
+    throw new AppError("Invalid email or password", 401);
+  }
+
+  const isPasswordValid = await bcrypt.compare(input.password, doctor.passwordHash);
+  if (!isPasswordValid) {
+    throw new AppError("Invalid email or password", 401);
+  }
+
+  return await buildDoctorAuthResponse(doctor);
+};
+
+// ── Profile and Analytics Services ──
+
+const mapDoctorToResponse = (doctor: any) => ({
+  id: doctor.id,
+  name: doctor.name,
+  email: doctor.email,
+  createdAt: doctor.createdAt,
+  doctorProfile: {
+    specialization: doctor.specialization,
+    experience: doctor.experience,
+    consultationFee: doctor.consultationFee,
+  },
+});
+
+export const getDoctorProfile = async (id: string) => {
+  const doctor = await prisma.doctor.findUnique({
+    where: { id },
+  });
+
+  if (!doctor) {
+    throw new AppError("Doctor profile not found", 404);
+  }
+
+  return mapDoctorToResponse(doctor);
+};
+
+export const getAllDoctors = async () => {
+  const doctors = await prisma.doctor.findMany({
+    orderBy: { name: "asc" },
+  });
+  return doctors.map(mapDoctorToResponse);
+};
+
+export const getDoctorById = async (id: string) => {
+  const doctor = await prisma.doctor.findUnique({
+    where: { id },
+  });
+
+  if (!doctor) {
+    throw new AppError("Doctor not found", 404);
+  }
+
+  return mapDoctorToResponse(doctor);
+};
+
+type DoctorAnalyticsListParams = {
+  page: number;
+  limit: number;
+  search?: string;
+};
+
+type DoctorAnalyticsRow = {
+  id: string;
+  name: string;
+  specialization: string;
+  totalAppointments: number;
+  upcomingAppointments: number;
+};
+
+type DoctorAnalyticsResponse = {
+  doctors: DoctorAnalyticsRow[];
+  total: number;
+  page: number;
+  totalPages: number;
+};
+
+export const getDoctorAnalytics = async ({
+  page,
+  limit,
+  search,
+}: DoctorAnalyticsListParams): Promise<DoctorAnalyticsResponse> => {
+  const skip = (page - 1) * limit;
+  const trimmedSearch = search?.trim();
+
+  const where = trimmedSearch
+    ? {
+        OR: [
+          { name: { contains: trimmedSearch, mode: "insensitive" as const } },
+          { specialization: { contains: trimmedSearch, mode: "insensitive" as const } },
+        ],
+      }
+    : {};
+
+  const [total, doctors] = await Promise.all([
+    prisma.doctor.count({ where }),
+    prisma.doctor.findMany({
+      where,
+      select: {
+        id: true,
+        name: true,
+        specialization: true,
+      },
+      orderBy: { name: "asc" },
+      skip,
+      take: limit,
+    }),
+  ]);
+
+  const doctorIds = doctors.map((doctor) => doctor.id);
+
+  const [totalsByDoctor, upcomingByDoctor] = await Promise.all([
+    prisma.appointment.groupBy({
+      by: ["doctorId"],
+      where: {
+        doctorId: { in: doctorIds },
+      },
+      _count: {
+        _all: true,
+      },
+    }),
+    prisma.appointment.groupBy({
+      by: ["doctorId"],
+      where: {
+        doctorId: { in: doctorIds },
+        status: "booked",
+        date: {
+          gte: new Date(),
+        },
+      },
+      _count: {
+        _all: true,
+      },
+    }),
+  ]);
+
+  const totalCountMap = new Map(totalsByDoctor.map((entry) => [entry.doctorId, entry._count._all]));
+  const upcomingCountMap = new Map(upcomingByDoctor.map((entry) => [entry.doctorId, entry._count._all]));
+
+  return {
+    doctors: doctors.map((doctor) => ({
+      id: doctor.id,
+      name: doctor.name,
+      specialization: doctor.specialization,
+      totalAppointments: totalCountMap.get(doctor.id) ?? 0,
+      upcomingAppointments: upcomingCountMap.get(doctor.id) ?? 0,
+    })),
+    total,
+    page,
+    totalPages: Math.max(1, Math.ceil(total / limit)),
+  };
+};
+
+// ── Schedule and Unavailability Services ──
 
 const dayNameByIndex: DayOfWeek[] = [
   "SUNDAY",
@@ -24,9 +279,8 @@ const DEFAULT_DAY_END_MINUTES = 19 * 60; // 7:00 PM
 const DEFAULT_SLOT_DURATION_MINUTES = 30;
 
 const assertDoctor = async (doctorId: string) => {
-  const doctor = await prisma.user.findUnique({ where: { id: doctorId } });
-
-  if (!doctor || doctor.role !== "doctor") {
+  const doctor = await prisma.doctor.findUnique({ where: { id: doctorId } });
+  if (!doctor) {
     throw new AppError("Doctor account not found", 404);
   }
 };

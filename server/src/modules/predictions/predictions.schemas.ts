@@ -1,7 +1,5 @@
 import { z } from "zod";
 
-// ── Existing schemas ──
-
 export const waitingTimePredictionSchema = z.object({
   department: z.string().trim().min(1),
   appointmentType: z.string().trim().min(1),
@@ -19,8 +17,6 @@ export const resourceAllocationPredictionSchema = z.object({
 export const trainModelSchema = z.object({
   datasetPath: z.string().trim().min(1).optional(),
 });
-
-// ── New schemas ──
 
 export const noShowPredictionSchema = z.object({
   age: z.number().int().min(0).max(120),
@@ -55,8 +51,6 @@ export const diseasePredictionSchema = z.object({
   bloodPressure: z.enum(["Low", "Normal", "High"]).optional().default("Normal"),
   cholesterolLevel: z.enum(["Low", "Normal", "High"]).optional().default("Normal"),
 });
-
-// ── Inferred types ──
 
 export type WaitingTimePredictionInput = z.infer<typeof waitingTimePredictionSchema>;
 export type ResourceAllocationPredictionInput = z.infer<typeof resourceAllocationPredictionSchema>;

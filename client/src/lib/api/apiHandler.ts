@@ -52,11 +52,100 @@ function isApiSuccessEnvelope<T>(payload: unknown): payload is ApiSuccessEnvelop
   );
 }
 
+let isRefreshing = false;
+let failedQueue: any[] = [];
+
+const processQueue = (error: any, token: string | null = null) => {
+  failedQueue.forEach((prom) => {
+    if (error) {
+      prom.reject(error);
+    } else {
+      prom.resolve(token);
+    }
+  });
+  failedQueue = [];
+};
+
 class ApiHandler {
   private readonly client: AxiosInstance;
 
   constructor(baseURL: string) {
     this.client = axios.create({ baseURL });
+
+    this.client.interceptors.response.use(
+      (response) => response,
+      async (error: AxiosError) => {
+        const originalRequest = error.config as AxiosRequestConfig & { _retry?: boolean };
+        if (error.response?.status === 401 && originalRequest && !originalRequest._retry) {
+          if (isRefreshing) {
+            return new Promise((resolve, reject) => {
+              failedQueue.push({ resolve, reject });
+            })
+              .then((token) => {
+                if (originalRequest.headers) {
+                  originalRequest.headers["Authorization"] = `Bearer ${token}`;
+                }
+                return this.client(originalRequest);
+              })
+              .catch((err) => {
+                return Promise.reject(err);
+              });
+          }
+
+          originalRequest._retry = true;
+          isRefreshing = true;
+
+          try {
+            const { store } = await import("@/store/store");
+            const { setCredentials, mapAuthUserDto } = await import("@/store/authSlice");
+            const state = store.getState();
+            const refreshToken =
+              state.auth.refreshToken ||
+              (typeof window !== "undefined" ? localStorage.getItem("auth_refresh_token") : null);
+
+            if (!refreshToken) {
+              throw new Error("No refresh token available");
+            }
+
+            const response = await axios.post(`${baseURL}/auth/refresh`, { refreshToken });
+            const resultEnvelope = response.data;
+            const resultData = resultEnvelope.result?.data || resultEnvelope;
+
+            const token = resultData.token;
+            const newRefreshToken = resultData.refreshToken;
+            const user = resultData.user;
+
+            store.dispatch(
+              setCredentials({
+                token,
+                refreshToken: newRefreshToken,
+                user: mapAuthUserDto(user),
+              })
+            );
+
+            processQueue(null, token);
+            isRefreshing = false;
+
+            if (originalRequest.headers) {
+              originalRequest.headers["Authorization"] = `Bearer ${token}`;
+            }
+            return this.client(originalRequest);
+          } catch (refreshError) {
+            processQueue(refreshError, null);
+            isRefreshing = false;
+
+            try {
+              const { store } = await import("@/store/store");
+              const { logout } = await import("@/store/authSlice");
+              store.dispatch(logout());
+            } catch {}
+
+            return Promise.reject(error);
+          }
+        }
+        return Promise.reject(error);
+      }
+    );
   }
 
   private async request<T>(method: HttpMethod, url: string, options: RequestOptions = {}): Promise<T> {

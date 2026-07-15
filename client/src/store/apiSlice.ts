@@ -120,6 +120,7 @@ export const api = createApi({
           dispatch(
             setCredentials({
               token: data.token,
+              refreshToken: data.refreshToken,
               user: mapAuthUserDto(data.user),
             })
           );
@@ -137,7 +138,7 @@ export const api = createApi({
     loginDoctor: builder.mutation<AuthResponse, LoginRequest>({
       async queryFn(body, api: BaseQueryApi): Promise<ApiResult<AuthResponse>> {
         return runRequest(
-          apiHandler.post<AuthResponse>("auth/doctor/login", body, {
+          apiHandler.post<AuthResponse>("doctors/auth/login", body, {
             token: (api.getState() as any).auth.token,
           }),
           api,
@@ -150,6 +151,7 @@ export const api = createApi({
           dispatch(
             setCredentials({
               token: data.token,
+              refreshToken: data.refreshToken,
               user: mapAuthUserDto(data.user),
             })
           );
@@ -180,6 +182,7 @@ export const api = createApi({
           dispatch(
             setCredentials({
               token: data.token,
+              refreshToken: data.refreshToken,
               user: mapAuthUserDto(data.user),
             })
           );
@@ -209,6 +212,7 @@ export const api = createApi({
           dispatch(
             setCredentials({
               token: data.token,
+              refreshToken: data.refreshToken,
               user: mapAuthUserDto(data.user),
             })
           );
@@ -226,7 +230,7 @@ export const api = createApi({
     registerDoctor: builder.mutation<AuthResponse, RegisterDoctorRequest>({
       async queryFn(body, api: BaseQueryApi): Promise<ApiResult<AuthResponse>> {
         return runRequest(
-          apiHandler.post<AuthResponse>("auth/doctor/register", body, {
+          apiHandler.post<AuthResponse>("doctors/auth/register", body, {
             token: (api.getState() as any).auth.token,
           }),
           api
@@ -238,6 +242,7 @@ export const api = createApi({
           dispatch(
             setCredentials({
               token: data.token,
+              refreshToken: data.refreshToken,
               user: mapAuthUserDto(data.user),
             })
           );
@@ -250,6 +255,17 @@ export const api = createApi({
         } catch {
           // Expected auth failures are handled by the shared API handler.
         }
+      },
+    }),
+    logoutUser: builder.mutation<unknown, void>({
+      async queryFn(_arg, api: BaseQueryApi): Promise<ApiResult<unknown>> {
+        return runRequest(
+          apiHandler.post<unknown>("auth/logout", undefined, {
+            token: (api.getState() as any).auth.token,
+          }),
+          api,
+          true
+        );
       },
     }),
 
@@ -817,6 +833,7 @@ export const {
   useLoginAdminMutation,
   useRegisterPatientMutation,
   useRegisterDoctorMutation,
+  useLogoutUserMutation,
   useGetDoctorsQuery,
   useGetAdminDoctorAnalyticsQuery,
   useGetAdminPatientsQuery,

@@ -53,7 +53,7 @@ export function withRoleGuard(request: NextRequest) {
   const expired = isTokenExpired(payload);
   const path = request.nextUrl.pathname;
 
-  if (path === "/admin/login") {
+  if (path === "/admin/login" || path === "/doctor/login" || path === "/doctor/register") {
     return NextResponse.next();
   }
 
@@ -66,7 +66,12 @@ export function withRoleGuard(request: NextRequest) {
   }
 
   if (!role || expired) {
-    const loginPath = requestedRole === "admin" ? "/admin/login" : "/login";
+    const loginPath =
+      requestedRole === "admin"
+        ? "/admin/login"
+        : requestedRole === "doctor"
+        ? "/doctor/login"
+        : "/login";
     const response = NextResponse.redirect(new URL(loginPath, request.url));
     response.cookies.set(COOKIE_NAME, "", { path: "/", maxAge: 0 });
     return response;

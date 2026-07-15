@@ -6,6 +6,8 @@ export const ROUTES = {
   contact: "/contact",
   login: "/login",
   adminLogin: "/admin/login",
+  doctorLogin: "/doctor/login",
+  doctorRegister: "/doctor/register",
   register: "/register",
   unauthorized: "/unauthorized",
   admin: "/admin",

@@ -39,22 +39,26 @@ model User {
   age           Int?     // Age for patients
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+  refreshToken  String?
 
-  doctorProfile DoctorProfile?
-  schedules Schedule[]
-  unavailableSlots DoctorUnavailability[]
   appointmentsAsPatient Appointment[] @relation("PatientAppointments")
-  appointmentsAsDoctor  Appointment[] @relation("DoctorAppointments")
 }
 
-model DoctorProfile {
-  id              String @id @default(uuid())
-  userId          String @unique
+model Doctor {
+  id              String   @id @default(uuid())
+  name            String
+  email           String   @unique
+  passwordHash    String   @map("password")
   specialization  String
   experience      Int
   consultationFee Float
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  refreshToken    String?
 
-  user User @relation(fields: [userId], references: [id])
+  schedules       Schedule[]
+  unavailableSlots DoctorUnavailability[]
+  appointments    Appointment[] @relation("DoctorAppointments")
 }
 
 model Schedule {
@@ -65,7 +69,7 @@ model Schedule {
   endTime   Int
   slotDurationMinutes Int @default(30)
 
-  doctor User @relation(fields: [doctorId], references: [id])
+  doctor Doctor @relation(fields: [doctorId], references: [id])
 
   @@index([doctorId, dayOfWeek])
   appointments Appointment[]
@@ -80,7 +84,7 @@ model DoctorUnavailability {
   reason    String?
   createdAt DateTime @default(now())
 
-  doctor User @relation(fields: [doctorId], references: [id])
+  doctor Doctor @relation(fields: [doctorId], references: [id])
 
   @@index([doctorId, date])
 }
@@ -107,7 +111,7 @@ model Appointment {
   createdAt DateTime @default(now())
 
   patient User @relation("PatientAppointments", fields: [patientId], references: [id])
-  doctor  User @relation("DoctorAppointments", fields: [doctorId], references: [id])
+  doctor  Doctor @relation("DoctorAppointments", fields: [doctorId], references: [id])
   schedule Schedule @relation(fields: [scheduleId], references: [id])
 
   @@index([patientId, doctorId, date])
@@ -153,4 +157,13 @@ model ResourceType {
   updatedAt   DateTime @updatedAt
 
   resources   Resource[]
+}
+
+model BlacklistedToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([token])
 }

@@ -8,26 +8,26 @@ import {
   priceEstimationSchema,
   bedAvailabilitySchema,
   diseasePredictionSchema,
-} from "../schemas/prediction.schemas.js";
+} from "./predictions.schemas.js";
 import {
   predictResourceAllocation,
   predictWaitingTime,
   reloadPredictionModel,
-} from "../ml/inference.js";
-import { trainPredictionModel } from "../ml/trainer.js";
-import { predictNoShow } from "../ml/noshow-inference.js";
-import { planSurgery } from "../ml/surgery-planner.js";
-import { estimatePrice } from "../ml/price-inference.js";
-import { estimateBedAvailability } from "../ml/bed-inference.js";
-import { analyzeSlots } from "../ml/slots-analysis.js";
-import { getQueueStatus as getQueueStatusML } from "../ml/queue-status.js";
-import { getRecommendations as getRecommendationsML } from "../ml/recommendations.js";
-import { trainNoShowModel } from "../ml/noshow-trainer.js";
-import { trainPriceModel } from "../ml/price-trainer.js";
-import { trainBedModel } from "../ml/bed-trainer.js";
-import { trainDiseaseModel } from "../ml/disease-trainer.js";
-import { predictDisease } from "../ml/disease-inference.js";
-import { AppError } from "../utils/app-error.js";
+} from "../../ml/inference.js";
+import { trainPredictionModel } from "../../ml/trainer.js";
+import { predictNoShow } from "../../ml/noshow-inference.js";
+import { planSurgery } from "../../ml/surgery-planner.js";
+import { estimatePrice } from "../../ml/price-inference.js";
+import { estimateBedAvailability } from "../../ml/bed-inference.js";
+import { analyzeSlots } from "../../ml/slots-analysis.js";
+import { getQueueStatus as getQueueStatusML } from "../../ml/queue-status.js";
+import { getRecommendations as getRecommendationsML } from "../../ml/recommendations.js";
+import { trainNoShowModel } from "../../ml/noshow-trainer.js";
+import { trainPriceModel } from "../../ml/price-trainer.js";
+import { trainBedModel } from "../../ml/bed-trainer.js";
+import { trainDiseaseModel } from "../../ml/disease-trainer.js";
+import { predictDisease } from "../../ml/disease-inference.js";
+import { AppError } from "../../utils/app-error.js";
 
 // ── Existing controllers ──
 

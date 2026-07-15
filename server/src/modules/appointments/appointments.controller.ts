@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import {
   createAppointmentSchema,
   updateAppointmentByDoctorSchema,
-} from "../schemas/appointment.schemas.js";
+} from "./appointments.schemas.js";
 import {
   createAppointment,
   getAppointmentsForDoctor,
@@ -13,8 +13,8 @@ import {
   updateAppointmentByDoctor,
   getAdminAppointmentPredictionInsights,
   getPredictedSlotsForDoctor,
-} from "../services/appointment.service.js";
-import { AppError } from "../utils/app-error.js";
+} from "./appointments.service.js";
+import { AppError } from "../../utils/app-error.js";
 
 export const createAppointmentController = async (req: Request, res: Response): Promise<void> => {
   if (!req.user) {
